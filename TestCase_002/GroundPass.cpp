@@ -11,6 +11,10 @@ CGroundPass::CGroundPass(const std::string& vPassName, int vExcutionOrder) :IRen
 {
 }
 
+CGroundPass::~CGroundPass()
+{
+}
+
 //************************************************************************************
 //Function:
 void CGroundPass::initV()
@@ -19,14 +23,19 @@ void CGroundPass::initV()
 	m_LTCMatrixTexture = loadTextureFromFile("Textures/ltc_mat.dds");
 	m_LTCMagnitueTexture = loadTextureFromFile("Textures/ltc_amp.dds");
 
-	//const auto &PolygonalLightVertexPos = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"))->getPolygonalLightVertexPosSet();
+	std::shared_ptr<ElayGraphics::STexture2D> pTexture2D = std::make_shared<ElayGraphics::STexture2D>();
+	pTexture2D->InternalFormat = GL_RGBA16F;
+	pTexture2D->ExternalFormat = GL_RGBA;
+	pTexture2D->DataType = GL_FLOAT;
+	pTexture2D->TextureName = "HDRTexture";
+	genTexture2D(*pTexture2D);
+	m_HDRFBO = genFBO({ *pTexture2D });
+
+	ElayGraphics::ResourceManager::registerSharedData("HDRTexture", pTexture2D->TextureID);
+	ElayGraphics::ResourceManager::registerSharedData("HDRFBO", m_HDRFBO);
 
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getModelMatrix()));
-	/*for (int i = 0; i < 4; ++i)
-	{
-		m_pShader->setFloatUniformValue("u_PolygonalLightVertexPos[" + std::to_string(i) + "]", PolygonalLightVertexPos[i].x, PolygonalLightVertexPos[i].y, PolygonalLightVertexPos[i].z);
-	}*/
 	m_pShader->setTexture2DUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
 	m_pShader->setTexture2DUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
 }
@@ -35,7 +44,8 @@ void CGroundPass::initV()
 //Function:
 void CGroundPass::updateV()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

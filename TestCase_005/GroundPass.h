@@ -8,13 +8,15 @@ class CGroundPass : public IRenderPass
 {
 public:
 	CGroundPass(const std::string& vPassName, int vExcutionOrder);
+	virtual ~CGroundPass();
 
 	virtual void initV() override;
 	virtual void updateV() override;
 
 private:
-	GLuint m_LTCMatrixTexture = 0;
-	GLuint m_LTCMagnitueTexture = 0;
+	GLint  m_HDRFBO = -1;
+	GLuint m_LTCMatrixTexture = -1;
+	GLuint m_LTCMagnitueTexture = -1;
 	glm::vec4 m_DiffuseColor;
 	glm::vec4 m_SpecularColor;
 	std::vector<glm::vec3> m_PolygonalLightVertexPos;

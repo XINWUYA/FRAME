@@ -10,20 +10,31 @@ CLightSourcePass::CLightSourcePass(const std::string& vPassName, int vExcutionOr
 {
 }
 
+CLightSourcePass::~CLightSourcePass()
+{
+}
+
 //************************************************************************************
 //Function:
 void CLightSourcePass::initV()
 {
 	m_pShader = std::make_shared<CShader>("LightSource_VS.glsl", "LightSource_FS.glsl");
+	m_HDRFBO = ElayGraphics::ResourceManager::getSharedDataByName<GLint>("HDRFBO");
 }
 
 //************************************************************************************
 //Function:
 void CLightSourcePass::updateV()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO);
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("LightSource")->getModelMatrix()));
+	float Intensity = ElayGraphics::ResourceManager::getSharedDataByName<float>("Intensity");
+	if (Intensity != m_Intensity)
+	{
+		m_Intensity = Intensity;
+		m_pShader->setFloatUniformValue("u_Intensity", m_Intensity);
+	}
 	glBindVertexArray(ElayGraphics::ResourceManager::getGameObjectByName("LightSource")->getVAO());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1b4fa1c2-3378-4faf-bf39-37a88f338cd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ground.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="MyGUI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenQuadPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ground.h">
@@ -50,11 +56,28 @@
     <ClInclude Include="MyGUI.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenQuadPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Ground_FS.glsl" />
-    <None Include="Ground_VS.glsl" />
-    <None Include="LightSource_FS.glsl" />
-    <None Include="LightSource_VS.glsl" />
+    <None Include="ScreenQuad_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Ground_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Ground_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightSource_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightSource_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ScreenQuad_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

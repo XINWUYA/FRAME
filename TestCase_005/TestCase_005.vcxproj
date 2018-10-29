@@ -18,6 +18,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="GroundPass.cpp" />
+    <ClCompile Include="LightSource.cpp" />
+    <ClCompile Include="LightSourcePass.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyGUI.cpp" />
+    <ClCompile Include="ScreenQuadPass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="GroundPass.h" />
+    <ClInclude Include="LightSource.h" />
+    <ClInclude Include="LightSourcePass.h" />
+    <ClInclude Include="MyGUI.h" />
+    <ClInclude Include="ScreenQuadPass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ground_FS.glsl" />
+    <None Include="Ground_VS.glsl" />
+    <None Include="LightSource_FS.glsl" />
+    <None Include="LightSource_VS.glsl" />
+    <None Include="ScreenQuad_FS.glsl" />
+    <None Include="ScreenQuad_VS.glsl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A92CAD4E-496C-460C-865A-A3DE1E33FB6E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -149,27 +174,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="GroundPass.cpp" />
-    <ClCompile Include="LightSource.cpp" />
-    <ClCompile Include="LightSourcePass.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyGUI.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Ground.h" />
-    <ClInclude Include="GroundPass.h" />
-    <ClInclude Include="LightSource.h" />
-    <ClInclude Include="LightSourcePass.h" />
-    <ClInclude Include="MyGUI.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ground_FS.glsl" />
-    <None Include="Ground_VS.glsl" />
-    <None Include="LightSource_FS.glsl" />
-    <None Include="LightSource_VS.glsl" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

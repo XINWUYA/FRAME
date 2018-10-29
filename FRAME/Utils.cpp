@@ -176,6 +176,7 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture2D>& vTextureAtta
 	Attachments.reserve(vTextureAttachments.size());
 	for (const ElayGraphics::STexture2D &vTexture : vTextureAttachments)
 	{
+		_ASSERT(vTexture.TextureID != -1);
 		switch (vTexture.TextureType)
 		{
 		case ElayGraphics::STexture2D::ETextureType::DepthTexture:
@@ -196,6 +197,7 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture2D>& vTextureAtta
 		default:
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), GL_TEXTURE_2D, vTexture.TextureID, 0);
 			Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+			HasStencilTextureAttachment = GL_TRUE;
 			break;
 		}
 	}

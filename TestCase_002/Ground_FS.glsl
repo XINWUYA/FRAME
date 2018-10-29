@@ -139,8 +139,8 @@ float integrateEdge(vec3 vVertex1, vec3 vVertex2)
 	float CosTheta = dot(vVertex1, vVertex2);
 	CosTheta = clamp(CosTheta, -0.9999, 0.9999);
 	float Theta = acos(CosTheta);
-	//return cross(vVertex1, vVertex2).z * Theta / sin(Theta);
-	return cross(vVertex1, vVertex2).z * ((Theta > 0.001) ? Theta / sin(Theta) : 1.0);
+	return cross(vVertex1, vVertex2).z * Theta / sin(Theta);
+	//return cross(vVertex1, vVertex2).z * ((Theta > 0.001) ? Theta / sin(Theta) : 1.0);
 
 	//float x = dot(vVertex1, vVertex2);
 	//float y = abs(x);
@@ -216,11 +216,8 @@ void main()
 	Specular *= texture2D(u_LTC_MagnitueTexture, UV).w;
 
 	vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular * u_SpecularColor);
-	//vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor);
+	//vec3 ResultColor = u_Intensity * (Specular * u_SpecularColor);
 	ResultColor /= 2.0 * PI;
 
 	FragColor_ = vec4(ResultColor, 1.0);
-	//FragColor_ = texture2D(u_LTC_MatrixTexture, v2f_TexCoords);
-	//FragColor_ = vec4(Diffuse, Diffuse, Diffuse, 1.0);
-	//FragColor_ = vec4(0, 1, 0, 1.0);
 }
