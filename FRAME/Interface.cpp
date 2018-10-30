@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include "InputManager.h"
 
 //************************************************************************************
 //Function:
@@ -38,6 +39,20 @@ double ElayGraphics::App::getFrameRateInMilliSecond()
 int ElayGraphics::App::getFramesPerSecond()
 {
 	return CApp::getOrCreateInstance()->getFramesPerSecond();
+}
+
+//************************************************************************************
+//Function:
+int ElayGraphics::WINDOW_KEYWORD::getWindowWidth()
+{
+	return WINDOW_WIDTH;
+}
+
+//************************************************************************************
+//Function:
+int ElayGraphics::WINDOW_KEYWORD::getWindowHeight()
+{
+	return WINDOW_HEIGHT;
 }
 
 //************************************************************************************
@@ -164,4 +179,11 @@ const boost::any& ElayGraphics::ResourceManager::getSharedDataByName(const std::
 void ElayGraphics::ResourceManager::updateSharedDataByName(const std::string& vDataName, const boost::any& vData)
 {
 	CResourceManager::getOrCreateInstance()->updateSharedDataByName(vDataName, vData);
+}
+
+//************************************************************************************
+//Function:
+int ElayGraphics::InputManager::getKeyStatus(int vKey)
+{
+	return CInputManager::getOrCreateInstance()->getKeyStatus()[vKey];
 }

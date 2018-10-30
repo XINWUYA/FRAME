@@ -25,6 +25,8 @@ namespace ElayGraphics
 
 	namespace WINDOW_KEYWORD
 	{
+		FRAME_DLLEXPORTS int  getWindowWidth();
+		FRAME_DLLEXPORTS int  getWindowHeight();
 		FRAME_DLLEXPORTS void setWindowSize(int vWidth, int vHeight, bool vIsViewportSizeChangedWithWindow = true);
 		FRAME_DLLEXPORTS void setViewportSize(int vWidth, int vHeight);
 		FRAME_DLLEXPORTS void setSampleNum(int vSampleNum);
@@ -62,5 +64,10 @@ namespace ElayGraphics
 		{
 			return boost::any_cast<TDataType>(getSharedDataByName(vDataName));
 		}
+	}
+
+	namespace InputManager
+	{
+		FRAME_DLLEXPORTS int getKeyStatus(int vKey);
 	}
 }

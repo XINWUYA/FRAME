@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <string>
+#include <vector>
 #include "FRAME_EXPORTS.h"
 
 namespace ElayGraphics
@@ -32,34 +33,45 @@ namespace ElayGraphics
 		extern bool IS_ENABLE_GUI;
 	}
 
-	struct FRAME_DLLEXPORTS STexture2D
+	struct FRAME_DLLEXPORTS STexture
 	{
-		enum ETextureType
+		enum class ETextureType
+		{
+			Texture2D,
+			Texture3D,
+			Texture2DArray,
+			TextureCubeMap
+		};
+		enum class ETextureAttachmentType
 		{
 			ColorTexture,
 			DepthTexture,
 			StencilTexture,
 			DepthAndStencilTexture
 		};
-		GLint		 InternalFormat;
-		GLenum		 ExternalFormat;
-		GLenum		 DataType;
-		GLsizei		 Width;
-		GLsizei		 Height;
-		GLvoid*		 pData;
-		GLint		 Type4WrapS;
-		GLint		 Type4WrapT;
-		GLint		 Type4MinFilter;
-		GLint		 Type4MagFilter;
-		GLboolean	 isMipmap;
-		GLint		 TextureID;
-		std::string  TextureName;
-		ETextureType TextureType;
+		GLint					InternalFormat;
+		GLenum					ExternalFormat;
+		GLenum					DataType;
+		GLsizei					Width;
+		GLsizei					Height;
+		GLsizei					Depth;
+		std::vector<GLvoid*>	pDataSet;
+		GLint					Type4WrapS;
+		GLint					Type4WrapT;
+		GLint					Type4WrapR;
+		GLint					Type4MinFilter;
+		GLint					Type4MagFilter;
+		GLboolean				isMipmap;
+		GLint					TextureID;
+		std::string				TextureName;
+		ETextureType			TextureType;
+		ETextureAttachmentType	TextureAttachmentType;
 
-		STexture2D() : TextureID(-1), InternalFormat(GL_RGBA), ExternalFormat(GL_RGBA), DataType(GL_UNSIGNED_BYTE), Width(WINDOW_KEYWORD::WINDOW_WIDTH),
-			Height(WINDOW_KEYWORD::WINDOW_HEIGHT), pData(nullptr), Type4WrapS(GL_REPEAT), Type4WrapT(GL_REPEAT), Type4MinFilter(GL_LINEAR),
-			Type4MagFilter(GL_LINEAR), isMipmap(GL_TRUE), TextureType(ETextureType::ColorTexture)
-		{}
+		STexture() : TextureID(-1), InternalFormat(GL_RGBA), ExternalFormat(GL_RGBA), DataType(GL_UNSIGNED_BYTE), Width(WINDOW_KEYWORD::WINDOW_WIDTH),
+			Height(WINDOW_KEYWORD::WINDOW_HEIGHT), Depth(1), Type4WrapS(GL_REPEAT), Type4WrapT(GL_REPEAT), Type4WrapR(GL_REPEAT), Type4MinFilter(GL_LINEAR),
+			Type4MagFilter(GL_LINEAR), isMipmap(GL_TRUE), TextureType(ETextureType::Texture2D), TextureAttachmentType(ETextureAttachmentType::ColorTexture)
+		{
+		}
 	};
 
 	enum class EDataType

@@ -21,6 +21,7 @@ uniform bool  u_IsTwoSided = false;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
+uniform sampler2DArray u_FilteredLightTexture;
 
 const float LUT_SIZE = 64.0;
 const float LUT_SCALE = (LUT_SIZE - 1.0) / LUT_SIZE;
@@ -152,7 +153,7 @@ float integrateEdge(vec3 vVertex1, vec3 vVertex2)
 	//return theta_sintheta * cross(vVertex1, vVertex2).z;
 }
 
-float integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, vec3 vPolygonalLightVertexPos[4], bool vTwoSided)
+vec3 integrateLTC_ID(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, vec3 vPolygonalLightVertexPos[4], bool vTwoSided)
 {	
 	//着色点上的切线空间正交基
 	vec3 Tangent = normalize(vViewDir - vNormal * dot(vViewDir, vNormal));
@@ -172,7 +173,7 @@ float integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, 
 	clipPolygonalLightByZPlane(PolygonalLightVertexPosInTangentSpace, PolygonalLightVertexNumAfterClipping);
 	
 	if(PolygonalLightVertexNumAfterClipping == 0)
-		return 0;
+		return vec3(0);
 	
 	//把裁剪后的多边形投影到球面上（也就是对每个顶点坐标向量归一化）
 	PolygonalLightVertexPosInTangentSpace[0] = normalize(PolygonalLightVertexPosInTangentSpace[0]);
@@ -191,7 +192,13 @@ float integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, 
 	if(PolygonalLightVertexNumAfterClipping == 5)
 		Sum += integrateEdge(PolygonalLightVertexPosInTangentSpace[4], PolygonalLightVertexPosInTangentSpace[0]);
 	Sum = vTwoSided ? abs(Sum) : max(Sum, 0.0);
-	return Sum;
+	return vec3(Sum);
+}
+
+vec3 integrateLTC_IL(vec3 vPolygonalLightVertexPos[4])
+{
+	vec3 TexCoords;
+	return texture(u_FilteredLightTexture, TexCoords);
 }
 
 void main()
@@ -211,12 +218,11 @@ void main()
 		vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 	);
 
-	float Diffuse = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1), u_PolygonalLightVertexPos, u_IsTwoSided);
-	float Specular = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix, u_PolygonalLightVertexPos, u_IsTwoSided);
+	vec3 Diffuse = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1), u_PolygonalLightVertexPos, u_IsTwoSided) * integrateLTC_IL(u_PolygonalLightVertexPos);
+	vec3 Specular = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix, u_PolygonalLightVertexPos, u_IsTwoSided) * integrateLTC_IL(u_PolygonalLightVertexPos);
 	Specular *= texture2D(u_LTC_MagnitueTexture, UV).w;
 
 	vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular * u_SpecularColor);
-	//vec3 ResultColor = u_Intensity * (Specular * u_SpecularColor);
 	ResultColor /= 2.0 * PI;
 
 	FragColor_ = vec4(ResultColor, 1.0);

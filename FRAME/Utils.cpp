@@ -82,25 +82,51 @@ void transferData2Buffer(GLenum vTarget,GLint vTargetID,std::vector<GLintptr> vO
 
 //************************************************************************************
 //Function:
-GLint genTexture2D(ElayGraphics::STexture2D& vioTexture2D)
+GLint genTexture(ElayGraphics::STexture& vioTexture)
 {
 	GLint TextureID;
 	glGenTextures(1, &(GLuint&)TextureID);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, vioTexture2D.InternalFormat, vioTexture2D.Width, vioTexture2D.Height, 0, vioTexture2D.ExternalFormat, vioTexture2D.DataType, const_cast<GLvoid*>(vioTexture2D.pData));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, vioTexture2D.Type4WrapS);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, vioTexture2D.Type4WrapT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, vioTexture2D.Type4MinFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, vioTexture2D.Type4MagFilter);
-	if (vioTexture2D.isMipmap) glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	vioTexture2D.TextureID = TextureID;
+
+	GLuint TextureType = -1;
+	switch (vioTexture.TextureType)
+	{
+	case ElayGraphics::STexture::ETextureType::Texture2D:
+		TextureType = GL_TEXTURE_2D;
+		glBindTexture(TextureType, TextureID);
+		glTexImage2D(TextureType, 0, vioTexture.InternalFormat, vioTexture.Width, vioTexture.Height, 0, vioTexture.ExternalFormat, vioTexture.DataType, vioTexture.pDataSet.size() > 0 ? vioTexture.pDataSet[0] : nullptr);
+		break;
+	case ElayGraphics::STexture::ETextureType::Texture2DArray:
+		TextureType = GL_TEXTURE_2D_ARRAY;
+		glBindTexture(TextureType, TextureID);
+		glTexImage3D(TextureType, 0, vioTexture.InternalFormat, vioTexture.Width, vioTexture.Height, vioTexture.Depth, 0, vioTexture.ExternalFormat, vioTexture.DataType, nullptr);
+		for (size_t i = 0; i < vioTexture.pDataSet.size(); ++i)
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, vioTexture.Width, vioTexture.Height, 1, vioTexture.ExternalFormat, vioTexture.DataType, vioTexture.pDataSet[i]);
+		break;
+	case ElayGraphics::STexture::ETextureType::Texture3D:
+		TextureType = GL_TEXTURE_3D;
+		glBindTexture(TextureType, TextureID);
+		break;
+	case ElayGraphics::STexture::ETextureType::TextureCubeMap:
+		TextureType = GL_TEXTURE_CUBE_MAP;
+		glBindTexture(TextureType, TextureID);
+		break;
+	default:
+		break;
+	}
+	glTexParameteri(TextureType, GL_TEXTURE_WRAP_S, vioTexture.Type4WrapS);
+	glTexParameteri(TextureType, GL_TEXTURE_WRAP_T, vioTexture.Type4WrapT);
+	glTexParameteri(TextureType, GL_TEXTURE_WRAP_R, vioTexture.Type4WrapR);
+	glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, vioTexture.Type4MinFilter);
+	glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, vioTexture.Type4MagFilter);
+	if (vioTexture.isMipmap) glGenerateMipmap(TextureType);
+	glBindTexture(TextureType, 0);
+	vioTexture.TextureID = TextureID;
 	return TextureID;
 }
 
 //************************************************************************************
 //Function:
-GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture2D& vioTexture2D)
+GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture& vioTexture2D)
 {
 	GLint ImageWidth = 0, ImageHeight = 0;
 	
@@ -129,6 +155,7 @@ GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture2D
 	else
 	{
 		GLint NumChannels = 0;
+		stbi_set_flip_vertically_on_load(true);
 		pImageData = stbi_load(vFilePath.c_str(), &ImageWidth, &ImageHeight, &NumChannels, 0);
 		switch (NumChannels)
 		{
@@ -156,8 +183,8 @@ GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture2D
 	vioTexture2D.InternalFormat = InternalFormat;
 	vioTexture2D.ExternalFormat = ExternalFormat;
 	vioTexture2D.DataType = DataType;
-	vioTexture2D.pData = pImageData;
-	GLint TextureID = genTexture2D(vioTexture2D);
+	vioTexture2D.pDataSet.push_back(pImageData);
+	GLint TextureID = genTexture(vioTexture2D);
 
 	if (!IsUseGLI) stbi_image_free(pImageData);
 	return TextureID;
@@ -165,7 +192,7 @@ GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture2D
 
 //************************************************************************************
 //Function:
-GLint genFBO(const std::initializer_list<ElayGraphics::STexture2D>& vTextureAttachments)
+GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttachments)
 {
 	GLint FBO;
 	glGenFramebuffers(1, &(GLuint&)FBO);
@@ -174,29 +201,43 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture2D>& vTextureAtta
 	GLboolean HasDepthTextureAttachment = GL_FALSE, HasStencilTextureAttachment = GL_FALSE;
 	std::vector<GLenum> Attachments;
 	Attachments.reserve(vTextureAttachments.size());
-	for (const ElayGraphics::STexture2D &vTexture : vTextureAttachments)
+	for (const ElayGraphics::STexture &vTexture : vTextureAttachments)
 	{
 		_ASSERT(vTexture.TextureID != -1);
-		switch (vTexture.TextureType)
+		switch (vTexture.TextureAttachmentType)
 		{
-		case ElayGraphics::STexture2D::ETextureType::DepthTexture:
+		case ElayGraphics::STexture::ETextureAttachmentType::DepthTexture:
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, vTexture.TextureID, 0);
 			HasDepthTextureAttachment = GL_TRUE;
 			HasStencilTextureAttachment = GL_TRUE;	//FIXME£ºthere is a problem: if set it as GL_FALSE, the stencil render buffer will be added, then result in incomplete fbo 
 			break;
-		case ElayGraphics::STexture2D::ETextureType::StencilTexture:
+		case ElayGraphics::STexture::ETextureAttachmentType::StencilTexture:
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, vTexture.TextureID, 0);
 			HasDepthTextureAttachment = GL_TRUE;
 			HasStencilTextureAttachment = GL_TRUE;	//FIXME: there is also same problem as above
 			break;
-		case ElayGraphics::STexture2D::ETextureType::DepthAndStencilTexture:
+		case ElayGraphics::STexture::ETextureAttachmentType::DepthAndStencilTexture:
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, vTexture.TextureID, 0);
 			HasDepthTextureAttachment = GL_TRUE;
 			HasStencilTextureAttachment = GL_TRUE; 
 			break;
 		default:
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), GL_TEXTURE_2D, vTexture.TextureID, 0);
-			Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+			switch (vTexture.TextureType)
+			{
+			case ElayGraphics::STexture::ETextureType::Texture2D:
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), GL_TEXTURE_2D, vTexture.TextureID, 0);
+				Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+				break;
+			case ElayGraphics::STexture::ETextureType::Texture2DArray:
+				for (int k = 0; k < vTexture.Depth; ++k)
+				{
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), vTexture.TextureID, 0, k);
+					Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+				}
+				break;
+			default:
+				break;
+			}
 			HasStencilTextureAttachment = GL_TRUE;
 			break;
 		}

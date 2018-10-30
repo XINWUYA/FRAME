@@ -12,7 +12,7 @@ CScreenQuadPass::CScreenQuadPass(const std::string& vPassName, int vExcutionOrde
 //Function:
 void CScreenQuadPass::initV()
 {
-	m_Texture = ElayGraphics::ResourceManager::getSharedDataByName<std::shared_ptr<ElayGraphics::STexture2D>>("BackDepthTexture")->TextureID;
+	m_Texture = ElayGraphics::ResourceManager::getSharedDataByName<std::shared_ptr<ElayGraphics::STexture>>("BackDepthTexture")->TextureID;
 	m_pShader = std::make_shared<CShader>("ScreenQuad_VS.glsl", "ScreenQuad_FS.glsl");
 }
 

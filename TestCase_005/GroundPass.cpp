@@ -23,12 +23,12 @@ void CGroundPass::initV()
 	m_LTCMatrixTexture = loadTextureFromFile("Textures/ltc_mat.dds");
 	m_LTCMagnitueTexture = loadTextureFromFile("Textures/ltc_amp.dds");
 
-	std::shared_ptr<ElayGraphics::STexture2D> pTexture2D = std::make_shared<ElayGraphics::STexture2D>();
+	std::shared_ptr<ElayGraphics::STexture> pTexture2D = std::make_shared<ElayGraphics::STexture>();
 	pTexture2D->InternalFormat = GL_RGBA16F;
 	pTexture2D->ExternalFormat = GL_RGBA;
 	pTexture2D->DataType = GL_FLOAT;
 	pTexture2D->TextureName = "HDRTexture";
-	genTexture2D(*pTexture2D);
+	genTexture(*pTexture2D);
 	m_HDRFBO = genFBO({ *pTexture2D });
 
 	ElayGraphics::ResourceManager::registerSharedData("HDRTexture", pTexture2D->TextureID);

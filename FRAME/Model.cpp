@@ -128,7 +128,7 @@ GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMat
 		if (!Skip)
 		{
 			SMeshTexture MeshTexture;
-			ElayGraphics::STexture2D Texture2D;
+			ElayGraphics::STexture Texture2D;
 			MeshTexture.ID = loadTextureFromFile(TexturePath, Texture2D);
 			MeshTexture.TexturePath = TexturePath;
 			voTextures.push_back(MeshTexture);

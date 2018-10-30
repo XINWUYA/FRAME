@@ -14,13 +14,13 @@ CLoadModelCullFrontPass::CLoadModelCullFrontPass(const std::string& vPassName, i
 //Function:
 void CLoadModelCullFrontPass::initV()
 {
-	std::shared_ptr<ElayGraphics::STexture2D> pTexture2D = std::make_shared<ElayGraphics::STexture2D>();
+	std::shared_ptr<ElayGraphics::STexture> pTexture2D = std::make_shared<ElayGraphics::STexture>();
 	pTexture2D->InternalFormat = GL_DEPTH_COMPONENT;
 	pTexture2D->ExternalFormat = GL_DEPTH_COMPONENT;
 	pTexture2D->DataType = GL_FLOAT;
-	pTexture2D->TextureType = ElayGraphics::STexture2D::DepthTexture;
+	pTexture2D->TextureAttachmentType = ElayGraphics::STexture::ETextureAttachmentType::DepthTexture;
 	pTexture2D->TextureName = "BackDepthTexture";
-	genTexture2D(*pTexture2D);
+	genTexture(*pTexture2D);
 	ElayGraphics::ResourceManager::registerSharedData(pTexture2D->TextureName, pTexture2D);
 	m_FBO = genFBO({ *pTexture2D });
 	m_pShader = std::make_shared<CShader>("LoadModel_VS.glsl", "LoadModel_FS.glsl");
