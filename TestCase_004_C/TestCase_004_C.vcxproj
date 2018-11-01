@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{06BE3C2D-7C4B-4C38-B96C-EA136DBE55A7}</ProjectGuid>
+    <ProjectGuid>{603D8664-1C30-4C67-9501-7AAB06E24809}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>TestCase_003</RootNamespace>
+    <RootNamespace>TestCase_004_B</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>TestCase_003(GUI)</ProjectName>
+    <ProjectName>TestCase_004_C(2DTextureArray+GaussianBlur)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../FRAME;../SDK;$(OPENGL)/include/;$(GLM);$(STB_IMAGE)/include;$(ASSIMP)/include;$(BOOST)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../FRAME;$(OPENGL)/include/;$(GLM);$(STB_IMAGE)/include;$(ASSIMP)/include;$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,11 +150,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DrawTextureArrayByFBO.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyGUI.cpp" />
+    <ClCompile Include="ScreenQuadPass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyGUI.h" />
+    <ClInclude Include="DrawTextureArrayByFBO.h" />
+    <ClInclude Include="ScreenQuadPass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DrawTextureArrayByFBO_FS.glsl" />
+    <None Include="DrawTextureArrayByFBO_VS.glsl" />
+    <None Include="ScreenQuad_FS.glsl" />
+    <None Include="ScreenQuad_VS.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
