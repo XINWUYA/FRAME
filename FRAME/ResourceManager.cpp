@@ -33,10 +33,15 @@ void CResourceManager::init()
 GLint CResourceManager::getOrCreateScreenQuadVAO()
 {
 	if (m_ScreenQuadVAO == 0)      //Fixed Me: some method to simply these code
-	{
 		m_ScreenQuadVAO = createVAO4ScreenQuad();
-	}
 	return m_ScreenQuadVAO;
+}
+
+GLint CResourceManager::getOrCreateCubeVAO()
+{
+	if (m_CubeVAO == 0)
+		m_CubeVAO = createVAO4Cube();
+	return m_CubeVAO;
 }
 
 //************************************************************************************

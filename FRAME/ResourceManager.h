@@ -37,6 +37,7 @@ public:
 
 	GLvoid  init();
 	GLint														getOrCreateScreenQuadVAO();
+	GLint														getOrCreateCubeVAO();
 	const std::shared_ptr<CModel>&								getOrCreateModel(const std::string &vModelPath);
 	const std::shared_ptr<CMainGUI>&							getOrCreateMainGUI();
 	const std::shared_ptr<IRenderPass>&							getRenderPassByName(const std::string &vPassName);
@@ -68,6 +69,7 @@ private:
 	std::shared_ptr<CMainGUI>				m_pMainGUI;
 
 	GLint m_ScreenQuadVAO = 0;
+	GLint m_CubeVAO = 0;
 	GLint m_Texture4FisrtPass = 0;
 	GLint m_Texture4LoadModelCullFrontPass = 0;
 	ElayGraphics::MVector<std::shared_ptr<IRenderPass>> m_RenderPassSet;

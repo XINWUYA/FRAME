@@ -4,13 +4,14 @@
 #include <stb_image.h>
 #include <gli.hpp>
 #include <iostream>
+#include <numeric>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include "common.h"
 
 //************************************************************************************
 //Function:
-GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_list<GLint> vAttribsLength, GLint vStride, const GLint vIndices[], GLint vIndicesSize)
+GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_list<GLint> vAttribsLength, const GLint vIndices[], GLint vIndicesSize)
 {
 	GLint VAO = 0, VBO = 0, EBO = 0;
 	glGenVertexArrays(1, &(GLuint&)VAO);
@@ -24,10 +25,11 @@ GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_l
 	}
 	GLint AttribOffset = 0;
 	GLint i = 0;
+	GLint Stride = std::accumulate(vAttribsLength.begin(), vAttribsLength.end(), 0);
 	for (auto vAttribLength : vAttribsLength)
 	{
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, vAttribLength, GL_FLOAT, GL_FALSE, vStride * sizeof(GL_FLOAT), (GLvoid*)(AttribOffset * sizeof(GL_FLOAT)));
+		glVertexAttribPointer(i, vAttribLength, GL_FLOAT, GL_FALSE, Stride * sizeof(GL_FLOAT), (GLvoid*)(AttribOffset * sizeof(GL_FLOAT)));
 		AttribOffset += vAttribLength;
 		++i;
 	}
@@ -41,7 +43,7 @@ GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_l
 //Function:
 GLint createVAO4ScreenQuad()
 {
-	GLfloat windowQuadVertices[] = {
+	GLfloat WindowQuadVertices[] = {
 		1.0f, 1.0f,  1.0f,1.0f,
 		1.0f,-1.0f,  1.0f,0.0f,
 		-1.0f, 1.0f,  0.0f,1.0f,
@@ -49,7 +51,58 @@ GLint createVAO4ScreenQuad()
 		1.0f,-1.0f,  1.0f,0.0f,
 		-1.0f,-1.0f,  0.0f,0.0f
 	};
-	return createVAO(windowQuadVertices, sizeof(windowQuadVertices), { 2,2 }, 4);
+	return createVAO(WindowQuadVertices, sizeof(WindowQuadVertices), { 2,2 });
+}
+
+//************************************************************************************
+//Function:
+GLint createVAO4Cube()
+{
+	GLfloat CubeVertices[] = {
+		// back face
+		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+		1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+		1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+		1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+		-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+		// front face
+		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+		1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+		1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+		1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+		-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+		// left face
+		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+		-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+		-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+		// right face
+		1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+		1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+		1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+		1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+		1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+		1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+		// bottom face
+		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+		1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+		1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+		1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+		-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+		// top face
+		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+		1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+		1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+		1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+		-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left      
+	};
+	return createVAO(CubeVertices, sizeof(CubeVertices), { 3,3,2 });
 }
 
 //************************************************************************************
@@ -126,67 +179,109 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 
 //************************************************************************************
 //Function:
-GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture& vioTexture2D)
+void configureDDSTexture(const std::string& vFilePath, gli::texture &voGLITexture,ElayGraphics::STexture& voTexture2D)
+{
+	voGLITexture = gli::load(vFilePath);
+	GLvoid* pImageData = voGLITexture.data();
+	_ASSERT(pImageData);
+	gli::gl GL(gli::gl::PROFILE_GL33);
+	gli::gl::format const GLIFormat = GL.translate(voGLITexture.format(), voGLITexture.swizzles());
+	voTexture2D.InternalFormat = GLIFormat.Internal;
+	voTexture2D.ExternalFormat = GLIFormat.External;
+	voTexture2D.DataType = GLIFormat.Type;
+	voTexture2D.Width = voGLITexture.extent().x;
+	voTexture2D.Height = voGLITexture.extent().y;
+	voTexture2D.pDataSet.push_back(pImageData);
+}
+
+//************************************************************************************
+//Function:
+void configureCommonTexture(const std::string& vFilePath, ElayGraphics::STexture& voTexture2D)
+{
+	stbi_set_flip_vertically_on_load(true);
+	GLint NumChannels = 0, ImageWidth = 0, ImageHeight = 0;
+	GLvoid *pImageData = stbi_load(vFilePath.c_str(), &ImageWidth, &ImageHeight, &NumChannels, 0);
+	_ASSERT(pImageData);
+	switch (NumChannels)
+	{
+	case 1:
+		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RED;
+		break;
+	case 2:
+		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RG;
+		break;
+	case 3:
+		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RGB;
+		break;
+	case 4:
+		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RGBA;
+		break;
+	default:
+		break;
+	}
+	voTexture2D.DataType = GL_UNSIGNED_BYTE;
+	voTexture2D.Width = ImageWidth;
+	voTexture2D.Height = ImageHeight;
+	voTexture2D.pDataSet.push_back(pImageData);
+}
+
+//************************************************************************************
+//Function:
+void configureHDRTexture(const std::string& vFilePath, ElayGraphics::STexture& voTexture2D)
+{
+	stbi_set_flip_vertically_on_load(true);
+	GLint NumChannels = 0, ImageWidth = 0, ImageHeight = 0;
+	GLvoid *pImageData = stbi_loadf(vFilePath.c_str(), &ImageWidth, &ImageHeight, &NumChannels, 0);
+	_ASSERT(pImageData);
+	switch (NumChannels)
+	{
+	case 1:
+		voTexture2D.InternalFormat = GL_R16F;
+		voTexture2D.ExternalFormat = GL_RED;
+		break;
+	case 2:
+		voTexture2D.InternalFormat = GL_RG16F;
+		voTexture2D.ExternalFormat = GL_RG;
+		break;
+	case 3:
+		voTexture2D.InternalFormat = GL_RGB16F;
+		voTexture2D.ExternalFormat = GL_RGB;
+		break;
+	case 4:
+		voTexture2D.InternalFormat = GL_RGBA16F;
+		voTexture2D.ExternalFormat = GL_RGBA;
+		break;
+	default:
+		break;
+	}
+	voTexture2D.DataType = GL_FLOAT;
+	voTexture2D.Width = ImageWidth;
+	voTexture2D.Height = ImageHeight;
+	voTexture2D.pDataSet.push_back(pImageData);
+}
+
+//************************************************************************************
+//Function:
+GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture& voTexture2D)
 {
 	GLint ImageWidth = 0, ImageHeight = 0;
 	
 	std::vector<std::string> SplitStringSet;
 	boost::split(SplitStringSet, vFilePath, boost::is_any_of(".")); 
-	bool IsUseGLI = false;
-	if (*(SplitStringSet.end() - 1) == "dds")
-		IsUseGLI = true;
-
-	//GLubyte *pImageData = nullptr;
-	GLvoid *pImageData = nullptr;
-	GLint ExternalFormat = -1, InternalFormat = -1, DataType = -1;
+	bool IsUseStbi = true;
 	gli::texture GLITexture;
-	if (IsUseGLI)
+	if (*(SplitStringSet.end() - 1) == "dds")
 	{
-		GLITexture = gli::load(vFilePath);
-		pImageData = GLITexture.data();
-		gli::gl GL(gli::gl::PROFILE_GL33);
-		gli::gl::format const GLIFormat = GL.translate(GLITexture.format(), GLITexture.swizzles());
-		InternalFormat = GLIFormat.Internal;
-		ExternalFormat = GLIFormat.External;
-		DataType = GLIFormat.Type;
-		ImageWidth = GLITexture.extent().x;
-		ImageHeight = GLITexture.extent().y;
+		configureDDSTexture(vFilePath, GLITexture, voTexture2D);
+		IsUseStbi = false;
 	}
+	else if (*(SplitStringSet.end() - 1) == "hdr")
+		configureHDRTexture(vFilePath, voTexture2D);
 	else
-	{
-		GLint NumChannels = 0;
-		stbi_set_flip_vertically_on_load(true);
-		pImageData = stbi_load(vFilePath.c_str(), &ImageWidth, &ImageHeight, &NumChannels, 0);
-		switch (NumChannels)
-		{
-		case 1:
-			InternalFormat = ExternalFormat = GL_RED;
-			break;
-		case 2:
-			InternalFormat = ExternalFormat = GL_RG;
-			break;
-		case 3:
-			InternalFormat = ExternalFormat = GL_RGB;
-			break;
-		case 4:
-			InternalFormat = ExternalFormat = GL_RGBA;
-			break;
-		default:
-			break;
-		}
-		DataType = GL_UNSIGNED_BYTE;
-	}
-	_ASSERT(pImageData);
-	
-	vioTexture2D.Width = ImageWidth;
-	vioTexture2D.Height = ImageHeight;
-	vioTexture2D.InternalFormat = InternalFormat;
-	vioTexture2D.ExternalFormat = ExternalFormat;
-	vioTexture2D.DataType = DataType;
-	vioTexture2D.pDataSet.push_back(pImageData);
-	GLint TextureID = genTexture(vioTexture2D);
+		configureCommonTexture(vFilePath, voTexture2D);
+	GLint TextureID = genTexture(voTexture2D);
 
-	if (!IsUseGLI) stbi_image_free(pImageData);
+	if (IsUseStbi) stbi_image_free(voTexture2D.pDataSet[0]);
 	return TextureID;
 }
 

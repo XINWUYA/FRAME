@@ -18,37 +18,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="GroundPass.cpp" />
-    <ClCompile Include="LightSource.cpp" />
-    <ClCompile Include="LightSourcePass.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyGUI.cpp" />
-    <ClCompile Include="ScreenQuadPass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Ground.h" />
-    <ClInclude Include="GroundPass.h" />
-    <ClInclude Include="LightSource.h" />
-    <ClInclude Include="LightSourcePass.h" />
-    <ClInclude Include="MyGUI.h" />
-    <ClInclude Include="ScreenQuadPass.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ground_FS.glsl" />
-    <None Include="Ground_VS.glsl" />
-    <None Include="LightSource_FS.glsl" />
-    <None Include="LightSource_VS.glsl" />
-    <None Include="ScreenQuad_FS.glsl" />
-    <None Include="ScreenQuad_VS.glsl" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A92CAD4E-496C-460C-865A-A3DE1E33FB6E}</ProjectGuid>
+    <ProjectGuid>{4F234CA5-5B01-4E66-AC4B-CA736D95FA17}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>TestCase_005</RootNamespace>
+    <RootNamespace>TestCase_006_A</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>TestCase_005(TexturedAreaLight)</ProjectName>
+    <ProjectName>TestCase_006_A(ShowSphereMap)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -120,7 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../Debug;$(OPENGL)/lib/x86;$(ASSIMP)/lib/x86;$(BOOST)/x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Debug;$(OPENGL)/lib/x86;$(SOIL)/lib/x86;$(ASSIMP)/lib/x86;$(BOOST)/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>FRAME-x86-vc140D.lib;opengl32.lib;glew32d.lib;glfw3-vc140.lib;assimp-vc140-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -174,6 +149,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShowSphereMapPass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShowSphereMap_FS.glsl" />
+    <None Include="ShowSphereMap_VS.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ShowSphereMapPass.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

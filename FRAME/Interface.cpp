@@ -162,6 +162,13 @@ GLint ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO()
 
 //************************************************************************************
 //Function:
+GLint ElayGraphics::ResourceManager::getOrCreateCubeVAO()
+{
+	return CResourceManager::getOrCreateInstance()->getOrCreateCubeVAO();
+}
+
+//************************************************************************************
+//Function:
 const std::shared_ptr<CMainGUI>& ElayGraphics::ResourceManager::getOrCreateMainGUI()
 {
 	return CResourceManager::getOrCreateInstance()->getOrCreateMainGUI();
