@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame_4_SubsurfaceScattering_Exp", "Frame_4_SubsurfaceScattering_Exp\Frame_4_SubsurfaceScattering_Exp.vcxproj", "{982E388C-A65B-474C-8D6B-B4D39EA7153C}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_A(2DTextureArray)", "TestCase_004_A\TestCase_004_A.vcxproj", "{46624D4C-A144-4E30-AFD5-45A2DF265A39}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_B(2DTextureArray+FBO)", "TestCase_004_B\TestCase_004_B.vcxproj", "{6C6D6D7A-8476-4ED3-BDCF-1A1980A4AB73}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_C(2DTextureArray+GaussianBlur)", "TestCase_004_C\TestCase_004_C.vcxproj", "{603D8664-1C30-4C67-9501-7AAB06E24809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,8 +93,19 @@ Global
 		{6C6D6D7A-8476-4ED3-BDCF-1A1980A4AB73}.Release|x64.Build.0 = Release|x64
 		{6C6D6D7A-8476-4ED3-BDCF-1A1980A4AB73}.Release|x86.ActiveCfg = Release|Win32
 		{6C6D6D7A-8476-4ED3-BDCF-1A1980A4AB73}.Release|x86.Build.0 = Release|Win32
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Debug|x64.ActiveCfg = Debug|x64
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Debug|x64.Build.0 = Debug|x64
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Debug|x86.ActiveCfg = Debug|Win32
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Debug|x86.Build.0 = Debug|Win32
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Release|x64.ActiveCfg = Release|x64
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Release|x64.Build.0 = Release|x64
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Release|x86.ActiveCfg = Release|Win32
+		{603D8664-1C30-4C67-9501-7AAB06E24809}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {493235AC-4B60-4FB2-9F3D-022AE2B5823C}
 	EndGlobalSection
 EndGlobal
