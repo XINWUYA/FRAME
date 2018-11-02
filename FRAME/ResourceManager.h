@@ -38,11 +38,12 @@ public:
 	GLvoid  init();
 	GLint														getOrCreateScreenQuadVAO();
 	GLint														getOrCreateCubeVAO();
+	GLint														getOrCretaeSphereVAO();
 	const std::shared_ptr<CModel>&								getOrCreateModel(const std::string &vModelPath);
 	const std::shared_ptr<CMainGUI>&							getOrCreateMainGUI();
-	const std::shared_ptr<IRenderPass>&							getRenderPassByName(const std::string &vPassName);
-	const std::shared_ptr<IGameObject>&							getGameObjectByName(const std::string &vGameObjectName);
-	const std::shared_ptr<IGUI>&								getSubGUIByName(const std::string &vSubGUIByName);
+	const std::shared_ptr<IRenderPass>&							getRenderPassByName(const std::string &vPassName);			//Time consuming much
+	const std::shared_ptr<IGameObject>&							getGameObjectByName(const std::string &vGameObjectName);	//Time consuming much
+	const std::shared_ptr<IGUI>&								getSubGUIByName(const std::string &vSubGUIByName);			//Time consuming much
 	const ElayGraphics::MVector<std::shared_ptr<IRenderPass>>&  getRenderPassSet() const { return m_RenderPassSet; }
 	const ElayGraphics::MVector<std::shared_ptr<IGameObject>>&  getGameObjectSet() const { return m_GameObjectSet; }
 	const ElayGraphics::MVector<std::shared_ptr<IGUI>>&			getSubGUISet() const { return m_SubGUISet; }
@@ -70,6 +71,7 @@ private:
 
 	GLint m_ScreenQuadVAO = 0;
 	GLint m_CubeVAO = 0;
+	GLint m_SphereVAO = 0;
 	GLint m_Texture4FisrtPass = 0;
 	GLint m_Texture4LoadModelCullFrontPass = 0;
 	ElayGraphics::MVector<std::shared_ptr<IRenderPass>> m_RenderPassSet;

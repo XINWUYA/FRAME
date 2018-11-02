@@ -14,6 +14,7 @@ namespace ElayGraphics
 
 #define MAX_VALUE 3.402823466e+38F
 #define MIN_VALUE 1.175494351e-38F
+	const float PI = 3.14159265359f;
 
 	namespace WINDOW_KEYWORD
 	{

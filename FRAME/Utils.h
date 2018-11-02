@@ -12,5 +12,9 @@ FRAME_DLLEXPORTS GLint genTexture(ElayGraphics::STexture& vioTexture/* = ElayGra
 FRAME_DLLEXPORTS GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture& voTexture2D = ElayGraphics::STexture());
 FRAME_DLLEXPORTS GLint createVAO4ScreenQuad();
 FRAME_DLLEXPORTS GLint createVAO4Cube();
+FRAME_DLLEXPORTS GLint createVAO4Sphere();
+FRAME_DLLEXPORTS void  drawQuad();
+FRAME_DLLEXPORTS void  drawCube();
+FRAME_DLLEXPORTS void  drawSphere();
 FRAME_DLLEXPORTS GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttachments);
 FRAME_DLLEXPORTS void  transferData2Buffer(GLenum vTarget, GLint vTargetID, std::vector<GLintptr> vOffsets, std::vector<GLsizeiptr> vSizes, std::vector<const GLvoid*> vDatas);

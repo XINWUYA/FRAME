@@ -23,17 +23,6 @@ void CGroundPass::initV()
 	m_LTCMatrixTexture = loadTextureFromFile("Textures/ltc_mat.dds");
 	m_LTCMagnitueTexture = loadTextureFromFile("Textures/ltc_amp.dds");
 
-	std::shared_ptr<ElayGraphics::STexture> pTexture2D = std::make_shared<ElayGraphics::STexture>();
-	pTexture2D->InternalFormat = GL_RGBA16F;
-	pTexture2D->ExternalFormat = GL_RGBA;
-	pTexture2D->DataType = GL_FLOAT;
-	pTexture2D->TextureName = "HDRTexture";
-	genTexture(*pTexture2D);
-	m_HDRFBO = genFBO({ *pTexture2D });
-
-	ElayGraphics::ResourceManager::registerSharedData("HDRTexture", pTexture2D->TextureID);
-	ElayGraphics::ResourceManager::registerSharedData("HDRFBO", m_HDRFBO);
-
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getModelMatrix()));
 	m_pShader->setTexture2DUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
@@ -44,8 +33,7 @@ void CGroundPass::initV()
 //Function:
 void CGroundPass::updateV()
 {
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

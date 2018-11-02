@@ -156,7 +156,6 @@
     <ClCompile Include="LightSourcePass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGUI.cpp" />
-    <ClCompile Include="ScreenQuadPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ground.h" />
@@ -171,8 +170,6 @@
     <None Include="Ground_VS.glsl" />
     <None Include="LightSource_FS.glsl" />
     <None Include="LightSource_VS.glsl" />
-    <None Include="ScreenQuad_FS.glsl" />
-    <None Include="ScreenQuad_VS.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

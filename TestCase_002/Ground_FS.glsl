@@ -219,5 +219,8 @@ void main()
 	//vec3 ResultColor = u_Intensity * (Specular * u_SpecularColor);
 	ResultColor /= 2.0 * PI;
 
-	FragColor_ = vec4(ResultColor, 1.0);
+	vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
+	vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
+
+	FragColor_ = vec4(GammaedColor, 1.0);
 }

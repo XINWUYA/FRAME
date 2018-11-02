@@ -8,6 +8,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include "common.h"
+#include "ResourceManager.h"
 
 //************************************************************************************
 //Function:
@@ -106,6 +107,118 @@ GLint createVAO4Cube()
 }
 
 //************************************************************************************
+//Function:
+GLint createVAO4Sphere()
+{
+	GLuint SphereVAO = 0;
+	glGenVertexArrays(1, &SphereVAO);
+	GLuint VBO, EBO;
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	std::vector<glm::vec3> Positions;
+	std::vector<glm::vec2> UV;
+	std::vector<glm::vec3> Normals;
+	std::vector<unsigned int> Indices;
+	const unsigned int SEGMENTX = 64;
+	const unsigned int SEGMENTY = 64;
+	for (unsigned int y = 0; y <= SEGMENTY; ++y)
+	{
+		for (unsigned int x = 0; x <= SEGMENTX; ++x)
+		{
+			float XSegment = (float)x / (float)SEGMENTX;
+			float YSegment = (float)y / (float)SEGMENTY;
+			float PosX = std::cos(XSegment * 2.0f * ElayGraphics::PI) * std::sin(YSegment * ElayGraphics::PI);
+			float PosY = std::cos(YSegment * ElayGraphics::PI);
+			float PosZ = std::sin(XSegment * 2.0f * ElayGraphics::PI) * std::sin(YSegment * ElayGraphics::PI);
+			Positions.push_back(glm::vec3(PosX, PosY, PosZ));
+			UV.push_back(glm::vec2(XSegment, YSegment));
+			Normals.push_back(glm::vec3(PosX, PosY, PosZ));
+		}
+	}
+	bool OddRow = false;
+	for (int y = 0; y < SEGMENTY; ++y)
+	{
+		if (!OddRow) // even rows: y == 0, y == 2; and so on
+		{
+			for (int x = 0; x <= SEGMENTX; ++x)
+			{
+				Indices.push_back(y * (SEGMENTX + 1) + x);
+				Indices.push_back((y + 1) * (SEGMENTX + 1) + x);
+			}
+		}
+		else
+		{
+			for (int x = SEGMENTX; x >= 0; --x)
+			{
+				Indices.push_back((y + 1) * (SEGMENTX + 1) + x);
+				Indices.push_back(y * (SEGMENTX + 1) + x);
+			}
+		}
+		OddRow = !OddRow;
+	}
+	std::vector<float> Data;
+	for (size_t i = 0; i < Positions.size(); ++i)
+	{
+		Data.push_back(Positions[i].x);
+		Data.push_back(Positions[i].y);
+		Data.push_back(Positions[i].z);
+		if (UV.size() > 0)
+		{
+			Data.push_back(UV[i].x);
+			Data.push_back(UV[i].y);
+		}
+		if (Normals.size() > 0)
+		{
+			Data.push_back(Normals[i].x);
+			Data.push_back(Normals[i].y);
+			Data.push_back(Normals[i].z);
+		}
+	}
+	glBindVertexArray(SphereVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, Data.size() * sizeof(float), &Data[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), &Indices[0], GL_STATIC_DRAW);
+	size_t Stride = (3 + 2 + 3) * sizeof(float);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Stride, (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Stride, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, Stride, (void*)(5 * sizeof(float)));
+
+	return SphereVAO;
+}
+
+//************************************************************************************
+//Function:
+void drawQuad()
+{
+	glBindVertexArray(CResourceManager::getOrCreateInstance()->getOrCreateScreenQuadVAO());
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+}
+
+//************************************************************************************
+//Function:
+void drawCube()
+{
+	glBindVertexArray(CResourceManager::getOrCreateInstance()->getOrCreateCubeVAO());
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+//************************************************************************************
+//Function:
+void drawSphere()
+{
+	glBindVertexArray(CResourceManager::getOrCreateInstance()->getOrCretaeSphereVAO());
+	glDrawElements(GL_TRIANGLE_STRIP, 8320, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
+//************************************************************************************
 //Function: 
 GLint genBuffer(GLenum vTarget, GLsizeiptr vSize, const GLvoid *vData, GLenum vUsage, GLint vBindingIndex)
 {
@@ -162,6 +275,8 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 	case ElayGraphics::STexture::ETextureType::TextureCubeMap:
 		TextureType = GL_TEXTURE_CUBE_MAP;
 		glBindTexture(TextureType, TextureID);
+		for (int i = 0; i < 6; ++i)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, vioTexture.InternalFormat, vioTexture.Width, vioTexture.Height, 0, vioTexture.ExternalFormat, vioTexture.DataType, int(vioTexture.pDataSet.size()) > i ? vioTexture.pDataSet[i] : nullptr);
 		break;
 	default:
 		break;
@@ -329,6 +444,11 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttach
 					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), vTexture.TextureID, 0, k);
 					Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
 				}
+				break;
+			case ElayGraphics::STexture::ETextureType::TextureCubeMap:
+				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (++i), vTexture.TextureID, 0);
+				Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+				HasDepthTextureAttachment = GL_TRUE;	//FIXME: there is a problem: if set it as GL_FALSE, the depth render buffer will be added, then result in incomplete fbo.
 				break;
 			default:
 				break;

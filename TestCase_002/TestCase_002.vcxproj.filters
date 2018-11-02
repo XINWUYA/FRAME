@@ -36,9 +36,6 @@
     <ClCompile Include="MyGUI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenQuadPass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LightSourcePass.h">
@@ -71,12 +68,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="LightSource_VS.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="ScreenQuad_VS.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="ScreenQuad_FS.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

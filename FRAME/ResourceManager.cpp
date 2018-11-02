@@ -37,11 +37,22 @@ GLint CResourceManager::getOrCreateScreenQuadVAO()
 	return m_ScreenQuadVAO;
 }
 
+//************************************************************************************
+//Function:
 GLint CResourceManager::getOrCreateCubeVAO()
 {
 	if (m_CubeVAO == 0)
 		m_CubeVAO = createVAO4Cube();
 	return m_CubeVAO;
+}
+
+//************************************************************************************
+//Function:
+GLint CResourceManager::getOrCretaeSphereVAO()
+{
+	if (m_SphereVAO == 0)
+		m_SphereVAO = createVAO4Sphere();
+	return m_SphereVAO;
 }
 
 //************************************************************************************
