@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_006_F(IBL_BRDFMap)
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_006_G(IBL_Diffuse+Specular)", "TestCase_006_G\TestCase_006_G.vcxproj", "{2C9BAF21-437C-4332-900F-76540D50B470}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_007(TextureBorderColor)", "TestCase_007\TestCase_007.vcxproj", "{7962BFF3-F47E-469B-88A4-71673CAF0EAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -181,6 +183,14 @@ Global
 		{2C9BAF21-437C-4332-900F-76540D50B470}.Release|x64.Build.0 = Release|x64
 		{2C9BAF21-437C-4332-900F-76540D50B470}.Release|x86.ActiveCfg = Release|Win32
 		{2C9BAF21-437C-4332-900F-76540D50B470}.Release|x86.Build.0 = Release|Win32
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Debug|x64.ActiveCfg = Debug|x64
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Debug|x64.Build.0 = Debug|x64
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Debug|x86.ActiveCfg = Debug|Win32
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Debug|x86.Build.0 = Debug|Win32
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Release|x64.ActiveCfg = Release|x64
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Release|x64.Build.0 = Release|x64
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Release|x86.ActiveCfg = Release|Win32
+		{7962BFF3-F47E-469B-88A4-71673CAF0EAA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

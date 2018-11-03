@@ -281,6 +281,7 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 	default:
 		break;
 	}
+	glTexParameterfv(TextureType, GL_TEXTURE_BORDER_COLOR, vioTexture.BorderColor.data());
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_S, vioTexture.Type4WrapS);
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_T, vioTexture.Type4WrapT);
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_R, vioTexture.Type4WrapR);
