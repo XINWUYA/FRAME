@@ -18,6 +18,7 @@ uniform vec3  u_PolygonalLightVertexPos[4];
 uniform float u_Roughness;
 uniform float u_Intensity;
 uniform bool  u_IsTwoSided = false;
+uniform int u_Layer = 0;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
@@ -153,6 +154,52 @@ float integrateEdge(vec3 vVertex1, vec3 vVertex2)
 	//return theta_sintheta * cross(vVertex1, vVertex2).z;
 }
 
+vec3 integrateLTC_IL(vec3 vPolygonalLightVertexPos[5])
+{
+	vec3 V1 = vPolygonalLightVertexPos[1] - vPolygonalLightVertexPos[0];
+	vec3 V2 = vPolygonalLightVertexPos[3] - vPolygonalLightVertexPos[0];
+	/*vec3 PlaneNormal = normalize(cross(V1, V2));
+	vec3 PointProjectedInPlane = -PlaneNormal * dot(vPolygonalLightVertexPos[0], PlaneNormal);
+
+	vec3 PointProjected2P0 = PointProjectedInPlane - vPolygonalLightVertexPos[0];
+	vec2 Puv;
+	Puv.x = dot(PointProjected2P0, V1) / length(V1);
+	Puv.y = dot(PointProjected2P0, V2) / length(V2);*/
+	vec3 PlaneOrtho = (cross(V1, V2));
+	float PlaneAreaSquared = dot(PlaneOrtho, PlaneOrtho);
+	float PlaneDistxPlaneArea = dot(PlaneOrtho, vPolygonalLightVertexPos[0]);
+
+	/*vec3 OrthoP1_P2 = acos(dot(vPolygonalLightVertexPos[0], vPolygonalLightVertexPos[1])) * cross(vPolygonalLightVertexPos[0], vPolygonalLightVertexPos[1]) / length(cross(vPolygonalLightVertexPos[0], vPolygonalLightVertexPos[1]));
+	vec3 OrthoP2_P3 = acos(dot(vPolygonalLightVertexPos[1], vPolygonalLightVertexPos[2])) * cross(vPolygonalLightVertexPos[1], vPolygonalLightVertexPos[2]) / length(cross(vPolygonalLightVertexPos[1], vPolygonalLightVertexPos[2]));
+	vec3 OrthoP3_P4 = acos(dot(vPolygonalLightVertexPos[2], vPolygonalLightVertexPos[3])) * cross(vPolygonalLightVertexPos[2], vPolygonalLightVertexPos[3]) / length(cross(vPolygonalLightVertexPos[2], vPolygonalLightVertexPos[3]));
+	vec3 OrthoP4_P1 = acos(dot(vPolygonalLightVertexPos[3], vPolygonalLightVertexPos[0])) * cross(vPolygonalLightVertexPos[3], vPolygonalLightVertexPos[0]) / length(cross(vPolygonalLightVertexPos[3], vPolygonalLightVertexPos[0]));
+	vec3 P_Dir = OrthoP1_P2 + OrthoP2_P3 + OrthoP3_P4 + OrthoP4_P1;
+	vec3 N = normalize(PlaneOrtho);
+	vec3 P = (dot(N, vPolygonalLightVertexPos[0]) / dot(N, P_Dir)) * P_Dir;*/
+
+	vec3 P = PlaneDistxPlaneArea * PlaneOrtho / PlaneAreaSquared - vPolygonalLightVertexPos[0];
+
+	float Dot_V1_V2 = dot(V1, V2);
+	float Inv_dot_V1_V1 = 1.0 / dot(V1, V1);
+	vec3 V2_ = V2 - V1 * Dot_V1_V2 * Inv_dot_V1_V1;
+	vec2 Puv;
+	Puv.y = dot(V2_, P) / dot(V2_, V2_);
+	Puv.x = dot(V1, P)*Inv_dot_V1_V1 - Dot_V1_V2 * Inv_dot_V1_V1*Puv.y;
+	/*vec2 Puv;
+	Puv.x = dot(P - vPolygonalLightVertexPos[0], normalize(V1)) / length(V1);
+	Puv.y = dot(P - vPolygonalLightVertexPos[0], normalize(V2)) / length(V2);*/
+	//// LOD
+	float Level = abs(PlaneDistxPlaneArea) / pow(PlaneAreaSquared, 0.75);
+
+	//return texture2DLod(texLightFiltered, vec2(0.125, 0.125) + 0.75 * Puv, log(2048.0*d) / log(3.0)).rgb;
+
+	vec3 TexCoords = vec3(/*vec2(0.125, 0.125) + 0.75 * */Puv, log(2048.0*Level) / log(3.0));
+	//vec3 TexCoords = vec3(Puv, u_Layer);
+	return vec3(texture(u_FilteredLightTexture, TexCoords));
+	//return vec3(1.0f, 0, 0);
+}
+
+
 vec3 integrateLTC_ID(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, vec3 vPolygonalLightVertexPos[4], bool vTwoSided)
 {	
 	//着色点上的切线空间正交基
@@ -167,7 +214,10 @@ vec3 integrateLTC_ID(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix
 	PolygonalLightVertexPosInTangentSpace[1] = vLTCMatrix * (vPolygonalLightVertexPos[1] - vFragPos);
 	PolygonalLightVertexPosInTangentSpace[2] = vLTCMatrix * (vPolygonalLightVertexPos[2] - vFragPos);
 	PolygonalLightVertexPosInTangentSpace[3] = vLTCMatrix * (vPolygonalLightVertexPos[3] - vFragPos);
-	//PolygonalLightVertexPosInTangentSpace[4] = PolygonalLightVertexPosInTangentSpace[3];
+	PolygonalLightVertexPosInTangentSpace[4] = PolygonalLightVertexPosInTangentSpace[3];
+
+	vec3 TextureLight = integrateLTC_IL(PolygonalLightVertexPosInTangentSpace);
+
 
 	int PolygonalLightVertexNumAfterClipping;
 	clipPolygonalLightByZPlane(PolygonalLightVertexPosInTangentSpace, PolygonalLightVertexNumAfterClipping);
@@ -192,13 +242,7 @@ vec3 integrateLTC_ID(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix
 	if(PolygonalLightVertexNumAfterClipping == 5)
 		Sum += integrateEdge(PolygonalLightVertexPosInTangentSpace[4], PolygonalLightVertexPosInTangentSpace[0]);
 	Sum = vTwoSided ? abs(Sum) : max(Sum, 0.0);
-	return vec3(Sum);
-}
-
-vec3 integrateLTC_IL(vec3 vPolygonalLightVertexPos[4])
-{
-	vec3 TexCoords;
-	return texture(u_FilteredLightTexture, TexCoords);
+	return vec3(Sum) * TextureLight;
 }
 
 void main()
@@ -218,12 +262,14 @@ void main()
 		vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 	);
 
-	vec3 Diffuse = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1), u_PolygonalLightVertexPos, u_IsTwoSided) * integrateLTC_IL(u_PolygonalLightVertexPos);
-	vec3 Specular = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix, u_PolygonalLightVertexPos, u_IsTwoSided) * integrateLTC_IL(u_PolygonalLightVertexPos);
+	vec3 Diffuse = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1), u_PolygonalLightVertexPos, u_IsTwoSided)/* * integrateLTC_IL(u_PolygonalLightVertexPos)*/;
+	vec3 Specular = integrateLTC_ID(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix, u_PolygonalLightVertexPos, u_IsTwoSided)/* * integrateLTC_IL(u_PolygonalLightVertexPos)*/;
 	Specular *= texture2D(u_LTC_MagnitueTexture, UV).w;
 
 	vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular * u_SpecularColor);
 	ResultColor /= 2.0 * PI;
 
 	FragColor_ = vec4(ResultColor, 1.0);
+	//FragColor_ = vec4(integrateLTC_IL(u_PolygonalLightVertexPos),1.0f);
+	//FragColor_ = texture(u_FilteredLightTexture, vec3(v2f_TexCoords, u_Layer));
 }

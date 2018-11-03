@@ -19,7 +19,7 @@ void CScreenQuadPass::initV()
 	m_HDRTexture = ElayGraphics::ResourceManager::getSharedDataByName<int>("HDRTexture");
 	m_pShader = std::make_shared<CShader>("ScreenQuad_VS.glsl", "ScreenQuad_FS.glsl");
 	m_pShader->activeShader();
-	m_pShader->setTexture2DUniformValue("u_HDRTexture", m_HDRTexture, 2);
+	m_pShader->setTextureUniformValue("u_HDRTexture", m_HDRTexture, 2);
 }
 
 //************************************************************************************

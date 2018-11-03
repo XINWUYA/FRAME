@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame_4_SubsurfaceScattering_Exp", "Frame_4_SubsurfaceScattering_Exp\Frame_4_SubsurfaceScattering_Exp.vcxproj", "{982E388C-A65B-474C-8D6B-B4D39EA7153C}"
 EndProject
@@ -14,6 +14,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_003(GUI)", "TestCase_003\TestCase_003.vcxproj", "{06BE3C2D-7C4B-4C38-B96C-EA136DBE55A7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_005(TexturedAreaLight)", "TestCase_005\TestCase_005.vcxproj", "{A92CAD4E-496C-460C-865A-A3DE1E33FB6E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{17E19055-C565-4938-B82C-442B81F2353C} = {17E19055-C565-4938-B82C-442B81F2353C}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_A(2DTextureArray)", "TestCase_004_A\TestCase_004_A.vcxproj", "{46624D4C-A144-4E30-AFD5-45A2DF265A39}"
 EndProject
@@ -194,5 +197,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D515167-7B8B-4B7D-BF16-31B78D444E75}
 	EndGlobalSection
 EndGlobal

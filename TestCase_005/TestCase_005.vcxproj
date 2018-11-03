@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DrawTextureArrayByFBO.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GroundPass.cpp" />
     <ClCompile Include="LightSource.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="ScreenQuadPass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DrawTextureArrayByFBO.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GroundPass.h" />
     <ClInclude Include="LightSource.h" />
@@ -36,6 +38,8 @@
     <ClInclude Include="ScreenQuadPass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DrawTextureArrayByFBO_FS.glsl" />
+    <None Include="DrawTextureArrayByFBO_VS.glsl" />
     <None Include="Ground_FS.glsl" />
     <None Include="Ground_VS.glsl" />
     <None Include="LightSource_FS.glsl" />
