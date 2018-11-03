@@ -25,8 +25,8 @@ void CGroundPass::initV()
 
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getModelMatrix()));
-	m_pShader->setTexture2DUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
-	m_pShader->setTexture2DUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
 }
 
 //************************************************************************************
@@ -86,12 +86,6 @@ void CGroundPass::updateV()
 
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_LTCMatrixTexture);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_LTCMagnitueTexture);
-	glBindVertexArray(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getVAO());
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

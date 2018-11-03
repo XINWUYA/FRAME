@@ -21,7 +21,6 @@ CScreenQuadPass::~CScreenQuadPass()
 //Function:
 void CScreenQuadPass::initV()
 {
-	m_VAO = ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO();
 	m_pShader = std::make_shared<CShader>("ScreenQuad_VS.glsl", "ScreenQuad_FS.glsl");
 	ElayGraphics::STexture TextureArray;
 	int Width = 0, Height = 0, Channels = 0;
@@ -41,6 +40,9 @@ void CScreenQuadPass::initV()
 	m_TextureArray = genTexture(TextureArray);
 	for (auto& Item : TextureArray.pDataSet)
 		stbi_image_free(Item);
+
+	m_pShader->activeShader();
+	glBindTexture(GL_TEXTURE_2D_ARRAY, m_TextureArray);
 }
 
 //************************************************************************************
@@ -60,10 +62,6 @@ void CScreenQuadPass::updateV()
 	}
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_RIGHT) == GLFW_RELEASE)
 		m_OldKeyRightStatus = GLFW_RELEASE;
-	glBindTexture(GL_TEXTURE_2D_ARRAY, m_TextureArray);
-	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-
+	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

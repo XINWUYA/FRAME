@@ -6,11 +6,11 @@
 
 class CSphereSet;
 
-class CSpherePass : public IRenderPass
+class CSpherePBRPass : public IRenderPass
 {
 public:
-	CSpherePass(const std::string& vPassName, int vExecutionOrder);
-	virtual ~CSpherePass();
+	CSpherePBRPass(const std::string& vPassName, int vExecutionOrder);
+	virtual ~CSpherePBRPass();
 
 	virtual void initV() override;
 	virtual void updateV() override;

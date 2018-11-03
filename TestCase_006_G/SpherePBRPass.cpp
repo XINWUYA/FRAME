@@ -5,17 +5,17 @@
 #include "Utils.h"
 #include "SphereSet.h"
 
-CSpherePass::CSpherePass(const std::string& vPassName, int vExecutionOrder) : IRenderPass(vPassName,vExecutionOrder)
+CSpherePBRPass::CSpherePBRPass(const std::string& vPassName, int vExecutionOrder) : IRenderPass(vPassName,vExecutionOrder)
 {
 }
 
-CSpherePass::~CSpherePass()
+CSpherePBRPass::~CSpherePBRPass()
 {
 }
 
 //************************************************************************************
 //Function:
-void CSpherePass::initV()
+void CSpherePBRPass::initV()
 {
 	m_IrradianceCubeMap = ElayGraphics::ResourceManager::getSharedDataByName<int>("IrradianceCubeTexture");
 	m_RowNum = ElayGraphics::ResourceManager::getSharedDataByName<int>("SphereRowNum");
@@ -42,9 +42,9 @@ void CSpherePass::initV()
 	m_pShader->activeShader();
 	m_pShader->setFloatUniformValue("u_ObjectColor", 0.5f, 0.0f, 0.0f);
 	m_pShader->setFloatUniformValue("u_AO", 1.0f);
-	m_pShader->setTexture2DUniformValue("u_IrradianceMap", m_IrradianceCubeMap, 0);
-	m_pShader->setTexture2DUniformValue("u_PrefilterEnvMap", m_PrefilterEnvMap, 1);
-	m_pShader->setTexture2DUniformValue("u_BRDFMap", m_BRDFMap, 2);
+	m_pShader->setTextureUniformValue("u_IrradianceMap", m_IrradianceCubeMap, 4, GL_TEXTURE_CUBE_MAP);
+	m_pShader->setTextureUniformValue("u_PrefilterEnvMap", m_PrefilterEnvMap, 5, GL_TEXTURE_CUBE_MAP);
+	m_pShader->setTextureUniformValue("u_BRDFMap", m_BRDFMap, 6);
 	for (int i = 0; i < sizeof(LightPositions) / sizeof(LightPositions[0]); ++i)
 	{
 		glm::vec3 NewPos = LightPositions[i];
@@ -55,18 +55,11 @@ void CSpherePass::initV()
 
 //************************************************************************************
 //Function:
-void CSpherePass::updateV()
+void CSpherePBRPass::updateV()
 {
 	m_pShader->activeShader();
 	const glm::vec3& CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_ViewPos", CameraPos[0], CameraPos[1], CameraPos[2]);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_IrradianceCubeMap);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_PrefilterEnvMap);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, m_BRDFMap);
-	float Spacing = 2.5f;
 	for (int Row = 0; Row < m_RowNum; ++Row)
 	{
 		m_pShader->setFloatUniformValue("u_Metalness", float(Row) / m_RowNum);
@@ -77,6 +70,4 @@ void CSpherePass::updateV()
 			drawSphere();
 		}
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

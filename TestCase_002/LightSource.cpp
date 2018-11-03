@@ -9,7 +9,6 @@ CLightSource::CLightSource(const std::string &vGameObjectName, int vExecutionOrd
 //Function:
 void CLightSource::initV()
 {
-	setVAO(ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO());
 	translate(glm::vec3(0, 1.5, 0));
 
 	m_PolygonalLightVertexOriginalPosSet =

@@ -18,7 +18,6 @@ CDrawTextureArrayByFBO::~CDrawTextureArrayByFBO()
 //Function:
 void CDrawTextureArrayByFBO::initV()
 {
-	m_VAO = ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO();
 	m_pShader = std::make_shared<CShader>("DrawTextureArrayByFBO_VS.glsl", "DrawTextureArrayByFBO_FS.glsl");
 
 	ElayGraphics::STexture InputTextureArray;
@@ -50,6 +49,9 @@ void CDrawTextureArrayByFBO::initV()
 	m_FBO = genFBO({ FBOTextureArray });
 	
 	ElayGraphics::ResourceManager::registerSharedData("FBOTextureArray", m_FBOTextureArray);
+
+	m_pShader->activeShader();
+	m_pShader->setTextureUniformValue("u_TextureArray", m_InputTextureArray, 0, GL_TEXTURE_2D_ARRAY);
 }
 
 //************************************************************************************
@@ -62,11 +64,7 @@ void CDrawTextureArrayByFBO::updateV()
 	//glViewport(0, 0, m_Width, m_Height);
 
 	m_pShader->activeShader();
-	glBindTexture(GL_TEXTURE_2D_ARRAY, m_InputTextureArray);
-	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-
+	drawQuad();
 	//glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

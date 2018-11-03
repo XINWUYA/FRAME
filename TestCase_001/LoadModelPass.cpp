@@ -18,6 +18,7 @@ void CLoadModelPass::initV()
 	m_pShader = std::make_shared<CShader>("RenderModel_VS.glsl", "RenderModel_FS.glsl");
 	m_pShader->activeShader();
 	m_pShader->setFloatUniformValue("u_ViewPos", static_cast<GLfloat>(CameraPos.x), static_cast<GLfloat>(CameraPos.y), static_cast<GLfloat>(CameraPos.z));
+	m_pShader->setTextureUniformValue("u_BackDepthTexture", ElayGraphics::ResourceManager::getSharedDataByName<std::shared_ptr<ElayGraphics::STexture>>("BackDepthTexture")->TextureID, 5);
 }
 
 //************************************************************************************
@@ -32,7 +33,6 @@ void CLoadModelPass::updateV()
 	glCullFace(GL_BACK);
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Bunny")->getModelMatrix()));
-	m_pShader->setTexture2DUniformValue("u_BackDepthTexture", ElayGraphics::ResourceManager::getSharedDataByName<std::shared_ptr<ElayGraphics::STexture>>("BackDepthTexture")->TextureID, 5);
 	ElayGraphics::ResourceManager::getGameObjectByName("Bunny")->updateModel(*m_pShader);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);

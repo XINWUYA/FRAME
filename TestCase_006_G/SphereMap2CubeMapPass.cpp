@@ -54,7 +54,7 @@ void CSphereMap2CubeMapPass::initV()
 	m_pShader->activeShader();
 	for (int i = 0; i < 6; ++i)
 		m_pShader->setMat4UniformValue("u_VPMatrices4LookAtSixFaces[" + std::to_string(i) + "]", glm::value_ptr(m_VPMatrices4LookAtSixFaces[i]));
-	glBindTexture(GL_TEXTURE_2D, m_HDRTexture);
+	m_pShader->setTextureUniformValue("u_SphereMap", m_HDRTexture, 0);
 	glBindVertexArray(m_CubeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);

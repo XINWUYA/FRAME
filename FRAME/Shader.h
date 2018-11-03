@@ -26,7 +26,7 @@ public:
 	GLvoid setDoubleUniformValue(const std::string& vUniformName, GLdouble v0, GLdouble v1, GLdouble v2) const;
 	GLvoid setDoubleUniformValue(const std::string& vUniformName, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3) const;
 
-	GLvoid setTexture2DUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex) const;
+	GLvoid setTextureUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex, GLint vTextureType = GL_TEXTURE_2D) const;
 	GLvoid setMat4UniformValue(const std::string& vUniformName, const GLfloat vMatrix[16]) const;
 
 	GLvoid activeShader() const;

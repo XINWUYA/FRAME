@@ -11,7 +11,6 @@ public:
 	virtual void updateV() override;
 
 private:
-	int m_VAO = -1;
 	int m_TextureArray = -1;
 	int m_Layer = 0;
 	int m_OldKeyRightStatus = -1;

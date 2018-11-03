@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Interface.h"
 #include "GameObject.h"
+#include "Utils.h"
 
 CLightSourcePass::CLightSourcePass(const std::string& vPassName, int vExcutionOrder) :IRenderPass(vPassName, vExcutionOrder)
 {
@@ -34,8 +35,6 @@ void CLightSourcePass::updateV()
 		m_Intensity = Intensity;
 		m_pShader->setFloatUniformValue("u_Intensity", m_Intensity);
 	}
-	glBindVertexArray(ElayGraphics::ResourceManager::getGameObjectByName("LightSource")->getVAO());
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

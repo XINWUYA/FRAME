@@ -221,11 +221,11 @@ GLvoid CShader::setMat4UniformValue(const std::string& vUniformName, const GLflo
 
 //************************************************************************************
 //Function:
-GLvoid CShader::setTexture2DUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex) const
+GLvoid CShader::setTextureUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex, GLint vTextureType/* = GL_TEXTURE_2D*/) const
 {
-	glBindTexture(GL_TEXTURE_2D, vTextureID);
 	glActiveTexture(GL_TEXTURE0 + vBindingIndex);
 	glUniform1i(glGetUniformLocation(m_ShaderProgram, vTextureName.c_str()), vBindingIndex);
+	glBindTexture(vTextureType, vTextureID);
 }
 
 //************************************************************************************

@@ -7,7 +7,6 @@ CGround::CGround(const std::string& vGameObjectName, int vExecutionOrder) : IGam
 
 void CGround::initV()
 {
-	setVAO(ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO());
 	rotate(glm::vec3(90, 0, 0));
 	scale(glm::vec3(10, 10, 1));
 }

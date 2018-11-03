@@ -35,8 +35,12 @@
     <None Include="ScreenQuad_FS.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="DrawTextureArrayByFBO_VS.glsl" />
-    <None Include="DrawTextureArrayByFBO_FS.glsl" />
+    <None Include="DrawTextureArrayByFBO_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DrawTextureArrayByFBO_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScreenQuadPass.h">

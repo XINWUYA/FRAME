@@ -40,7 +40,7 @@ void CPrefilterEnvMapPass::initV()
 	m_pShader->activeShader();
 	for (int i = 0; i < 6; ++i)
 		m_pShader->setMat4UniformValue("u_VPMatrices4LookAtSixFaces[" + std::to_string(i) + "]", glm::value_ptr(m_VPMatrices4LookAtSixFaces[i]));
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubeMap);
+	m_pShader->setTextureUniformValue("u_EnvironmentCubeMap", m_EnvCubeMap, 2, GL_TEXTURE_CUBE_MAP);
 	int MaxMipLevel = 5;
 	for (int MipLevel = 0; MipLevel < MaxMipLevel; ++MipLevel)
 	{
@@ -55,7 +55,6 @@ void CPrefilterEnvMapPass::initV()
 		drawCube();
 	}
 	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

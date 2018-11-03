@@ -26,7 +26,7 @@ GLvoid CMesh::update(const CShader& vShader) const
 	int i = -1;
 	for (auto &vTexture : m_Textures)
 	{
-		vShader.setTexture2DUniformValue("u_DiffuseTexture" + std::to_string(++i), vTexture.ID, i);
+		vShader.setTextureUniformValue("u_DiffuseTexture" + std::to_string(++i), vTexture.ID, i);
 	}
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);

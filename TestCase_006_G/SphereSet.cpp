@@ -16,6 +16,7 @@ void CSphereSet::initV()
 {
 	ElayGraphics::ResourceManager::registerSharedData("SphereRowNum", m_RowNum);
 	ElayGraphics::ResourceManager::registerSharedData("SphereColNum", m_ColNum);
+	ElayGraphics::ResourceManager::registerSharedData("SpacingBetweenSpheres", m_SpacingBetweenSpheres);
 	m_SphereSet.resize(m_RowNum);
 
 	for (int Row = 0; Row < m_RowNum; ++Row)

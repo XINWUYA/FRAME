@@ -11,7 +11,6 @@ public:
 	virtual void updateV() override;
 
 private:
-	int m_VAO = -1;
 	int m_InputTextureArray = -1;
 	int m_FBO = -1;
 	int m_FBOTextureArray = -1;
