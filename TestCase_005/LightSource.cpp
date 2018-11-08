@@ -11,6 +11,8 @@ void CLightSource::initV()
 {
 	setVAO(ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO());
 	translate(glm::vec3(0, 1.5, 0));
+	//translate(glm::vec3(0, 0, -40));
+	//scale(glm::vec3(64.0, 64.0, 1.0));
 
 	m_PolygonalLightVertexOriginalPosSet =
 	{

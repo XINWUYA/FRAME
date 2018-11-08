@@ -16,8 +16,14 @@ out vec2 v2f_TexCoords;
 
 void main()
 {
+	//vec4 FragPosInWorldSpace = u_ModelMatrix * vec4(_Position, 0.0, 1.0);
+	//v2f_FragPosInWorldSpace = vec3(FragPosInWorldSpace);
+	//gl_Position = u_ProjectionMatrix * u_ViewMatrix * FragPosInWorldSpace;
+	//v2f_TexCoords = _TexCoords;
+
 	vec4 FragPosInWorldSpace = u_ModelMatrix * vec4(_Position, 0.0, 1.0);
-	v2f_FragPosInWorldSpace = vec3(FragPosInWorldSpace);
+	vec4 FragPosInRightCoordiante = vec4(FragPosInWorldSpace.x, FragPosInWorldSpace.y, FragPosInWorldSpace.z, 1.0);
+	v2f_FragPosInWorldSpace = vec3(FragPosInRightCoordiante);
 	gl_Position = u_ProjectionMatrix * u_ViewMatrix * FragPosInWorldSpace;
 	v2f_TexCoords = _TexCoords;
 }

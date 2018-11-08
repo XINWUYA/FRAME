@@ -23,17 +23,7 @@ void CGroundPass::initV()
 	m_pShader = std::make_shared<CShader>("Ground_VS.glsl", "Ground_FS.glsl");
 	m_LTCMatrixTexture = loadTextureFromFile("Textures/ltc_mat.dds");
 	m_LTCMagnitueTexture = loadTextureFromFile("Textures/ltc_amp.dds");
-
-	std::shared_ptr<ElayGraphics::STexture> pTexture2D = std::make_shared<ElayGraphics::STexture>();
-	pTexture2D->InternalFormat = GL_RGBA16F;
-	pTexture2D->ExternalFormat = GL_RGBA;
-	pTexture2D->DataType = GL_FLOAT;
-	pTexture2D->TextureName = "HDRTexture";
-	genTexture(*pTexture2D);
-	m_HDRFBO = genFBO({ *pTexture2D });
-
-	ElayGraphics::ResourceManager::registerSharedData("HDRTexture", pTexture2D->TextureID);
-	ElayGraphics::ResourceManager::registerSharedData("HDRFBO", m_HDRFBO);
+	ElayGraphics::ResourceManager::registerSharedData("LTCMatrixTexture", m_LTCMatrixTexture);
 
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getModelMatrix()));
@@ -41,15 +31,14 @@ void CGroundPass::initV()
 	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
 
 	m_FBOTextureArray = ElayGraphics::ResourceManager::getSharedDataByName<int>("FBOTextureArray");
-	m_pShader->setTextureUniformValue("u_FilteredLightTexture", m_FBOTextureArray, 2);
+	m_pShader->setTextureUniformValue("u_FilteredLightTexture", m_FBOTextureArray, 2, GL_TEXTURE_2D_ARRAY);
 }
 
 //************************************************************************************
 //Function:
 void CGroundPass::updateV()
 {
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -100,25 +89,8 @@ void CGroundPass::updateV()
 		}
 	}
 
-	/*if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_RIGHT) == GLFW_PRESS && m_OldKeyRightStatus != GLFW_PRESS)
-	{
-		m_OldKeyRightStatus = GLFW_PRESS;
-		m_Layer = (m_Layer + 1) % 5;
-		m_pShader->setIntUniformValue("u_Layer", m_Layer);
-	}
-	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_RIGHT) == GLFW_RELEASE)
-		m_OldKeyRightStatus = GLFW_RELEASE;*/
-
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_LTCMatrixTexture);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_LTCMagnitueTexture);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, m_FBOTextureArray);
-	glBindVertexArray(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getVAO());
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

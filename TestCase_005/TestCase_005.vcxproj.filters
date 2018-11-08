@@ -36,9 +36,6 @@
     <ClCompile Include="MyGUI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenQuadPass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="DrawTextureArrayByFBO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -57,9 +54,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MyGUI.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ScreenQuadPass.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DrawTextureArrayByFBO.h">

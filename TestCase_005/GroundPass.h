@@ -14,7 +14,6 @@ public:
 	virtual void updateV() override;
 
 private:
-	GLint  m_HDRFBO = -1;
 	GLuint m_LTCMatrixTexture = -1;
 	GLuint m_LTCMagnitueTexture = -1;
 	int m_FBOTextureArray = -1;

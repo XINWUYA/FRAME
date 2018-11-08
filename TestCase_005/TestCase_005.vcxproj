@@ -26,7 +26,6 @@
     <ClCompile Include="LightSourcePass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGUI.cpp" />
-    <ClCompile Include="ScreenQuadPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DrawTextureArrayByFBO.h" />
@@ -35,7 +34,6 @@
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="LightSourcePass.h" />
     <ClInclude Include="MyGUI.h" />
-    <ClInclude Include="ScreenQuadPass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DrawTextureArrayByFBO_FS.glsl" />

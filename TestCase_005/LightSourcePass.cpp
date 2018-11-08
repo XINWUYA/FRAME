@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Interface.h"
 #include "GameObject.h"
+#include "Utils.h"
 
 CLightSourcePass::CLightSourcePass(const std::string& vPassName, int vExcutionOrder) :IRenderPass(vPassName, vExcutionOrder)
 {
@@ -19,24 +20,27 @@ CLightSourcePass::~CLightSourcePass()
 void CLightSourcePass::initV()
 {
 	m_pShader = std::make_shared<CShader>("LightSource_VS.glsl", "LightSource_FS.glsl");
-	m_HDRFBO = ElayGraphics::ResourceManager::getSharedDataByName<GLint>("HDRFBO");
+	m_LightSourceTexture = loadTextureFromFile("Textures/0.png");
+	int LTCMatrixTexture = ElayGraphics::ResourceManager::getSharedDataByName<GLuint>("LTCMatrixTexture");
+	m_pShader->activeShader();
+	m_pShader->setTextureUniformValue("u_LightSourceTexture", m_LightSourceTexture, 3);
 }
 
 //************************************************************************************
 //Function:
 void CLightSourcePass::updateV()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glEnable(GL_DEPTH_TEST);
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("LightSource")->getModelMatrix()));
+
 	float Intensity = ElayGraphics::ResourceManager::getSharedDataByName<float>("Intensity");
 	if (Intensity != m_Intensity)
 	{
 		m_Intensity = Intensity;
 		m_pShader->setFloatUniformValue("u_Intensity", m_Intensity);
 	}
-	glBindVertexArray(ElayGraphics::ResourceManager::getGameObjectByName("LightSource")->getVAO());
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

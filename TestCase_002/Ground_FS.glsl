@@ -22,7 +22,7 @@ uniform bool  u_IsTwoSided = false;
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
 
-const float LUT_SIZE = 64.0;
+const float LUT_SIZE = 32.0;
 const float LUT_SCALE = (LUT_SIZE - 1.0) / LUT_SIZE;
 const float LUT_BIAS = 0.5 / LUT_SIZE;
 const float PI = 3.14159265;
@@ -139,8 +139,8 @@ float integrateEdge(vec3 vVertex1, vec3 vVertex2)
 	float CosTheta = dot(vVertex1, vVertex2);
 	CosTheta = clamp(CosTheta, -0.9999, 0.9999);
 	float Theta = acos(CosTheta);
-	return cross(vVertex1, vVertex2).z * Theta / sin(Theta);
-	//return cross(vVertex1, vVertex2).z * ((Theta > 0.001) ? Theta / sin(Theta) : 1.0);
+	//return cross(vVertex1, vVertex2).z * Theta / sin(Theta);
+	return cross(vVertex1, vVertex2).z * ((Theta > 0.001) ? Theta / sin(Theta) : 1.0);
 
 	//float x = dot(vVertex1, vVertex2);
 	//float y = abs(x);
@@ -216,8 +216,10 @@ void main()
 	Specular *= texture2D(u_LTC_MagnitueTexture, UV).w;
 
 	vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular * u_SpecularColor);
-	//vec3 ResultColor = u_Intensity * (Specular * u_SpecularColor);
+	//vec3 ResultColor = u_Intensity * Diffuse * u_DiffuseColor;
 	ResultColor /= 2.0 * PI;
+
+	//ResultColor = vec3(Specular);
 
 	vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
 	vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));

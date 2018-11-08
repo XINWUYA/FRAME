@@ -113,6 +113,20 @@ const glm::dvec3& ElayGraphics::Camera::getMainCameraPos()
 
 //************************************************************************************
 //Function:
+void ElayGraphics::Camera::setMainCameraFarPlane(double vFarPlane)
+{
+	return CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setFarPlane(vFarPlane);
+}
+
+//************************************************************************************
+//Function:
+void ElayGraphics::Camera::setMainCameraMoveSpeed(double vMoveSpeed)
+{
+	return CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setMoveSpeed(vMoveSpeed);
+}
+
+//************************************************************************************
+//Function:
 const std::shared_ptr<IGameObject>& ElayGraphics::ResourceManager::getGameObjectByName(const std::string &vGameObjectName)
 {
 	return CResourceManager::getOrCreateInstance()->getGameObjectByName(vGameObjectName);

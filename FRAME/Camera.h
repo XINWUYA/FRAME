@@ -18,6 +18,9 @@ public:
 	glm::mat4  getViewMatrix() const;  //not need const reference
 	glm::mat4  getProjectionMatrix() const;
 	const glm::dvec3& getCameraPos() const;
+
+	void setFarPlane(GLdouble vFarPlane) { m_Far = vFarPlane; }
+	void setMoveSpeed(GLdouble vMoveSpeed) { m_MoveSpeed = vMoveSpeed; }
 	
 
 private:

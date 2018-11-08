@@ -12,6 +12,6 @@ public:
 	virtual void updateV() override;
 
 private:
-	int m_HDRFBO = -1;
 	float m_Intensity = 0.0;
+	int   m_LightSourceTexture = 0;
 };
