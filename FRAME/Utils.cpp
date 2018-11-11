@@ -285,6 +285,8 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_S, vioTexture.Type4WrapS);
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_T, vioTexture.Type4WrapT);
 	glTexParameteri(TextureType, GL_TEXTURE_WRAP_R, vioTexture.Type4WrapR);
+	if (vioTexture.isMipmap && vioTexture.Type4MinFilter == GL_LINEAR)
+		vioTexture.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
 	glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, vioTexture.Type4MinFilter);
 	glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, vioTexture.Type4MagFilter);
 	if (vioTexture.isMipmap) glGenerateMipmap(TextureType);
@@ -395,6 +397,7 @@ GLint loadTextureFromFile(const std::string& vFilePath, ElayGraphics::STexture& 
 		configureHDRTexture(vFilePath, voTexture2D);
 	else
 		configureCommonTexture(vFilePath, voTexture2D);
+
 	GLint TextureID = genTexture(voTexture2D);
 
 	if (IsUseStbi) stbi_image_free(voTexture2D.pDataSet[0]);
