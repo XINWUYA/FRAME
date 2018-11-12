@@ -15,4 +15,5 @@ private:
 	int m_BluredTexture = -1;
 	int m_Layer = 0;
 	int m_OldKeyRightStatus = -1;
+	int m_MaxMipLevel = 0;
 };

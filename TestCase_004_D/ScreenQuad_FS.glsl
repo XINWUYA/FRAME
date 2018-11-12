@@ -9,6 +9,6 @@ uniform int u_Layer = 0;
 void main()
 {
 	//Color_ = texture(u_BluredTexture, v2f_TexCoords);
-	Color_ = textureLod(u_BluredTexture, v2f_TexCoords, 7);
+	Color_ = textureLod(u_BluredTexture, v2f_TexCoords, u_Layer);
 	//Color_ = vec4(0, 1, 0, 1);
 }

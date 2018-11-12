@@ -32,6 +32,7 @@ void CGaussianBlurPass::initV()
 		m_PingPongFBO[i] = genFBO({ Texture2D });
 	}
 	ElayGraphics::ResourceManager::registerSharedData("BluredTexture", m_PingPongTexture[0]);
+	ElayGraphics::ResourceManager::registerSharedData("MaxMipLevel", m_MaxMipLevel);
 }
 
 //************************************************************************************

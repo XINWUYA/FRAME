@@ -22,6 +22,7 @@ void CScreenQuadPass::initV()
 	m_VAO = ElayGraphics::ResourceManager::getOrCreateScreenQuadVAO();
 	m_pShader = std::make_shared<CShader>("ScreenQuad_VS.glsl", "ScreenQuad_FS.glsl");
 	m_BluredTexture = ElayGraphics::ResourceManager::getSharedDataByName<int>("BluredTexture");
+	m_MaxMipLevel = ElayGraphics::ResourceManager::getSharedDataByName<int>("MaxMipLevel");
 }
 
 //************************************************************************************
@@ -36,7 +37,7 @@ void CScreenQuadPass::updateV()
 	if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_RIGHT) == GLFW_PRESS && m_OldKeyRightStatus != GLFW_PRESS)
 	{
 		m_OldKeyRightStatus = GLFW_PRESS;
-		m_Layer = (m_Layer + 1) % 5;
+		m_Layer = (m_Layer + 1) % m_MaxMipLevel;
 		m_pShader->setIntUniformValue("u_Layer", m_Layer);
 	}
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_RIGHT) == GLFW_RELEASE)
