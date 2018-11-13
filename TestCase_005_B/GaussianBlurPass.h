@@ -16,5 +16,5 @@ private:
 	std::vector<int> m_PingPongTexture{ 0,0 };
 	int m_InputTexture = 0;
 	int m_OutputTexture = 0;
-	int m_MaxMipLevel = 8;
+	int m_MaxMipLevel = 5;
 };

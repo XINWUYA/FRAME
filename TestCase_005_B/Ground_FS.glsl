@@ -190,7 +190,7 @@ vec3 fecthFilteredLightTexture(vec3 vPolygonalLightVertexPos[4], vec3 vLooupVect
 	float Distance = abs(Distance2Plane) / pow(PlaneAreaSquared, 0.25);
 	
 	float Lod = log(2048.0 * Distance) / log(3.0);
-	//Lod = min(Lod, 7.0);
+	Lod = min(Lod, 4.0);
 
 	//float LodA = floor(Lod);
 	//float LodB = ceil(Lod);

@@ -4,7 +4,7 @@
 
 int main()
 {
-	ElayGraphics::WINDOW_KEYWORD::setWindowSize(512, 512);
+	ElayGraphics::WINDOW_KEYWORD::setWindowSize(800, 600);
 	ElayGraphics::ResourceManager::registerRenderPass(std::make_shared<CGaussianBlurPass>("GaussianBlurPass", 1));
 	ElayGraphics::ResourceManager::registerRenderPass(std::make_shared<CScreenQuadPass>("ScreenQuadPass", 2));
 
