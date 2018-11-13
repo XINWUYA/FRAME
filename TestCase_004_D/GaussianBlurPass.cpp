@@ -16,7 +16,9 @@ CGaussianBlurPass::~CGaussianBlurPass()
 void CGaussianBlurPass::initV()
 {
 	m_pShader = std::make_shared<CShader>("GaussianBlur_VS.glsl", "GaussianBlur_FS.glsl");
-	m_InputTexture = loadTextureFromFile("../Textures/GaussianBlurTexture/0.png");
+	ElayGraphics::STexture InputTexture2D;
+	InputTexture2D.isMipmap = GL_TRUE;
+	m_InputTexture = loadTextureFromFile("../Textures/GaussianBlurTexture/0.png", InputTexture2D);
 
 	ElayGraphics::STexture Texture2D;
 	Texture2D.Width = 512;
@@ -25,6 +27,7 @@ void CGaussianBlurPass::initV()
 	Texture2D.ExternalFormat = GL_RGBA;
 	Texture2D.DataType = GL_FLOAT;
 	Texture2D.Type4WrapS = Texture2D.Type4WrapT = GL_CLAMP_TO_EDGE;
+	Texture2D.isMipmap = GL_TRUE;
 	//Texture2D.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
 	for (int i = 0; i < 2; ++i)
 	{

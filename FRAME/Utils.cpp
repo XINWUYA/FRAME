@@ -289,7 +289,8 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 		vioTexture.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
 	glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, vioTexture.Type4MinFilter);
 	glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, vioTexture.Type4MagFilter);
-	if (vioTexture.isMipmap) glGenerateMipmap(TextureType);
+	if (vioTexture.isMipmap) 
+		glGenerateMipmap(TextureType);
 	glBindTexture(TextureType, 0);
 	vioTexture.TextureID = TextureID;
 	return TextureID;

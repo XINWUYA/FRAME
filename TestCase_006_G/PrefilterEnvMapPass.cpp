@@ -27,7 +27,8 @@ void CPrefilterEnvMapPass::initV()
 	PrefilterEnvTexture.Width = 128;
 	PrefilterEnvTexture.Height = 128;
 	PrefilterEnvTexture.Type4WrapR = PrefilterEnvTexture.Type4WrapS = PrefilterEnvTexture.Type4WrapT = GL_CLAMP_TO_EDGE;
-	PrefilterEnvTexture.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
+	//PrefilterEnvTexture.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
+	PrefilterEnvTexture.isMipmap = GL_TRUE;
 	m_PrefilterEnvMap = genTexture(PrefilterEnvTexture);
 	ElayGraphics::ResourceManager::registerSharedData("PrefilterEnvMap", m_PrefilterEnvMap);
 

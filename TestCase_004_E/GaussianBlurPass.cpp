@@ -25,6 +25,7 @@ void CGaussianBlurPass::initV()
 	Texture2D.ExternalFormat = GL_RGBA;
 	Texture2D.DataType = GL_FLOAT;
 	Texture2D.Type4WrapS = Texture2D.Type4WrapT = GL_CLAMP_TO_EDGE;
+	Texture2D.isMipmap = GL_TRUE;
 	//Texture2D.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
 	for (int i = 0; i < 2; ++i)
 	{

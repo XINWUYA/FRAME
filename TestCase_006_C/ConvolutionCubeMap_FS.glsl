@@ -31,5 +31,5 @@ void main()
 	}
 	Irradiance = PI * Irradiance * (1.0 / SampleCount);	//不知道为什么是乘以PI，而不是除以PI
 
-	Color_ = vec4(Irradiance, 1.0);
+	Color_ = vec4(Irradiance, 1);
 }

@@ -71,7 +71,7 @@ namespace ElayGraphics
 
 		STexture() : TextureID(-1), InternalFormat(GL_RGBA), ExternalFormat(GL_RGBA), DataType(GL_UNSIGNED_BYTE), Width(WINDOW_KEYWORD::WINDOW_WIDTH),
 			Height(WINDOW_KEYWORD::WINDOW_HEIGHT), Depth(1), Type4WrapS(GL_REPEAT), Type4WrapT(GL_REPEAT), Type4WrapR(GL_REPEAT), Type4MinFilter(GL_LINEAR),
-			Type4MagFilter(GL_LINEAR), isMipmap(GL_TRUE), TextureType(ETextureType::Texture2D), TextureAttachmentType(ETextureAttachmentType::ColorTexture), BorderColor{ 1,1,1,1 }
+			Type4MagFilter(GL_LINEAR), isMipmap(GL_FALSE), TextureType(ETextureType::Texture2D), TextureAttachmentType(ETextureAttachmentType::ColorTexture), BorderColor{ 1,1,1,1 }
 		{
 		}
 	};

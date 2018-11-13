@@ -29,6 +29,7 @@ void CSphereMap2CubeMapPass::initV()
 	CubeTexture.Width = 512;
 	CubeTexture.Height = 512;
 	CubeTexture.Type4WrapR = CubeTexture.Type4WrapS = CubeTexture.Type4WrapT = GL_CLAMP_TO_EDGE;
+	CubeTexture.isMipmap = GL_TRUE;
 	m_EnvCubeMap = genTexture(CubeTexture);
 	ElayGraphics::ResourceManager::registerSharedData("EnvCubeMap", m_EnvCubeMap);
 
@@ -60,6 +61,10 @@ void CSphereMap2CubeMapPass::initV()
 	glBindVertexArray(0);
 	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubeMap);
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 //************************************************************************************
