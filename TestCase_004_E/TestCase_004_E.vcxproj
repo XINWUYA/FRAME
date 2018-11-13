@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CFF03B72-3C43-4258-9802-B0AC4F5F564A}</ProjectGuid>
+    <ProjectGuid>{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TestCase_004_D</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>TestCase_004_D(2DTextureMipmap+GaussianBlur_Adjusted)</ProjectName>
+    <ProjectName>TestCase_004_E(2DTextureMipmap+GaussianBlur)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
