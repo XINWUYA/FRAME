@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame_4_SubsurfaceScattering_Exp", "Frame_4_SubsurfaceScattering_Exp\Frame_4_SubsurfaceScattering_Exp.vcxproj", "{982E388C-A65B-474C-8D6B-B4D39EA7153C}"
 EndProject
@@ -42,11 +42,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_006_G(IBL_Diffuse+
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_007(TextureBorderColor)", "TestCase_007\TestCase_007.vcxproj", "{7962BFF3-F47E-469B-88A4-71673CAF0EAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_D(2DTextureMipmap+GaussianBlur_Adjusted)", "TestCase_004_D\TestCase_004_D.vcxproj", "{CFF03B72-3C43-4258-9802-B0AC4F5F564A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_D(2DTextureMipmap+GaussianBlur)", "TestCase_004_D\TestCase_004_D.vcxproj", "{CFF03B72-3C43-4258-9802-B0AC4F5F564A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_005_B", "TestCase_005_B\TestCase_005_B.vcxproj", "{CC2187E9-924D-4C00-BEF9-A8B4526DB09B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_005_B(TexturedAreaLight+MipmapGaussianBlur)", "TestCase_005_B\TestCase_005_B.vcxproj", "{CC2187E9-924D-4C00-BEF9-A8B4526DB09B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_E(2DTextureMipmap+GaussianBlur)", "TestCase_004_E\TestCase_004_E.vcxproj", "{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_E(2DTextureMipmap+GaussianBlur_Adjusted)", "TestCase_004_E\TestCase_004_E.vcxproj", "{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_008_A(IBL_PBRWithDiffuseByLTC)", "TestCase_008_A\TestCase_008_A.vcxproj", "{E4EBB366-E1A1-4E02-A732-377AF61CF00B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -224,6 +226,14 @@ Global
 		{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}.Release|x64.Build.0 = Release|x64
 		{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}.Release|x86.ActiveCfg = Release|Win32
 		{A615BB54-68B7-49B4-A2C4-1E433DBFE9D6}.Release|x86.Build.0 = Release|Win32
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Debug|x64.ActiveCfg = Debug|x64
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Debug|x64.Build.0 = Debug|x64
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Debug|x86.ActiveCfg = Debug|Win32
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Debug|x86.Build.0 = Debug|Win32
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Release|x64.ActiveCfg = Release|x64
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Release|x64.Build.0 = Release|x64
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Release|x86.ActiveCfg = Release|Win32
+		{E4EBB366-E1A1-4E02-A732-377AF61CF00B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
