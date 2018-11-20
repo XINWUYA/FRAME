@@ -40,7 +40,7 @@ void CSpherePBRPass::initV()
 
 	m_pShader = std::make_shared<CShader>("SpherePBR_VS.glsl", "SpherePBR_FS.glsl");
 	m_pShader->activeShader();
-	m_pShader->setFloatUniformValue("u_ObjectColor", 0.5f, 0.0f, 0.0f);
+	m_pShader->setFloatUniformValue("u_ObjectColor", 1.0f, 1.0f, 1.0f);
 	m_pShader->setFloatUniformValue("u_AO", 1.0f);
 	m_pShader->setTextureUniformValue("u_IrradianceMap", m_IrradianceCubeMap, 4, GL_TEXTURE_CUBE_MAP);
 	m_pShader->setTextureUniformValue("u_PrefilterEnvMap", m_PrefilterEnvMap, 5, GL_TEXTURE_CUBE_MAP);
