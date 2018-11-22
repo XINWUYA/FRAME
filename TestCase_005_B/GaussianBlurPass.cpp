@@ -16,7 +16,7 @@ CGaussianBlurPass::~CGaussianBlurPass()
 void CGaussianBlurPass::initV()
 {
 	m_pShader = std::make_shared<CShader>("GaussianBlur_VS.glsl", "GaussianBlur_FS.glsl");
-	m_InputTexture = loadTextureFromFile("../Textures/GaussianBlurTexture/0.png");
+	m_InputTexture = loadTextureFromFile("../Textures/hdr/newport_loft.hdr");	//../Textures/GaussianBlurTexture/0.png 
 
 	ElayGraphics::STexture Texture2D;
 	Texture2D.Width = 512;

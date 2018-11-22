@@ -37,7 +37,7 @@ void CSpherePass::initV()
 
 	m_pShader = std::make_shared<CShader>("SpherePBR_VS.glsl", "SpherePBR_FS.glsl");
 	m_pShader->activeShader();
-	m_pShader->setFloatUniformValue("u_ObjectColor", 0.5f, 0.0f, 0.0f);
+	m_pShader->setFloatUniformValue("u_ObjectColor", 1.0f, 1.0f, 1.0f);
 	m_pShader->setFloatUniformValue("u_AO", 1.0f);
 	for (int i = 0; i < sizeof(LightPositions) / sizeof(LightPositions[0]); ++i)
 	{

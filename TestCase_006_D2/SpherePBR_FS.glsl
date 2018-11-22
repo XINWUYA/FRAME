@@ -102,7 +102,7 @@ void main()
 	vec3 Irradiance = texture(u_IrradianceMap, N).rgb;
 	vec3 Ambient = Irradiance * u_ObjectColor * Kd * u_AO;
 
-	vec3 Color = Ambient + Lo;
+	vec3 Color = Ambient/* + Lo*/;
 
 	//HDRÉ«µ÷Ó³Éä
 	Color = Color / (Color + vec3(1.0));
