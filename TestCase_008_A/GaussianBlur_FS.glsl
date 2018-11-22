@@ -148,4 +148,5 @@ void main()
     //}
     //FragColor_ = vec4(Result, 1.0);
 	FragColor_ = getColorByRadius(u_MipLevel);
+	//FragColor_ = vec4(0, 1, 0, 1);
 }

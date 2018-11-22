@@ -144,7 +144,8 @@ void main()
 	vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, u_Roughness);
 	vec3 Ks = F;
 	vec3 Kd = 1.0 - Ks;
-	Kd *= 1.0 - u_Metalness;
+	//Kd *= 1.0 - u_Metalness;
+	//Kd = vec3(1.0);
 	//vec3 Irradiance = texture(u_IrradianceMap, N).rgb;
 	//vec3 DiffusePart = Irradiance * u_DiffuseColor * u_AO;
 	
@@ -170,11 +171,11 @@ void main()
 	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 	Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
 
-	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
-	//vec3 AmbientColor = u_Intensity * Diffuse * u_DiffuseColor;
+	//vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
+	vec3 AmbientColor = u_Intensity * Diffuse * u_DiffuseColor;
 	//AmbientColor /= 2.0 * PI;
 
-	vec3 Color = AmbientColor + Lo;
+	vec3 Color = AmbientColor/* + Lo*/;
 
 	//HDRÉ«µ÷Ó³Éä
 	Color = Color / (Color + vec3(1.0));

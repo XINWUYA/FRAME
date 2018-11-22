@@ -17,10 +17,13 @@ void CGaussianBlurPass::initV()
 {
 	m_pShader = std::make_shared<CShader>("GaussianBlur_VS.glsl", "GaussianBlur_FS.glsl");
 	m_InputTexture = loadTextureFromFile("../Textures/hdr/newport_loft.hdr");
+	glBindTexture(GL_TEXTURE_2D, m_InputTexture);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ElayGraphics::STexture Texture2D;
-	Texture2D.Width = 512;
-	Texture2D.Height = 512;
+	Texture2D.Width = 512;// 512;
+	Texture2D.Height = 512;// 512;
 	Texture2D.InternalFormat = GL_RGBA16F;
 	Texture2D.ExternalFormat = GL_RGBA;
 	Texture2D.DataType = GL_FLOAT;
@@ -36,6 +39,8 @@ void CGaussianBlurPass::initV()
 	ElayGraphics::ResourceManager::registerSharedData("MaxMipLevel", m_MaxMipLevel);
 
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+	/*glDisable(GL_DEPTH_TEST);
 	for (int MipLevel = 0; MipLevel < m_MaxMipLevel; ++MipLevel)
 	{
 		int MipWidth = 512 * std::pow(0.5, MipLevel);
@@ -60,17 +65,20 @@ void CGaussianBlurPass::initV()
 				IsFirstIteration = false;
 		}
 	}
-	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());
+	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());*/
 }
 
 //************************************************************************************
 //Function:
 void CGaussianBlurPass::updateV()
 {
-	/*for (int MipLevel = 0; MipLevel < m_MaxMipLevel; ++MipLevel)
+	glDisable(GL_DEPTH_TEST);
+	for (int MipLevel = 0; MipLevel < m_MaxMipLevel; ++MipLevel)
 	{
 		int MipWidth = 512 * std::pow(0.5, MipLevel);
 		int MipHeight = MipWidth;
+		/*int MipWidth = 1600 * std::pow(0.5, MipLevel);
+		int MipHeight = MipWidth / 2.0;*/
 
 		bool IsHorizontal = true, IsFirstIteration = true;
 		int BlurAmount = 10;
@@ -91,5 +99,5 @@ void CGaussianBlurPass::updateV()
 				IsFirstIteration = false;
 		}
 	}
-	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());*/
+	glViewport(0, 0, ElayGraphics::WINDOW_KEYWORD::getWindowWidth(), ElayGraphics::WINDOW_KEYWORD::getWindowHeight());
 }
