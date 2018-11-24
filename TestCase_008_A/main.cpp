@@ -8,7 +8,7 @@
 int main()
 {
 	ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(true);
-	ElayGraphics::WINDOW_KEYWORD::setWindowSize(1080, 768);
+	ElayGraphics::WINDOW_KEYWORD::setWindowSize(1600, 800);
 	//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
 
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CSphereSet>("SphereSet", 1));
