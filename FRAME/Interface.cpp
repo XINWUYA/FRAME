@@ -115,14 +115,21 @@ const glm::dvec3& ElayGraphics::Camera::getMainCameraPos()
 //Function:
 void ElayGraphics::Camera::setMainCameraFarPlane(double vFarPlane)
 {
-	return CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setFarPlane(vFarPlane);
+	CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setFarPlane(vFarPlane);
 }
 
 //************************************************************************************
 //Function:
 void ElayGraphics::Camera::setMainCameraMoveSpeed(double vMoveSpeed)
 {
-	return CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setMoveSpeed(vMoveSpeed);
+	CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setMoveSpeed(vMoveSpeed);
+}
+
+//************************************************************************************
+//Function:
+void ElayGraphics::Camera::setMainCameraFov(double vFov)
+{
+	CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setFov(vFov);
 }
 
 //************************************************************************************

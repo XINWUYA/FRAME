@@ -44,6 +44,7 @@ namespace ElayGraphics
 		FRAME_DLLEXPORTS const glm::dvec3& getMainCameraPos();
 		FRAME_DLLEXPORTS void setMainCameraFarPlane(double vFarPlane);
 		FRAME_DLLEXPORTS void setMainCameraMoveSpeed(double vMoveSpeed);
+		FRAME_DLLEXPORTS void setMainCameraFov(double vFov);
 	}
 
 	namespace ResourceManager

@@ -21,6 +21,7 @@ public:
 
 	void setFarPlane(GLdouble vFarPlane) { m_Far = vFarPlane; }
 	void setMoveSpeed(GLdouble vMoveSpeed) { m_MoveSpeed = vMoveSpeed; }
+	void setFov(GLdouble vFov) { m_Fov = vFov; }
 	
 
 private:
