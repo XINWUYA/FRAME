@@ -144,7 +144,7 @@ void main()
 	vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, u_Roughness);
 	vec3 Ks = F;
 	vec3 Kd = 1.0 - Ks;
-	//Kd *= 1.0 - u_Metalness;
+	Kd *= 1.0 - u_Metalness;
 	//Kd = vec3(1.0);
 	//vec3 Irradiance = texture(u_IrradianceMap, N).rgb;
 	//vec3 DiffusePart = Irradiance * u_DiffuseColor * u_AO;

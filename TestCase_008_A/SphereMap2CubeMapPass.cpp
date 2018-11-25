@@ -17,8 +17,8 @@ CSphereMap2CubeMapPass::~CSphereMap2CubeMapPass()
 //Function:
 void CSphereMap2CubeMapPass::initV()
 {
-	//m_InputSphericalTexture = loadTextureFromFile("../Textures/hdr/newport_loft_blured.jpg");
-	m_InputSphericalTexture = ElayGraphics::ResourceManager::getSharedDataByName<int>("BluredTexture");
+	m_InputSphericalTexture = loadTextureFromFile("../Textures/hdr/newport_loft_blured.jpg");
+	//m_InputSphericalTexture = ElayGraphics::ResourceManager::getSharedDataByName<int>("BluredTexture");
 	m_CubeVAO = ElayGraphics::ResourceManager::getOrCreateCubeVAO();
 	m_MaxMipMapLevel = ElayGraphics::ResourceManager::getSharedDataByName<int>("MaxMipLevel");
 	m_pShader = std::make_shared<CShader>("SphereMap2CubeMap_VS.glsl", "SphereMap2CubeMap_FS.glsl", "SphereMap2CubeMap_GS.glsl");
