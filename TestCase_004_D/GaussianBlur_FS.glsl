@@ -11,7 +11,7 @@ uniform float u_GaussianWeight[5] = float[] (0.2270270270, 0.1945945946, 0.12162
 
 void main()
 {
-    vec2 TexelOffset = 1.0 / textureSize(u_Image, 0); //每个纹素的大小
+    vec2 TexelOffset = 1.0 / textureSize(u_Image, u_MipLevel); //每个纹素的大小
     vec3 Result = textureLod(u_Image, v2f_TexCoords, u_MipLevel).rgb * u_GaussianWeight[0];
     if(u_IsHorizontal)
     {

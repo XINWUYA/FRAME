@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{8edcd557-8de4-45ab-9fc5-03b54a73afc5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowCubeMapPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereMap2CubeMapPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpherePBRPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianBlurPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ShowCubeMapPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereMap2CubeMapPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpherePBRPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereSet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlurPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GaussianBlur_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="GaussianBlur_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ShowCubeMap_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ShowCubeMap_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SphereMap2CubeMap_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SphereMap2CubeMap_GS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SphereMap2CubeMap_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SpherePBR_FS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SpherePBR_VS.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
