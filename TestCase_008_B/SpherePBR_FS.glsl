@@ -71,7 +71,7 @@ vec3 fecthFilteredEnvMap(vec3 vLooupVector, float vRoughness)
 
 	float Lod = vRoughness * MAX_MIPMAP_LEVEL;	//这里的LOD怎么算？
 	//Lod = min(pow(Lod, 1.0/2.0) * 3, 6.0);
-	//Lod = -0.3902*pow(vRoughness,4) + 3.248*pow(vRoughness,3) - 9.869*pow(vRoughness,2) + 12.91*vRoughness + 0.3992;
+	Lod = -0.3902*pow(vRoughness,4) + 3.248*pow(vRoughness,3) - 9.869*pow(vRoughness,2) + 12.91*vRoughness + 0.3992;
 
 	return textureLod(u_FilteredEnvMap, UV, Lod).rgb;
 }
@@ -82,7 +82,7 @@ vec3 fecthFilteredEnvMap4Diffuse(vec3 vLooupVector)
 
 	const float MAX_MIPMAP_LEVEL = 6.0;
 
-	return textureLod(u_FilteredEnvMap, UV, MAX_MIPMAP_LEVEL).rgb;
+	return textureLod(u_FilteredEnvMap, UV, MAX_MIPMAP_LEVEL - 1).rgb;
 }
 
 vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, vec3 vReflectionDir)
@@ -154,16 +154,6 @@ void main()
 	vec3 Ks = F;
 	vec3 Kd = 1.0 - Ks;
 	Kd *= 1.0 - u_Metalness;
-	//Kd = vec3(1.0);
-	//vec3 Irradiance = texture(u_IrradianceMap, N).rgb;
-	//vec3 DiffusePart = Irradiance * u_DiffuseColor * u_AO;
-	
-	//const float MAX_REFLECTION_LOD = 4.0;
- //   vec3 PrefilteredColor = textureLod(u_PrefilterEnvMap, R,  u_Roughness * MAX_REFLECTION_LOD).rgb;    
- //   vec2 BRDFColor = texture(u_BRDFMap, vec2(max(dot(N, V), 0.0), u_Roughness)).rg;
- //   vec3 SpecularPart = PrefilteredColor * (F * BRDFColor.x + BRDFColor.y);
-
-	//vec3 Ambient = Kd * DiffusePart + SpecularPart;
 
 	vec2 UV = LTC_Coords(dot(N, V), u_Roughness);
 	vec4 LTCMatrixComponents = texture2D(u_LTC_MatrixTexture, UV);

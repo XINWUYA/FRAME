@@ -111,6 +111,7 @@ void main()
     vec3 PrefilteredColor = textureLod(u_PrefilterEnvMap, R,  u_Roughness * MAX_REFLECTION_LOD).rgb;    
     vec2 BRDFColor = texture(u_BRDFMap, vec2(max(dot(N, V), 0.0), u_Roughness)).rg;
     vec3 SpecularPart = PrefilteredColor * (F * BRDFColor.x + BRDFColor.y);
+    //vec3 SpecularPart = PrefilteredColor * F;
 
 	vec3 Ambient = Kd * DiffusePart + SpecularPart;
 

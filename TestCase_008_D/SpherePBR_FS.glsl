@@ -190,9 +190,11 @@ void main()
 	Diffuse *= Kd;
 	vec3 TransformN = normalize(LTCMatrix * R);
 	//vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
-	vec3 Specular = textureLod(u_FilteredEnvMap, R,  u_Roughness * MAX_MIPMAP_LEVEL).rgb;
+	float Lod = -0.3902*pow(u_Roughness,4) + 3.248*pow(u_Roughness,3) - 9.869*pow(u_Roughness,2) + 12.91*u_Roughness + 0.3992;
+	vec3 Specular = textureLod(u_FilteredEnvMap, R,  Lod).rgb;
     vec2 BRDFColor = texture(u_BRDFMap, vec2(max(dot(N, V), 0.0), u_Roughness)).rg;
 	Specular = Specular * (F * BRDFColor.x + BRDFColor.y);
+	//Specular = Specular * F;
 	//---------------------------------------------------------
 
 	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
