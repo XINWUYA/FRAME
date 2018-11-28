@@ -7,6 +7,7 @@ out vec4 Color_;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
+uniform sampler2D u_BRDFMap;
 uniform samplerCube u_FilteredEnvMap;
 uniform vec3  u_DiffuseColor;
 uniform vec3  u_SpecularColor = vec3(1);
@@ -90,10 +91,7 @@ vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, v
 	vec3 VSum = vec3(1.0);		//这个地方应该要算球面转换后被截掉的比例 
 
 	float CosThetaBetweenHemiSphere = dot(normalize(vNormal), normalize(vLTCMatrix * vNormal));
-	//if(CosThetaBetweenHemiSphere >= 0.0)
-	//	VSum = vec3((CosThetaBetweenHemiSphere + 1) / 2.0);
-	//else
-		VSum = vec3((1 + CosThetaBetweenHemiSphere) / 2.0);
+	VSum = vec3((1 + CosThetaBetweenHemiSphere) / 2.0);
  
 	vec3 TransformN = normalize(vLTCMatrix * vReflectionDir);
 	vec3 TextureLight = vLTCMatrix == mat3(1) ? fecthFilteredEnvMap4Diffuse(vNormal) : fecthFilteredEnvMap(vReflectionDir, u_Roughness);
@@ -174,18 +172,32 @@ void main()
 		vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 	);
 	
-	vec3 Diffuse = integrateLTC(N, V, v2f_FragPosInWorldSpace, mat3(1), R);
-	Diffuse *= Kd;
-	vec3 TransformN = normalize(LTCMatrix * R);
-	vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
-	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
-	Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
-	Specular *= F;
+	//vec3 Diffuse = integrateLTC(N, V, v2f_FragPosInWorldSpace, mat3(1), R);
+	//Diffuse *= Kd;
+	//vec3 TransformN = normalize(LTCMatrix * R);
+	//vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
+	//vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
+	//Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
 
-	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
+	//vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
 	//vec3 AmbientColor = u_Intensity * Diffuse * u_DiffuseColor;
 	//vec3 AmbientColor = u_Intensity * Specular;
 	//AmbientColor /= 2.0 * PI;
+
+	//---------------------使用BRDFMap-------------------------
+	const float MAX_MIPMAP_LEVEL = 6.0;
+	vec3 Diffuse = textureLod(u_FilteredEnvMap, N, MAX_MIPMAP_LEVEL).rgb;
+	Diffuse *= Kd;
+	vec3 TransformN = normalize(LTCMatrix * R);
+	//vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
+	vec3 Specular = textureLod(u_FilteredEnvMap, R,  u_Roughness * MAX_MIPMAP_LEVEL).rgb;
+    vec2 BRDFColor = texture(u_BRDFMap, vec2(max(dot(N, V), 0.0), u_Roughness)).rg;
+	Specular = Specular * (F * BRDFColor.x + BRDFColor.y);
+	//---------------------------------------------------------
+
+	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
+	//vec3 AmbientColor = u_Intensity * Specular;
+	//vec3 AmbientColor = u_Intensity * Diffuse;
 
 	vec3 Color = AmbientColor/* + Lo*/;
 

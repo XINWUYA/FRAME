@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame_4_SubsurfaceScattering_Exp", "Frame_4_SubsurfaceScattering_Exp\Frame_4_SubsurfaceScattering_Exp.vcxproj", "{982E388C-A65B-474C-8D6B-B4D39EA7153C}"
 EndProject
@@ -59,6 +59,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_004_H(GaussianBlur+CustomDistribution)", "TestCase_004_H\TestCase_004_H.vcxproj", "{03746737-912B-41C5-9ABF-BB886C213B14}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_008_B(IBL_PBRWithDiffuseByLTC_CorrectedGaussianBlur)", "TestCase_008_B\TestCase_008_B.vcxproj", "{D5012649-1FC2-44F1-A6D0-4956030AF409}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_008_D(IBL_PBR+GaussianBlur+BRDFMap)", "TestCase_008_D\TestCase_008_D.vcxproj", "{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -284,6 +286,14 @@ Global
 		{D5012649-1FC2-44F1-A6D0-4956030AF409}.Release|x64.Build.0 = Release|x64
 		{D5012649-1FC2-44F1-A6D0-4956030AF409}.Release|x86.ActiveCfg = Release|Win32
 		{D5012649-1FC2-44F1-A6D0-4956030AF409}.Release|x86.Build.0 = Release|Win32
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Debug|x64.ActiveCfg = Debug|x64
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Debug|x64.Build.0 = Debug|x64
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Debug|x86.ActiveCfg = Debug|Win32
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Debug|x86.Build.0 = Debug|Win32
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Release|x64.ActiveCfg = Release|x64
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Release|x64.Build.0 = Release|x64
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Release|x86.ActiveCfg = Release|Win32
+		{2E0CD6D8-A2B8-49D2-B03E-E1E89677DFE1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
