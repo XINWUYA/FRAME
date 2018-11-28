@@ -114,7 +114,7 @@ void main()
 
 	vec3 Ambient = Kd * DiffusePart + SpecularPart;
 
-	vec3 Color = Ambient + Lo;
+	vec3 Color = Ambient/* + Lo*/;
 
 	//HDRÉ«µ÷Ó³Éä
 	Color = Color / (Color + vec3(1.0));

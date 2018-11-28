@@ -63,6 +63,7 @@ void CSpherePBRPass::updateV()
 	for (int Row = 0; Row < m_RowNum; ++Row)
 	{
 		m_pShader->setFloatUniformValue("u_Metalness", float(Row) / m_RowNum);
+		//m_pShader->setFloatUniformValue("u_Metalness", 1.0);
 		for (int Col = 0; Col < m_ColNum; ++Col)
 		{
 			m_pShader->setFloatUniformValue("u_Roughness", glm::clamp(float(Col) / m_ColNum, 0.1f, 1.0f));
