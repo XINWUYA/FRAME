@@ -18,5 +18,6 @@ private:
 	int m_InputSphericalTexture = -1;
 	int m_EnvCubeMap = -1;
 	int m_MaxMipMapLevel = -1;
+	float m_MipMapWidth = 512;
 	std::vector<glm::mat4> m_VPMatrices4LookAtSixFaces;
 };

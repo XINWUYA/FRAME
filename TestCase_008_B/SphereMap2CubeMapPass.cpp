@@ -28,8 +28,8 @@ void CSphereMap2CubeMapPass::initV()
 	CubeTexture.InternalFormat = GL_RGB16F;
 	CubeTexture.ExternalFormat = GL_RGB;
 	CubeTexture.DataType = GL_FLOAT;
-	CubeTexture.Width = 512;  //128
-	CubeTexture.Height = 512;
+	CubeTexture.Width = m_MipMapWidth;  //128
+	CubeTexture.Height = m_MipMapWidth;
 	CubeTexture.Type4WrapR = CubeTexture.Type4WrapS = CubeTexture.Type4WrapT = GL_CLAMP_TO_EDGE;
 	CubeTexture.isMipmap = GL_TRUE;
 	m_EnvCubeMap = genTexture(CubeTexture);
@@ -87,7 +87,7 @@ void CSphereMap2CubeMapPass::updateV()
 	m_pShader->setTextureUniformValue("u_SphereMap", m_InputSphericalTexture, 0);
 	for (int MipLevel = 0; MipLevel < m_MaxMipMapLevel; ++MipLevel)
 	{
-		GLuint MipWidth = 512 * std::pow(0.5, MipLevel);	//128
+		GLuint MipWidth = m_MipMapWidth * std::pow(0.5, MipLevel);	//128
 		GLuint MipHeight = MipWidth;
 		glViewport(0, 0, MipWidth, MipHeight);
 		//float Roughness = float(MipLevel) / (m_MaxMipMapLevel - 1);

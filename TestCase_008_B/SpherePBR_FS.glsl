@@ -70,6 +70,8 @@ vec3 fecthFilteredEnvMap(vec3 vLooupVector, float vRoughness)
 	const float MAX_MIPMAP_LEVEL = 6.0;
 
 	float Lod = vRoughness * MAX_MIPMAP_LEVEL;	//这里的LOD怎么算？
+	//Lod = min(pow(Lod, 1.0/2.0) * 3, 6.0);
+	Lod = -0.3902*pow(vRoughness,4) + 3.248*pow(vRoughness,3) - 9.869*pow(vRoughness,2) + 12.91*vRoughness + 0.3992;
 
 	return textureLod(u_FilteredEnvMap, UV, Lod).rgb;
 }
@@ -83,11 +85,18 @@ vec3 fecthFilteredEnvMap4Diffuse(vec3 vLooupVector)
 	return textureLod(u_FilteredEnvMap, UV, MAX_MIPMAP_LEVEL).rgb;
 }
 
-vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
+vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix, vec3 vReflectionDir)
 {	
 	vec3 VSum = vec3(1.0);		//这个地方应该要算球面转换后被截掉的比例 
+
+	float CosThetaBetweenHemiSphere = dot(normalize(vNormal), normalize(vLTCMatrix * vNormal));
+	//if(CosThetaBetweenHemiSphere >= 0.0)
+	//	VSum = vec3((CosThetaBetweenHemiSphere + 1) / 2.0);
+	//else
+		VSum = vec3((1 + CosThetaBetweenHemiSphere) / 2.0);
  
-	vec3 TextureLight = vLTCMatrix == mat3(1) ? fecthFilteredEnvMap4Diffuse(vNormal) : fecthFilteredEnvMap(vNormal, u_Roughness);
+	vec3 TransformN = normalize(vLTCMatrix * vReflectionDir);
+	vec3 TextureLight = vLTCMatrix == mat3(1) ? fecthFilteredEnvMap4Diffuse(vNormal) : fecthFilteredEnvMap(vReflectionDir, u_Roughness);
 
 	return VSum * TextureLight;
 }
@@ -165,14 +174,16 @@ void main()
 		vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 	);
 	
-	vec3 Diffuse = integrateLTC(N, V, v2f_FragPosInWorldSpace, mat3(1));
+	vec3 Diffuse = integrateLTC(N, V, v2f_FragPosInWorldSpace, mat3(1), R);
 	Diffuse *= Kd;
-	vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix);
+	vec3 TransformN = normalize(LTCMatrix * R);
+	vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
 	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 	Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
 
 	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
 	//vec3 AmbientColor = u_Intensity * Diffuse * u_DiffuseColor;
+	//vec3 AmbientColor = u_Intensity * Specular;
 	//AmbientColor /= 2.0 * PI;
 
 	vec3 Color = AmbientColor/* + Lo*/;
