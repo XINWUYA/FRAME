@@ -169,8 +169,11 @@ void main()
 	vec3 TransformN = normalize(LTCMatrix * R);
 	vec3 Specular = integrateLTC(N, V, v2f_FragPosInWorldSpace, LTCMatrix, R);
 	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
-	Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
-	Specular *= F;
+	//Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
+	//Specular *= F;
+
+	vec3 SpecularColor = u_SpecularColor * F;
+	Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
 
 	vec3 AmbientColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
 	//vec3 AmbientColor = u_Intensity * Diffuse * u_DiffuseColor;
