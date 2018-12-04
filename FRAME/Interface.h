@@ -68,6 +68,15 @@ namespace ElayGraphics
 		{
 			return boost::any_cast<TDataType>(getSharedDataByName(vDataName));
 		}
+
+		template <typename TDataType>
+		TDataType getSharedDataByName(const std::string &vDataName, const boost::any& vDataValueWhenLastGet, bool &vioDataChanged)
+		{
+			auto Data = boost::any_cast<TDataType>(getSharedDataByName(vDataName));
+			auto LastData = boost::any_cast<TDataType>(vDataValueWhenLastGet);
+			vioDataChanged = !(LastData == Data);
+			return Data;
+		}
 	}
 
 	namespace InputManager
