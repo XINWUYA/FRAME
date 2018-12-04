@@ -28,7 +28,7 @@ float DistributionGGX(vec3 vN, vec3 vH, float vRoughness)
 	float nom = a2;  //分子
 	float denom = NdotH2 * (a2 - 1.0) + 1.0;
 	denom = PI * denom * denom;
-	return nom / max(denom, 0.001);		//防止vRoughness=0而且NdotH=1时出现分母除0的情况
+	return nom / denom;		//防止vRoughness=0而且NdotH=1时出现分母除0的情况
 }
 
 float GeometrySchlickGGX(float vNdotV, float vRoughness)
