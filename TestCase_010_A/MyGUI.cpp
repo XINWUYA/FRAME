@@ -17,6 +17,7 @@ void CMyGUI::initV()
 	ElayGraphics::ResourceManager::registerSharedData("DiffuseColor", m_DiffuseColor);
 	ElayGraphics::ResourceManager::registerSharedData("SpecularColor", m_SpecularColor);
 	ElayGraphics::ResourceManager::registerSharedData("Roughness", m_Roughness);
+	ElayGraphics::ResourceManager::registerSharedData("Metalness", m_Metalness);
 	ElayGraphics::ResourceManager::registerSharedData("Intensity", m_Intensity);
 	ElayGraphics::ResourceManager::registerSharedData("Rotation", m_LightSourceRotation);
 	ElayGraphics::ResourceManager::registerSharedData("Position", m_LightSourcePosition);
@@ -33,6 +34,9 @@ void CMyGUI::updateV()
 	float MinRoughness = 0.0f, MaxRoughness = 1.0f;
 	if (IGUI::sliderScalar("Roughness", ElayGraphics::EDataType::DataType_Float, &m_Roughness, &MinRoughness, &MaxRoughness))
 		ElayGraphics::ResourceManager::updateSharedDataByName("Roughness", m_Roughness);
+	float MinMetalness = 0.0f, MaxMetalness = 1.0f;
+	if (IGUI::sliderScalar("Metalness", ElayGraphics::EDataType::DataType_Float, &m_Metalness, &MinMetalness, &MaxMetalness))
+		ElayGraphics::ResourceManager::updateSharedDataByName("Metalness", m_Metalness);
 	float MinIntensity = 0.0f, MaxIntensity = 10.0f;
 	if (IGUI::sliderScalar("Intensity", ElayGraphics::EDataType::DataType_Float, &m_Intensity, &MinIntensity, &MaxIntensity))
 		ElayGraphics::ResourceManager::updateSharedDataByName("Intensity", m_Intensity);

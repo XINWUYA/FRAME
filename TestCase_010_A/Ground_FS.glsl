@@ -11,12 +11,14 @@ layout (std140, binding = 0) uniform u_Matrices4ProjectionWorld
 };
 
 uniform vec3  u_CameraPosInWorldSpace;
-uniform vec3  u_DiffuseColor;
-uniform vec3  u_SpecularColor;
+uniform vec3  u_Albedo = vec3(1);
+uniform vec4  u_DielectricSpecularColor = vec4(0.220916301, 0.220916301, 0.220916301, 1.0 - 0.220916301);
+uniform vec3  u_LightColor = vec3(1);
 uniform vec3  u_LightPosition;
 
 uniform float u_Roughness;
 uniform float u_Intensity;
+uniform float u_Metalness = 0.0;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
@@ -35,7 +37,7 @@ vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
 	if(LightPositionInTangentSpace.z < 0)
 		return vec3(0);
 	LightPositionInTangentSpace = normalize(LightPositionInTangentSpace);
-	vec3 VSum = vec3(LightPositionInTangentSpace.z / PI);
+	vec3 VSum = vec3(LightPositionInTangentSpace.z/* / PI*/);
 
 	return VSum;
 }
@@ -50,10 +52,44 @@ vec2 LTC_Coords(float vCosTheta, float vRoughness)
     return Coords;
 }
 
+float OneMinusReflectivityFromMetallic(float metallic)
+{
+    // We'll need oneMinusReflectivity, so
+    //   1-reflectivity = 1-lerp(dielectricSpec, 1, metallic) = lerp(1-dielectricSpec, 0, metallic)
+    // store (1-dielectricSpec) in unity_ColorSpaceDielectricSpec.a, then
+    //   1-reflectivity = lerp(alpha, 0, metallic) = alpha + metallic*(0 - alpha) =
+    //                  = alpha - metallic * alpha
+    float oneMinusDielectricSpec = u_DielectricSpecularColor.a;
+    return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
+}
+
+vec3 DiffuseAndSpecularFromMetallic (vec3 albedo, float metallic, out vec3 specColor)
+{
+    specColor = mix (u_DielectricSpecularColor.rgb, albedo, metallic);
+    float oneMinusReflectivity = OneMinusReflectivityFromMetallic(metallic);
+    return u_Albedo * oneMinusReflectivity;
+}
+
+vec3 FresnelSchlick(float vCosTheta, vec3 vF0)
+{
+	return vF0 + (1.0 - vF0) * pow(1.0 - vCosTheta, 5.0);
+}
+
 void main()
 {
 	vec3 GroundNormal = vec3(0, 1, 0);	//其他几何体的话应该由其法线乘以模型矩阵来算
 	vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
+	vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
+	vec3 H = normalize(ViewDir + LightDir);
+	float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);	//length可以变成dot，减少开方运算
+	float LightAttenuation = 1.0f / (Distance * Distance);
+
+	vec3 SpecularColor;
+	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
+	vec3 F0 = SpecularColor;
+	vec3 F = FresnelSchlick(max(dot(H, ViewDir), 0.0f), F0);
+	vec3 Ks = F;
+	vec3 Kd = vec3(1.0) - Ks;
 
 	vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), u_Roughness);
 
@@ -69,14 +105,16 @@ void main()
 
 	vec3 Diffuse = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1));
 	vec3 Specular = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix);
-	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
-	Specular *= u_SpecularColor * Schlick.x + (1.0 - u_SpecularColor) * Schlick.y;
+	//vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
+	//Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
 
-	vec3 ResultColor = u_Intensity * (Diffuse * u_DiffuseColor + Specular);
-	//vec3 ResultColor = u_Intensity * Diffuse * u_DiffuseColor;
+	//vec3 ResultColor = u_Intensity * (Diffuse * DiffuseColor + Specular);
+	//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation/* * Kd*/;
+	vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 
-	vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
-	vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
+	//vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
+	//vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
+	vec3 GammaedColor = ResultColor;
 
 	FragColor_ = vec4(GammaedColor, 1.0);
 }

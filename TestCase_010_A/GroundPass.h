@@ -15,6 +15,7 @@ public:
 
 private:
 	float  m_Roughness = 0.0f;
+	float  m_Metalness = 0.0f;
 	float  m_Intensity = 0.0f;
 	int m_LTCMatrixTexture = -1;
 	int m_LTCMagnitueTexture = -1;

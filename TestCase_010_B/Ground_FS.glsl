@@ -143,7 +143,7 @@ void main()
 	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 
 	vec3 F0 = SpecularColor;
-	vec3 F = FresnelSchlick(max(dot(H, ViewDir), 0.0f), F0);
+	vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
 	float NDF = DistributionGGX(GroundNormal, H, u_Roughness);
 	float G = GeometrySmith(GroundNormal, ViewDir, LightDir, u_Roughness);
 	vec3 Specular = NDF * G * F / (4 * max(dot(GroundNormal, ViewDir), 0.0f) * max(dot(GroundNormal, LightDir), 0.0f) + 0.001);//0.001ÊÇÎªÁË±ÜÃâ³ý0
@@ -152,7 +152,7 @@ void main()
 	vec3 Kd = vec3(1.0) - Ks;
 
 	float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-	vec3 ResultColor = u_Intensity * (Kd * DiffuseColor/* / PI*/ + Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
+	vec3 ResultColor = u_Intensity * (/*Kd * DiffuseColor/* / PI* + */Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
 	////------------------BRDF in Unity---------------------
 	//float Smoothness = 1 - sqrt(u_Roughness);
 	//float Roughness = 1 - Smoothness;

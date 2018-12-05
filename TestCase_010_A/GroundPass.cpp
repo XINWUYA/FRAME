@@ -56,6 +56,11 @@ void CGroundPass::updateV()
 	if (RoughnessChanged)
 		m_pShader->setFloatUniformValue("u_Roughness", m_Roughness);
 
+	bool MetalnessChanged = false;
+	m_Metalness = ElayGraphics::ResourceManager::getSharedDataByName<float>("Metalness", m_Metalness, MetalnessChanged);
+	if (MetalnessChanged)
+		m_pShader->setFloatUniformValue("u_Metalness", m_Metalness);
+
 	bool IntensityChanged = false;
 	m_Intensity = ElayGraphics::ResourceManager::getSharedDataByName<float>("Intensity", m_Intensity, IntensityChanged);
 	if (IntensityChanged)
