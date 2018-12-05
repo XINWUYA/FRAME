@@ -152,7 +152,7 @@ void main()
 	vec3 Kd = vec3(1.0) - Ks;
 
 	float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-	vec3 ResultColor = u_Intensity * (/*Kd * DiffuseColor/* / PI* + */Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
+	vec3 ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
 	////------------------BRDF in Unity---------------------
 	//float Smoothness = 1 - sqrt(u_Roughness);
 	//float Roughness = 1 - Smoothness;

@@ -25,14 +25,24 @@ uniform sampler2D u_LTC_MagnitueTexture;
 
 const float PI = 3.14159265;
 
-vec3 integrateLTC(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
+vec3 integrateLTCSpecular(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
 {	
-	//着色点上的切线空间正交基
-	vec3 Tangent = normalize(vViewDir - vNormal * dot(vViewDir, vNormal));
-	vec3 Bitangent = cross(vNormal, Tangent);
-
 	//将变换矩阵转换到切线空间
-	vLTCMatrix = vLTCMatrix * transpose(mat3(Tangent, Bitangent, vNormal));
+	float JacobianNom = determinant(vLTCMatrix);
+	vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
+	if(LightPositionInTangentSpace.z < 0)
+		return vec3(0);
+	float JacobianDenom = pow(length(LightPositionInTangentSpace), 3);
+	LightPositionInTangentSpace = normalize(LightPositionInTangentSpace);
+	vec3 VSum = vec3(LightPositionInTangentSpace.z/* / PI*/);
+	VSum *= JacobianNom / JacobianDenom;
+
+	return VSum;
+}
+
+vec3 integrateLTCDiffuse(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
+{
+	//将变换矩阵转换到切线空间
 	vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
 	if(LightPositionInTangentSpace.z < 0)
 		return vec3(0);
@@ -70,9 +80,9 @@ vec3 DiffuseAndSpecularFromMetallic (vec3 albedo, float metallic, out vec3 specC
     return u_Albedo * oneMinusReflectivity;
 }
 
-vec3 FresnelSchlick(float vCosTheta, vec3 vF0)
+vec3 FresnelSchlickRoughness(float vCosTheta, vec3 vF0, float vRoughness)
 {
-	return vF0 + (1.0 - vF0) * pow(1.0 - vCosTheta, 5.0);
+	return vF0 + (max(vec3(1.0 - vRoughness), vF0) - vF0) * pow(1.0 - vCosTheta, 5.0);
 }
 
 void main()
@@ -87,9 +97,8 @@ void main()
 	vec3 SpecularColor;
 	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 	vec3 F0 = SpecularColor;
-	vec3 F = FresnelSchlick(max(dot(H, ViewDir), 0.0f), F0);
-	vec3 Ks = F;
-	vec3 Kd = vec3(1.0) - Ks;
+	vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
+	vec3 Kd = vec3(1.0) - F;
 
 	vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), u_Roughness);
 
@@ -101,16 +110,19 @@ void main()
 		vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 	);
 
-	//vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
+	//着色点上的切线空间正交基
+	vec3 Tangent = normalize(ViewDir - GroundNormal * dot(ViewDir, GroundNormal));
+	vec3 Bitangent = cross(GroundNormal, Tangent);
+	mat3 TangentSpaceInverseMatrix = transpose(mat3(Tangent, Bitangent, GroundNormal));
 
-	vec3 Diffuse = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, mat3(1));
-	vec3 Specular = integrateLTC(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix);
-	//vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
-	//Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
+	vec3 Diffuse = integrateLTCDiffuse(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, TangentSpaceInverseMatrix);
+	vec3 Specular = integrateLTCSpecular(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix * TangentSpaceInverseMatrix);
+	vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
+	Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
 
-	//vec3 ResultColor = u_Intensity * (Diffuse * DiffuseColor + Specular);
-	//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation/* * Kd*/;
-	vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
+	vec3 ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd + Specular) * LightAttenuation;
+	//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation * Kd;
+	//vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 
 	//vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
 	//vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
