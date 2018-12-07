@@ -78,11 +78,13 @@ float DisneyDiffuse(float NdotV, float NdotL, float LdotH, float perceptualRough
 // Ref: http://jcgt.org/published/0003/02/03/paper.pdf
 float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
 {
-    // Approximation of the above formulation (simplify the sqrt, not mathematically correct but close enough)
-    float a = roughness;
-    float lambdaV = NdotL * (NdotV * (1 - a) + a);
-    float lambdaL = NdotV * (NdotL * (1 - a) + a);
+	float a          = roughness;
+    float a2         = a * a;
 
+    float lambdaV    = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
+    float lambdaL    = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
+
+    // Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
     return 0.5f / (lambdaV + lambdaL + 1e-5f);
 }
 
@@ -132,6 +134,8 @@ void main()
 {
 	vec3 GroundNormal = vec3(0, 1, 0);	//其他几何体的话应该由其法线乘以模型矩阵来算
 	vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
+
+	vec3 ResultColor;
 	vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
 	vec3 H = normalize(ViewDir + LightDir);
 
@@ -152,7 +156,7 @@ void main()
 	vec3 Kd = vec3(1.0) - Ks;
 
 	float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-	vec3 ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
+	ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
 	////------------------BRDF in Unity---------------------
 	//float Smoothness = 1 - sqrt(u_Roughness);
 	//float Roughness = 1 - Smoothness;
