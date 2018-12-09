@@ -1,18 +1,19 @@
 #pragma once
 #include "RenderPass.h"
+#include <memory>
 #include <GLM/glm.hpp>
 
+class IGameObject;
 class CLightSource;
-class CGround;
 
-class CGroundPass : public IRenderPass
+class CModelPass : public IRenderPass
 {
 public:
-	CGroundPass(const std::string& vPassName, int vExcutionOrder);
-	virtual ~CGroundPass();
+	CModelPass(const std::string& vPassName, int vExecutionOrder);
+	virtual ~CModelPass();
 
-	virtual void initV() override;
-	virtual void updateV() override;
+	virtual void initV();
+	virtual void updateV();
 
 private:
 	float  m_Roughness = 0.0f;
@@ -24,7 +25,7 @@ private:
 	int m_OldKeyPStatus = -1;
 	glm::vec4 m_Albedo;
 	glm::vec3 m_LightSourcePos;
+	std::shared_ptr<IGameObject> m_pGameObject;
 	std::shared_ptr<CLightSource> m_pLightSource;
-	std::shared_ptr<CGround> m_pGround;
-	glm::mat4 m_GroundModelMatrix;
+	glm::mat4 m_GameObjectModelMatrix;
 };

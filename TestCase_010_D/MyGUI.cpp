@@ -19,7 +19,7 @@ void CMyGUI::initV()
 	ElayGraphics::ResourceManager::registerSharedData("Metalness", m_Metalness);
 	ElayGraphics::ResourceManager::registerSharedData("Intensity", m_Intensity);
 	ElayGraphics::ResourceManager::registerSharedData("Rotation", m_GroundRotation);
-	ElayGraphics::ResourceManager::registerSharedData("Position", m_LightSourcePosition);
+	ElayGraphics::ResourceManager::registerSharedData("LightPosition", m_LightSourcePosition);
 }
 
 //************************************************************************************
@@ -39,11 +39,11 @@ void CMyGUI::updateV()
 		ElayGraphics::ResourceManager::updateSharedDataByName("Intensity", m_Intensity);
 	float MinPosOffset = -10.0f, MaxPosOffset = 10.0f;
 	if (IGUI::sliderScalar("Position X", ElayGraphics::EDataType::DataType_Float, &m_LightSourcePosition.x, &MinPosOffset, &MaxPosOffset))
-		ElayGraphics::ResourceManager::updateSharedDataByName("Position", m_LightSourcePosition);
+		ElayGraphics::ResourceManager::updateSharedDataByName("LightPosition", m_LightSourcePosition);
 	if (IGUI::sliderScalar("Position Y", ElayGraphics::EDataType::DataType_Float, &m_LightSourcePosition.y, &MinPosOffset, &MaxPosOffset))
-		ElayGraphics::ResourceManager::updateSharedDataByName("Position", m_LightSourcePosition);
+		ElayGraphics::ResourceManager::updateSharedDataByName("LightPosition", m_LightSourcePosition);
 	if (IGUI::sliderScalar("Position Z", ElayGraphics::EDataType::DataType_Float, &m_LightSourcePosition.z, &MinPosOffset, &MaxPosOffset))
-		ElayGraphics::ResourceManager::updateSharedDataByName("Position", m_LightSourcePosition);
+		ElayGraphics::ResourceManager::updateSharedDataByName("LightPosition", m_LightSourcePosition);
 	float MinRotation = 0.0f, MaxRotation = 360.0f;
 	if (IGUI::sliderScalar("Rotation X", ElayGraphics::EDataType::DataType_Float, &m_GroundRotation.x, &MinRotation, &MaxRotation))
 		ElayGraphics::ResourceManager::updateSharedDataByName("Rotation", m_GroundRotation);
