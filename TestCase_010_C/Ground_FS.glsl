@@ -208,7 +208,7 @@ void main()
 			float DistanceFromFrag2Light = length(Frag2Light);
 			vec3 AttenuatedLightColor = b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light);
 			Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * AttenuatedLightColor;
-			Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * AttenuatedLightColor;
+			Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb;
 		}
 		Specular *= JacobianNom;
 
@@ -224,14 +224,15 @@ void main()
 		//-----------------------------Unity BRDF--------------------------------------
 		float nv = abs(dot(GroundNormal, ViewDir));
 		float Smoothness = 1 - sqrt(u_Roughness);
-		float Roughness = 1 - Smoothness;
+		float Roughness = u_Roughness;
 		vec3 F0 = SpecularColor;
 		for(int i = 0; i < u_LightNum; ++i)
 		{
 			vec3 LightDir = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
 			float Distance = length(LightDir);
 			LightDir = normalize(LightDir);
-			vec3 H = SafeNormalize(LightDir + ViewDir);
+			//vec3 H = SafeNormalize(LightDir + ViewDir);
+			vec3 H = normalize(LightDir + ViewDir);
 			float nl = saturate(dot(GroundNormal, LightDir));
 			float nh = saturate(dot(GroundNormal, H));
 			float lv = saturate(dot(LightDir, ViewDir));
