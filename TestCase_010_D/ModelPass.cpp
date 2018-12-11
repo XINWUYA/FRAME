@@ -34,6 +34,7 @@ void CModelPass::updateV()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
+	m_pShader->activeShader();
 	bool DiffuseColorChanged = false;
 	m_Albedo = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec4>("Albedo", m_Albedo, DiffuseColorChanged);
 	if (DiffuseColorChanged)

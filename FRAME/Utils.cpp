@@ -12,7 +12,7 @@
 
 //************************************************************************************
 //Function:
-GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_list<GLint> vAttribsLength, const GLint vIndices[], GLint vIndicesSize)
+GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_list<GLint> vAttribsLength, const GLint vIndices[], GLint vIndicesSize, int *voVBO)
 {
 	GLint VAO = 0, VBO = 0, EBO = 0;
 	glGenVertexArrays(1, &(GLuint&)VAO);
@@ -37,6 +37,8 @@ GLint createVAO(const GLvoid* vVertices, GLint vVerticesSize, std::initializer_l
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	if (voVBO)
+		*voVBO = VBO;
 	return VAO;
 }
 

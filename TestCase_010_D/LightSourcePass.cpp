@@ -16,14 +16,22 @@ CLightSourcePass::~CLightSourcePass()
 void CLightSourcePass::initV()
 {
 	m_pShader = std::make_shared<CShader>("LightSource_VS.glsl", "LightSource_FS.glsl");
-	const glm::vec3& LightSourcePos = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"))->getLightPos();
-	m_LightSourcePosVAO = createVAO(&LightSourcePos, sizeof(LightSourcePos), { 3 });
+	m_pLightSource = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"));
+	m_LightSourcePos = m_pLightSource->getLightPos();
+	m_LightSourcePosVAO = createVAO(&m_LightSourcePos, sizeof(m_LightSourcePos), { 3 }, nullptr, 0, &m_LightSourcePosVBO);
 }
 
 void CLightSourcePass::updateV()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+
+	const glm::vec3& LightSourcePos = m_pLightSource->getLightPos();
+	if (LightSourcePos != m_LightSourcePos)
+	{
+		m_LightSourcePos = LightSourcePos;
+		transferData2Buffer(GL_ARRAY_BUFFER, m_LightSourcePosVBO, { 0 }, { sizeof(m_LightSourcePos) }, { &m_LightSourcePos });
+	}
 
 	m_pShader->activeShader();
 	glBindVertexArray(m_LightSourcePosVAO);
