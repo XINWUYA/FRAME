@@ -13,7 +13,7 @@ public:
 
 private:
 	glm::vec4 m_Albedo = glm::vec4(1);
-	glm::vec3 m_GroundRotation;
+	glm::vec3 m_GroundRotation = { 270,0,0 };
 	glm::vec3 m_LightSourcePosition{ 0,1,0 };
 	float	  m_Roughness = 0.0f;
 	float	  m_Metalness = 0.0f;

@@ -33,17 +33,17 @@ GLvoid CApp::init()
 	CInputManager::getOrCreateInstance()->init();
 	m_pResourceManager->fetchOrCreateUBO4ProjectionWorld()->init();
 
+	for (auto &vItem : m_pResourceManager->getSubGUISet())
+	{
+		vItem->initV();
+	}
+
 	for (auto &vItem : m_pResourceManager->getGameObjectSet())
 	{
 		vItem->initV();
 	}
 
 	for (auto &vItem : m_pResourceManager->getRenderPassSet())
-	{
-		vItem->initV();
-	}
-
-	for (auto &vItem : m_pResourceManager->getSubGUISet())
 	{
 		vItem->initV();
 	}

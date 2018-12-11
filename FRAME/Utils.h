@@ -18,3 +18,5 @@ FRAME_DLLEXPORTS void  drawCube();
 FRAME_DLLEXPORTS void  drawSphere();
 FRAME_DLLEXPORTS GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttachments);
 FRAME_DLLEXPORTS void  transferData2Buffer(GLenum vTarget, GLint vTargetID, std::vector<GLintptr> vOffsets, std::vector<GLsizeiptr> vSizes, std::vector<const GLvoid*> vDatas);
+
+bool floatEqual(float vFloatNum1, float vFloatNum2);

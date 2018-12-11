@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Utils.h"
 #include "common.h"
+#include "Shader.h"
 
 CModel::CModel(const std::string &vModelPath)
 {

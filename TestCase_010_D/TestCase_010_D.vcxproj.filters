@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Ground.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="LightSource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ground.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="LightSource.h">
       <Filter>头文件</Filter>
     </ClInclude>

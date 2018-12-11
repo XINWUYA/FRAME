@@ -151,7 +151,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CornelBox.cpp" />
-    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="LightSourcePass.cpp" />
     <ClCompile Include="main.cpp" />
@@ -160,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CornelBox.h" />
-    <ClInclude Include="Ground.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="LightSourcePass.h" />
     <ClInclude Include="ModelPass.h" />

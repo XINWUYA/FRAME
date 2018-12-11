@@ -488,3 +488,8 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttach
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	return FBO;
 }
+
+bool floatEqual(float vFloatNum1, float vFloatNum2)
+{
+	return std::abs(vFloatNum1 - vFloatNum2) < 0.00001;
+}

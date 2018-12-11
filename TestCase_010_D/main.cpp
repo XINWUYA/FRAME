@@ -2,7 +2,6 @@
 #include "LightSourcePass.h"
 #include "ModelPass.h"
 #include "MyGUI.h"
-#include "Ground.h"
 #include "LightSource.h"
 #include "CornelBox.h"
 

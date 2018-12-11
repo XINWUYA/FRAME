@@ -23,9 +23,13 @@ void CLightSourcePass::initV()
 void CLightSourcePass::updateV()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 
+	m_pShader->activeShader();
 	glBindVertexArray(m_LightSourcePosVAO);
 	glDrawArrays(GL_POINTS, 0, 1);
+	glBindVertexArray(0);
 
+	glDisable(GL_PROGRAM_POINT_SIZE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

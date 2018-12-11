@@ -16,7 +16,7 @@ void CLightSource::initV()
 void CLightSource::updateV()
 {
 	bool LightPosChanged = false;
-	m_LightPos = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec3>("Position", m_LightPos, LightPosChanged);
+	m_LightPos = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec3>("Light Position", m_LightPos, LightPosChanged);
 	if (LightPosChanged)
 		setPosition(m_LightPos);
 }

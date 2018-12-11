@@ -9,7 +9,7 @@ CLightSource::CLightSource(const std::string &vGameObjectName, int vExecutionOrd
 //Function:
 void CLightSource::initV()
 {
-	//m_LightPos = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec3>("LightPosition");
+	m_LightPos = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec3>("LightPosition");
 }
 
 //************************************************************************************

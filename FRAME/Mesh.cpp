@@ -23,6 +23,7 @@ GLvoid CMesh::__init()
 //Function:
 GLvoid CMesh::update(const CShader& vShader) const
 {
+	vShader.activeShader();
 	int i = -1;
 	for (auto &vTexture : m_Textures)
 	{
