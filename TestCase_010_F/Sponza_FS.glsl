@@ -269,6 +269,6 @@ void main()
 	//vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
 	vec3 GammaedColor = ResultColor;
 
-	FragColor_ = vec4(GammaedColor, 1.0) * texture(u_DiffuseTexture, v2f_TexCoords);
+	FragColor_ = /*vec4(GammaedColor, 1.0) * */texture(u_DiffuseTexture, v2f_TexCoords);
 	//FragColor_ = vec4(v2f_Normal,1);
 }

@@ -22,7 +22,7 @@ GLvoid CModel::update(const CShader& vShader) const
 GLvoid CModel::__loadModel(const std::string& vPath)
 {
 	Assimp::Importer ModelImpoter;
-	m_pScene = ModelImpoter.ReadFile(vPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	m_pScene = ModelImpoter.ReadFile(vPath, aiProcess_Triangulate);
 	if (!m_pScene || !m_pScene->mRootNode || m_pScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE)
 	{
 		std::cerr << "Error::Model:: " << ModelImpoter.GetErrorString() << std::endl;

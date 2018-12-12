@@ -7,7 +7,7 @@ CGround::CGround(const std::string& vGameObjectName, int vExecutionOrder) : IGam
 
 void CGround::initV()
 {
-	rotate(glm::vec3(90, 0, 0));
+	setRotationX(90.0f);
 	scale(glm::vec3(10, 10, 1));
 }
 
