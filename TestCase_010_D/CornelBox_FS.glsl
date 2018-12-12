@@ -1,9 +1,8 @@
 #version 430 core
 
-in vec2 v2f_TexCoord;
-in vec3 v2f_Normal;
-in vec3 v2f_FragPosInWorldSpace;
-
+in  vec3 v2f_FragPosInWorldSpace;
+in  vec2 v2f_TexCoords;
+in  vec3 v2f_Normal;
 out vec4 FragColor_;
 
 layout (std140, binding = 0) uniform u_Matrices4ProjectionWorld
@@ -11,8 +10,6 @@ layout (std140, binding = 0) uniform u_Matrices4ProjectionWorld
 	mat4 u_ProjectionMatrix;
 	mat4 u_ViewMatrix;
 };
-
-uniform sampler2D u_DiffuseTexture;
 
 uniform vec3  u_CameraPosInWorldSpace;
 uniform vec3  u_Albedo = vec3(1);
@@ -27,6 +24,7 @@ uniform float u_Metalness = 0.0;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
+uniform sampler2D u_DiffuseTexture0;
 
 const float PI = 3.14159265;
 
@@ -175,17 +173,18 @@ void main()
 	vec3 ResultColor;
 	if(u_EnableLTC)
 	{
-		vec3 GroundNormal = v2f_Normal;	//其他几何体的话应该由其法线乘以模型矩阵来算
+		vec3 GroundNormal = normalize(v2f_Normal);	//其他几何体的话应该由其法线乘以模型矩阵来算
 		vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
 
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
 		vec3 H = normalize(ViewDir + LightDir);
 		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);	//length可以变成dot，减少开方运算
-		float LightAttenuation = 1.0f / (Distance * Distance);
+		float SpecularLightAttenuation = 1.0 / Distance;
+		float DiffuseLightAttenuation = SpecularLightAttenuation / Distance;
 
+		vec3 Albedo = texture(u_DiffuseTexture0, v2f_TexCoords).rgb;
 		vec3 SpecularColor;
-		vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoord).rgb;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 		vec3 F0 = SpecularColor;
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
 		vec3 Kd = vec3(1.0) - F;
@@ -209,14 +208,15 @@ void main()
 		vec3 Specular = integrateLTCSpecular(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix * TangentSpaceInverseMatrix);
 		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
+		//Diffuse *= DiffuseColor * Schlick.x + (1.0 - DiffuseColor) * Schlick.y;
 
-		ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd + Specular) * LightAttenuation;
+		ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd * DiffuseLightAttenuation + Specular * SpecularLightAttenuation);
 		//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation * Kd;
 		//vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 	}
 	else
 	{
-		vec3 GroundNormal = v2f_Normal;	//其他几何体的话应该由其法线乘以模型矩阵来算
+		vec3 GroundNormal = normalize(v2f_Normal);	//其他几何体的话应该由其法线乘以模型矩阵来算
 		vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
 
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
@@ -226,9 +226,9 @@ void main()
 		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
 		float LightAttenuation = 1.0f / (Distance * Distance);
 
+		vec3 Albedo = texture(u_DiffuseTexture0, v2f_TexCoords).rgb;
 		vec3 SpecularColor;
-		vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoord).rgb;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 
 		vec3 F0 = SpecularColor;
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
@@ -240,10 +240,10 @@ void main()
 		vec3 Kd = vec3(1.0) - Ks;
 
 		float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-		ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
+		ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular/* / PI*/) * u_LightColor * LightAttenuation * NormaldotLightDir;
 		////------------------BRDF in Unity---------------------
 		//float Smoothness = 1 - sqrt(u_Roughness);
-		//float Roughness = 1 - Smoothness;
+		//float Roughness = u_Roughness;
 		//float oneMinusReflectivity;
 		//vec3 SpecularColor;
 		//vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);

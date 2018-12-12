@@ -78,6 +78,9 @@ void CModelPass::updateV()
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_P) == GLFW_RELEASE)
 		m_OldKeyPStatus = GLFW_RELEASE;
 
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 4);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 5);
+
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);
 
