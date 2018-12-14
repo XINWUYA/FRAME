@@ -184,7 +184,7 @@ void main()
 
 		vec3 Albedo = texture(u_DiffuseTexture0, v2f_TexCoords).rgb;
 		vec3 SpecularColor;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
 		vec3 F0 = SpecularColor;
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
 		vec3 Kd = vec3(1.0) - F;
@@ -228,7 +228,7 @@ void main()
 
 		vec3 Albedo = texture(u_DiffuseTexture0, v2f_TexCoords).rgb;
 		vec3 SpecularColor;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
 
 		vec3 F0 = SpecularColor;
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);

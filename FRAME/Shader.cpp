@@ -1,11 +1,12 @@
 #include "Shader.h"
+#include "Common.h"
 #include <crtdbg.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 CShader::CShader(const std::string& vVertexShaderFileName, const std::string& vFragmentShaderFileName, const std::string& vGeometryShaderFileName,
-	const std::string& vTessellationControlShaderFileName, const std::string& vTessellationEvaluationShaderFileName) : m_ShaderProgram(0)
+	const std::string& vTessellationControlShaderFileName, const std::string& vTessellationEvaluationShaderFileName)
 {
 	__loadShader(vVertexShaderFileName, vFragmentShaderFileName, vGeometryShaderFileName, vTessellationControlShaderFileName, vTessellationEvaluationShaderFileName);
 }
@@ -221,10 +222,26 @@ GLvoid CShader::setMat4UniformValue(const std::string& vUniformName, const GLflo
 
 //************************************************************************************
 //Function:
-GLvoid CShader::setTextureUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex, GLint vTextureType/* = GL_TEXTURE_2D*/) const
+GLvoid CShader::setTextureUniformValue(const std::string& vTextureUniformName, GLint vTextureID, GLint vTextureType/* = GL_TEXTURE_2D*/)
 {
-	glActiveTexture(GL_TEXTURE0 + vBindingIndex);
-	glUniform1i(glGetUniformLocation(m_ShaderProgram, vTextureName.c_str()), vBindingIndex);
+	if (m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.find(vTextureUniformName) != m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.end())
+		return;
+	int BindingIndex = ++m_LastBindingIndex;
+	glActiveTexture(GL_TEXTURE0 + BindingIndex);
+	glUniform1i(glGetUniformLocation(m_ShaderProgram, vTextureUniformName.c_str()), BindingIndex);
+	glBindTexture(vTextureType, vTextureID);
+	m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet[vTextureUniformName] = { vTextureID, BindingIndex, vTextureType };
+}
+
+//************************************************************************************
+//Function:
+GLvoid CShader::changeTextureUniformValue(const std::string& vTextureUniformName, GLint vTextureID, GLint vTextureType/* = GL_TEXTURE_2D*/)
+{
+	_WARNING(m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.find(vTextureUniformName) != m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.end(), "Texture Uniform not be binded.");
+	auto &Item = m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet[vTextureUniformName];
+	std::get<0>(Item) = vTextureID;
+	std::get<2>(Item) = vTextureType;
+	glActiveTexture(GL_TEXTURE0 + std::get<1>(Item));
 	glBindTexture(vTextureType, vTextureID);
 }
 
@@ -233,4 +250,21 @@ GLvoid CShader::setTextureUniformValue(const std::string& vTextureName, GLint vT
 GLvoid CShader::activeShader() const
 {
 	glUseProgram(m_ShaderProgram);
+	__activeAllTextureUniform();
+}
+
+//************************************************************************************
+//Function:
+GLvoid CShader::__activeAllTextureUniform() const
+{
+	/*for (const auto& Item : m_TextureAndBindingIndexAndTextureTypeSet)
+	{
+		glActiveTexture(GL_TEXTURE0 + std::get<1>(Item));
+		glBindTexture(std::get<2>(Item), std::get<0>(Item));
+	}*/
+	for (const auto& Item : m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet)
+	{
+		glActiveTexture(GL_TEXTURE0 + std::get<1>(Item.second));
+		glBindTexture(std::get<2>(Item.second), std::get<0>(Item.second));
+	}
 }

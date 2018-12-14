@@ -11,7 +11,7 @@ int main()
 {
 	{
 		ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
-		ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(true);
+		//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
 
 		ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CBunny>("Bunny", 1));
 		ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CScreenQuad>("ScreenQuad", 1));

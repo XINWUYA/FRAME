@@ -16,5 +16,5 @@ void CBunny::initV()
 //Function:
 void CBunny::updateV()
 {
-	rotate(glm::vec3(0, 0.1, 0));
+	setRotationY(0.1);
 }

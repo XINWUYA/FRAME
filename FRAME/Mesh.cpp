@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "Common.h"
 #include "Utils.h"
 #include "Shader.h"
 
@@ -21,14 +22,21 @@ GLvoid CMesh::__init()
 
 //************************************************************************************
 //Function:
+GLvoid CMesh::init(const CShader& vioShader) const
+{
+}
+
+//************************************************************************************
+//Function:
 GLvoid CMesh::update(const CShader& vShader) const
 {
-	vShader.activeShader();
-	int i = -1;
-	for (auto &vTexture : m_Textures)
+	//_WARNING(m_Textures.size() > 5, "Texture num of some mesh is greater than 5.");
+	for (int i = 0; i < m_Textures.size(); ++i)
 	{
-		vShader.setTextureUniformValue("u_DiffuseTexture" + std::to_string(++i), vTexture.ID, i);
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, m_Textures[i].ID); 
 	}
+
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

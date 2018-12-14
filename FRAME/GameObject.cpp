@@ -235,6 +235,13 @@ int IGameObject::getVAO() const
 
 //************************************************************************************
 //Function:
+void IGameObject::initModel(CShader& vioShader) const
+{
+	m_pModel->init(vioShader);
+}
+
+//************************************************************************************
+//Function:
 void IGameObject::updateModel(const CShader& vShader) const
 {
 	m_pModel->update(vShader);

@@ -173,16 +173,18 @@ void main()
 	vec3 ResultColor;
 	if(u_EnableLTC)
 	{
-		vec3 GroundNormal = v2f_Normal;	//其他几何体的话应该由其法线乘以模型矩阵来算
+		vec3 GroundNormal = normalize(v2f_Normal);	//其他几何体的话应该由其法线乘以模型矩阵来算
 		vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
 
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
 		vec3 H = normalize(ViewDir + LightDir);
 		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);	//length可以变成dot，减少开方运算
-		float LightAttenuation = 1.0f / (Distance * Distance);
+		float SpecularLightAttenuation = 1.0 / Distance;
+		float DiffuseLightAttenuation = SpecularLightAttenuation / Distance;
 
+		vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoords).rgb;
 		vec3 SpecularColor;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
 		vec3 F0 = SpecularColor;
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
 		vec3 Kd = vec3(1.0) - F;
@@ -206,69 +208,70 @@ void main()
 		vec3 Specular = integrateLTCSpecular(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix * TangentSpaceInverseMatrix);
 		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
+		//Diffuse *= DiffuseColor * Schlick.x + (1.0 - DiffuseColor) * Schlick.y;
 
-		//ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd + Specular/* / Distance*/ * PI) * LightAttenuation;
-		ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd + Specular * Distance) * LightAttenuation;
+		ResultColor = u_Intensity * (Diffuse * DiffuseColor/* * Kd*/ * DiffuseLightAttenuation + Specular * SpecularLightAttenuation);
 		//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation * Kd;
 		//vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 	}
 	else
 	{
-		vec3 GroundNormal = v2f_Normal;	//其他几何体的话应该由其法线乘以模型矩阵来算
+		vec3 GroundNormal = normalize(v2f_Normal);	//其他几何体的话应该由其法线乘以模型矩阵来算
 		vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
 
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
 		vec3 H = normalize(ViewDir + LightDir);
 
 		//----------------original BRDF---------------------
-		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
-		float LightAttenuation = 1.0f / (Distance * Distance);
+		//float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
+		//float LightAttenuation = 1.0f / (Distance * Distance);
 
+		//vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoords).rgb;
+		//vec3 SpecularColor;
+		//vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
+
+		//vec3 F0 = SpecularColor;
+		//vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
+		//float NDF = DistributionGGX(GroundNormal, H, u_Roughness);
+		//float G = GeometrySmith(GroundNormal, ViewDir, LightDir, u_Roughness);
+		//vec3 Specular = NDF * G * F / (4 * max(dot(GroundNormal, ViewDir), 0.0f) * max(dot(GroundNormal, LightDir), 0.0f) + 0.001);//0.001是为了避免除0
+
+		//vec3 Ks = F;
+		//vec3 Kd = vec3(1.0) - Ks;
+
+		//float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
+		//ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular/* / PI*/) * u_LightColor * LightAttenuation * NormaldotLightDir;
+		//------------------BRDF in Unity---------------------
+		float Smoothness = 1 - sqrt(u_Roughness);
+		float Roughness = u_Roughness;
+		float oneMinusReflectivity;
 		vec3 SpecularColor;
 		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 
-		vec3 F0 = SpecularColor;
-		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
-		float NDF = DistributionGGX(GroundNormal, H, u_Roughness);
-		float G = GeometrySmith(GroundNormal, ViewDir, LightDir, u_Roughness);
-		vec3 Specular = NDF * G * F / (4 * max(dot(GroundNormal, ViewDir), 0.0f) * max(dot(GroundNormal, LightDir), 0.0f) + 0.001);//0.001是为了避免除0
-
-		vec3 Ks = F;
-		vec3 Kd = vec3(1.0) - Ks;
-
-		float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-		ResultColor = u_Intensity * (Kd * DiffuseColor + Specular) * u_LightColor * LightAttenuation * NormaldotLightDir;
-		//------------------BRDF in Unity---------------------
-		//float Smoothness = 1 - sqrt(u_Roughness);
-		//float Roughness = 1 - Smoothness;
-		//float oneMinusReflectivity;
-		//vec3 SpecularColor;
-		//vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
-
-		////H = SafeNormalize(LightDir + ViewDir);
-		//float nv = abs(dot(GroundNormal, ViewDir));
-		//float nl = saturate(dot(GroundNormal, LightDir));
-		//float nh = saturate(dot(GroundNormal, H));
-		//float lv = saturate(dot(LightDir, ViewDir));
-		//float lh = saturate(dot(LightDir, H));
-		//// Diffuse term
-	 //   float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
-		//// Specular term
-		//float DoubleRoughness = Roughness * Roughness;
-		//float V = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
-		//float D = GGXTerm (nh, DoubleRoughness);
-		//float SpecularTerm = V * D * PI / 4.0; // Torrance-Sparrow model, Fresnel is applied later
-		//SpecularTerm = max(0, SpecularTerm * nl);
+		//H = SafeNormalize(LightDir + ViewDir);
+		float nv = abs(dot(GroundNormal, ViewDir));
+		float nl = saturate(dot(GroundNormal, LightDir));
+		float nh = saturate(dot(GroundNormal, H));
+		float lv = saturate(dot(LightDir, ViewDir));
+		float lh = saturate(dot(LightDir, H));
+		// Diffuse term
+	    float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
+		// Specular term
+		float DoubleRoughness = Roughness * Roughness;
+		float V = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
+		float D = GGXTerm (nh, DoubleRoughness);
+		float SpecularTerm = V * D * PI / 4.0; // Torrance-Sparrow model, Fresnel is applied later
+		SpecularTerm = max(0, SpecularTerm * nl);
 	
-		//float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
-		//float LightAttenuation = 1.0f / ( Distance * Distance);
-	 //   ResultColor =  (DiffuseColor * (u_LightColor * DiffuseTerm) + SpecularTerm * u_LightColor * FresnelTerm(SpecularColor, lh)) * LightAttenuation;
+		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
+		float LightAttenuation = 1.0f / ( Distance * Distance);
+	    ResultColor =  (DiffuseColor * (u_LightColor * DiffuseTerm) + SpecularTerm * u_LightColor * FresnelTerm(SpecularColor, lh)) * LightAttenuation;
 	}
 
 	//vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
 	//vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
 	vec3 GammaedColor = ResultColor;
 
-	FragColor_ = /*vec4(GammaedColor, 1.0) * */texture(u_DiffuseTexture, v2f_TexCoords);
-	//FragColor_ = vec4(v2f_Normal,1);
+	FragColor_ = vec4(GammaedColor, 1.0);
+	//FragColor_ = vec4(1,0,0,1);
 }

@@ -11,6 +11,15 @@ CModel::CModel(const std::string &vModelPath)
 
 //************************************************************************************
 //Function:
+void CModel::init(const CShader &vShader) const
+{
+	vShader.setIntUniformValue(m_DiffuseTextureNamePrefix, 0);
+	vShader.setIntUniformValue(m_SpecularTextureNamePrefix, 1);
+	vShader.setIntUniformValue(m_NormalTextureNamePrefix, 2);
+}
+
+//************************************************************************************
+//Function:
 GLvoid CModel::update(const CShader& vShader) const
 {
 	for (auto &vMesh : m_Meshes)
@@ -99,16 +108,18 @@ GLvoid CModel::__processTextures(const aiMesh *vAiMesh, std::vector<SMeshTexture
 	if (vAiMesh->mMaterialIndex < 0)
 		return;
 	aiMaterial *pAiMat = m_pScene->mMaterials[vAiMesh->mMaterialIndex];
-	__loadTextureFromMaterial(aiTextureType_DIFFUSE, pAiMat, voTextures);
-	__loadTextureFromMaterial(aiTextureType_SPECULAR, pAiMat, voTextures);
+	__loadTextureFromMaterial(aiTextureType_DIFFUSE, pAiMat, m_DiffuseTextureNamePrefix, voTextures);
+	__loadTextureFromMaterial(aiTextureType_SPECULAR, pAiMat, m_SpecularTextureNamePrefix, voTextures);
+	__loadTextureFromMaterial(aiTextureType_HEIGHT, pAiMat, m_NormalTextureNamePrefix, voTextures);
 }
 
 //************************************************************************************
 //Function:
-GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, std::vector<SMeshTexture>& voTextures)
+GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix, std::vector<SMeshTexture>& voTextures)
 {
 	_ASSERT(vMat);
 	GLint TextureCount = vMat->GetTextureCount(vTextureType);
+	int TextureIndex = -1;
 	for (GLint i = 0; i < TextureCount; ++i)
 	{
 		aiString Str;
@@ -122,6 +133,7 @@ GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMat
 			if (TexturePath == m_LoadedTextures[k].TexturePath)
 			{
 				Skip = GL_TRUE;
+				m_LoadedTextures[k].TextureUniformName = vTextureNamePrefix + std::to_string(++TextureIndex);
 				voTextures.push_back(m_LoadedTextures[k]);
 				break;
 			}
@@ -129,9 +141,9 @@ GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMat
 		if (!Skip)
 		{
 			SMeshTexture MeshTexture;
-			ElayGraphics::STexture Texture2D;
-			MeshTexture.ID = loadTextureFromFile(TexturePath, Texture2D);
+			MeshTexture.ID = loadTextureFromFile(TexturePath);
 			MeshTexture.TexturePath = TexturePath;
+			MeshTexture.TextureUniformName = vTextureNamePrefix + std::to_string(++TextureIndex);
 			voTextures.push_back(MeshTexture);
 			m_LoadedTextures.push_back(MeshTexture);
 		}

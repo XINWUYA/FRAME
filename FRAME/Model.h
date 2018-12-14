@@ -15,12 +15,16 @@ public:
 	CModel() = default;
 	CModel(const std::string &vModelPath);
 	~CModel() = default;
+	void init(const CShader &vShader) const;
 	void update(const CShader &vShader) const;
 
 private:
 	std::vector<SMeshTexture>  m_LoadedTextures;
 	std::vector<CMesh>         m_Meshes;
 	std::string                m_Directory;
+	std::string				   m_DiffuseTextureNamePrefix = "u_DiffuseTexture";
+	std::string				   m_SpecularTextureNamePrefix = "u_SpecularTexture";
+	std::string				   m_NormalTextureNamePrefix = "u_NormalTexture";
 	const aiScene             *m_pScene;
 
 	GLvoid __loadModel(const std::string& vPath);
@@ -29,5 +33,5 @@ private:
 	GLvoid __processVertex(const aiMesh *vAiMesh, std::vector<SMeshVertex> &voVertices);
 	GLvoid __processIndices(const aiMesh *vAiMesh, std::vector<GLint> &voIndices);
 	GLvoid __processTextures(const aiMesh *vAiMesh, std::vector<SMeshTexture> &voTextures);
-	GLvoid __loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, std::vector<SMeshTexture>& voTextures);
+	GLvoid __loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix,std::vector<SMeshTexture>& voTextures);
 };

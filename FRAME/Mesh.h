@@ -19,10 +19,11 @@ struct SMeshVertex
 
 struct SMeshTexture
 {
-	GLint ID;
+	GLint ID = 0;
 	std::string TexturePath;
+	std::string TextureUniformName;
 
-	SMeshTexture() :ID(0), TexturePath("") {}
+	SMeshTexture() {}
 };
 
 class CMesh
@@ -31,6 +32,7 @@ public:
 	CMesh() = default;
 	CMesh(std::vector<SMeshVertex> vVertices, std::vector<GLint> vIndices, std::vector<SMeshTexture> vTexture);
 	~CMesh();
+	GLvoid init(const CShader& vioShader) const;
 	GLvoid update(const CShader& vShader) const;
 
 private:

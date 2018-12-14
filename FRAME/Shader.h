@@ -1,6 +1,9 @@
 #pragma once
 #include <GL/glew.h>
 #include <string>
+#include <vector>
+#include <tuple>
+#include <map>
 #include "FRAME_EXPORTS.h"
 
 class FRAME_DLLEXPORTS CShader
@@ -26,20 +29,26 @@ public:
 	GLvoid setDoubleUniformValue(const std::string& vUniformName, GLdouble v0, GLdouble v1, GLdouble v2) const;
 	GLvoid setDoubleUniformValue(const std::string& vUniformName, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3) const;
 
-	GLvoid setTextureUniformValue(const std::string& vTextureName, GLint vTextureID, GLint vBindingIndex, GLint vTextureType = GL_TEXTURE_2D) const;
+	GLvoid setTextureUniformValue(const std::string& vTextureUniformName, GLint vTextureID, GLint vTextureType = GL_TEXTURE_2D);
 	GLvoid setMat4UniformValue(const std::string& vUniformName, const GLfloat vMatrix[16]) const;
+
+	GLvoid changeTextureUniformValue(const std::string& vTextureUniformName, GLint vTextureID, GLint vTextureType/* = GL_TEXTURE_2D*/);
 
 	GLvoid activeShader() const;
 
 private:
-	GLvoid    __loadShader(const std::string& vVertexShaderFileName, const std::string& vFragmentShaderFileName, const std::string& vGeometryShaderFileName = "",
-						const std::string& vTessellationControlShaderFileName = "", const std::string& vTessellationEvaluationShaderFileName = "");
-	GLint    __loadShader(const std::string& vShaderFileName, GLint vShaderType) const;
-	GLboolean __compileShader(GLint vShader) const;
-	GLboolean __linkProgram() const;
-	GLvoid    __deleteShader(GLint vShader) const;
+	GLint m_ShaderProgram = 0;
+	GLint m_LastBindingIndex = 4;
+	std::map<std::string, std::tuple<int, int, int>> m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet;
+	//std::vector<std::tuple<int, int, int>> m_TextureAndBindingIndexAndTextureTypeSet;
 
+	GLint		__loadShader(const std::string& vShaderFileName, GLint vShaderType) const;
+	GLvoid		__loadShader(const std::string& vVertexShaderFileName, const std::string& vFragmentShaderFileName, const std::string& vGeometryShaderFileName = "",
+								const std::string& vTessellationControlShaderFileName = "", const std::string& vTessellationEvaluationShaderFileName = "");
+	GLvoid		__deleteShader(GLint vShader) const;
+	GLboolean	__compileShader(GLint vShader) const;
+	GLboolean	__linkProgram() const;
 	std::string __loadShaderSourceFromFile(const std::string& vShaderFileName) const;
 
-	GLint m_ShaderProgram;
+	GLvoid		__activeAllTextureUniform() const;
 };

@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <vector>
+#include <iostream>
 #include "FRAME_EXPORTS.h"
 
 namespace ElayGraphics

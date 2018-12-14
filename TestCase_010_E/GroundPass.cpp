@@ -29,8 +29,8 @@ void CGroundPass::initV()
 	m_pGround = std::dynamic_pointer_cast<CGround>(ElayGraphics::ResourceManager::getGameObjectByName("Ground"));
 	m_CubeVAO = ElayGraphics::ResourceManager::getOrCreateCubeVAO();
 	m_pShader->activeShader();
-	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
-	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture);
 }
 
 //************************************************************************************

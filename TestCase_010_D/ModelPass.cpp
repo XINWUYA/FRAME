@@ -23,8 +23,11 @@ void CModelPass::initV()
 	m_LTCMagnitueTexture = loadTextureFromFile("../Textures/LTCLight/ltc_amp.dds");
 	m_pLightSource = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"));
 	m_pGameObject = ElayGraphics::ResourceManager::getGameObjectByName("CornelBox");
+	m_pGameObject->initModel(*m_pShader);
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(m_pGameObject->getModelMatrix()));
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture);
 }
 
 void CModelPass::updateV()
@@ -77,9 +80,6 @@ void CModelPass::updateV()
 	}
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_P) == GLFW_RELEASE)
 		m_OldKeyPStatus = GLFW_RELEASE;
-
-	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 4);
-	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 5);
 
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);

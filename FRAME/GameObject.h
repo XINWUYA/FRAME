@@ -45,6 +45,7 @@ public:
 	void rotateZ(float vRotationOffset);
 	void scale(const glm::vec3& vScaleOffset);
 
+	void initModel(CShader& vioShader) const;
 	void updateModel(const CShader& vShader) const;
 
 	bool operator<(const IGameObject& vOtherPass) const;

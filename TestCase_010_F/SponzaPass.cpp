@@ -28,9 +28,11 @@ void CSponzaPass::initV()
 	m_pLightSource = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"));
 	m_pSponza = std::dynamic_pointer_cast<CSponza>(ElayGraphics::ResourceManager::getGameObjectByName("Sponza"));
 
-	/*m_pShader->activeShader();
-	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
-	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);*/
+	m_pShader->activeShader();
+	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(m_pSponza->getModelMatrix()));
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture);
+	m_pSponza->initModel(*m_pShader);
 }
 
 //************************************************************************************
@@ -45,7 +47,6 @@ void CSponzaPass::updateV()
 	glCullFace(GL_BACK);
 
 	m_pShader->activeShader();
-	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Sponza")->getModelMatrix()));
 	bool DiffuseColorChanged = false;
 	m_Albedo = ElayGraphics::ResourceManager::getSharedDataByName<glm::vec4>("Albedo", m_Albedo, DiffuseColorChanged);
 	if(DiffuseColorChanged)
@@ -91,10 +92,7 @@ void CSponzaPass::updateV()
 
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);
-	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 4);
-	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 5);
-	//drawQuad();
-	ElayGraphics::ResourceManager::getGameObjectByName("Sponza")->updateModel(*m_pShader);
+	m_pSponza->updateModel(*m_pShader);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
