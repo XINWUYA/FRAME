@@ -7,8 +7,8 @@
 
 int main()
 {
-	ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
-	ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
+	//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
+	//ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
 
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CSponza>("Sponza", 1));
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CLightSource>("LightSource", 2));

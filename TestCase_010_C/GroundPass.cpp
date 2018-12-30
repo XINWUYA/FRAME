@@ -92,6 +92,15 @@ void CGroundPass::updateV()
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_P) == GLFW_RELEASE)
 		m_OldKeyPStatus = GLFW_RELEASE;
 
+	if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_PRESS && m_OldKeyKStatus != GLFW_PRESS)
+	{
+		m_OldKeyKStatus = GLFW_PRESS;
+		m_EnableKeyK = !m_EnableKeyK;
+		m_pShader->setIntUniformValue("u_EnableKeyK", m_EnableKeyK);
+	}
+	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_RELEASE)
+		m_OldKeyKStatus = GLFW_RELEASE;
+
 	drawQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

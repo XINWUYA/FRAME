@@ -16,7 +16,7 @@ void CLightSource::initV()
 	m_LightSet.reserve(m_MaxLightNum);
 	std::default_random_engine E;
 	std::uniform_real_distribution<float> UPosX(-5.0f, 5.0f);
-	std::uniform_real_distribution<float> UPosY(1.0, 5.0f);
+	std::uniform_real_distribution<float> UPosY(-5.0, 5.0f);
 	std::uniform_real_distribution<float> UPosZ(-5.0f, 5.0f);
 	std::uniform_real_distribution<float> UColor(0.0f, 1.0f);
 	SLight Light;

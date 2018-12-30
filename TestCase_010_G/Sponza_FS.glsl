@@ -186,7 +186,7 @@ void main()
 
 	vec3 SpecularColor;
 	vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoords).rgb;
-	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (Albedo, u_Metalness, /*out*/ SpecularColor);
+	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 	vec3 ResultColor;
 
 	if(u_EnableLTC)
@@ -215,9 +215,11 @@ void main()
 		{
 			vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
 			float DistanceFromFrag2Light = length(Frag2Light);
-			vec3 AttenuatedLightColor = b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light);
-			Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * AttenuatedLightColor;
-			Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb;
+			float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
+			float DiffuseLightAttenuation = SpecularLightAttenuation / DistanceFromFrag2Light;
+			Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
+			//Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light * DistanceFromFrag2Light);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要慢一些
+			Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb/* * SpecularLightAttenuation*/;
 		}
 		//-----------------------------------------------------Multi Point Light-------------------------------------------------------------
 
@@ -234,7 +236,7 @@ void main()
 		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
 
-		ResultColor = u_Intensity * (Diffuse * DiffuseColor/* * Kd*/ + Specular)/* * LightAttenuation*/;
+		ResultColor = u_Intensity * (Diffuse * DiffuseColor/* * Kd*/ + Specular)/* * LightAttenuation*/ * Albedo;
 		//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation/* * Kd*/;
 		//vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 	}
@@ -259,7 +261,7 @@ void main()
 			float lv = saturate(dot(LightDir, ViewDir));
 			float lh = saturate(dot(LightDir, H));
 			// Diffuse term
-			float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
+			float DiffuseTerm = /*DisneyDiffuse(nv, nl, lh, Roughness) * */nl;
 			// Specular term
 			float DoubleRoughness = Roughness * Roughness;
 			float V = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
@@ -268,7 +270,7 @@ void main()
 			SpecularTerm = max(0, SpecularTerm * nl);
 	
 			float LightAttenuation = 1.0f / ( Distance * Distance);
-			ResultColor += (DiffuseColor * DiffuseTerm + SpecularTerm * FresnelTerm(SpecularColor, lh)) * b_Lights[i].Color.rgb * LightAttenuation;
+			ResultColor += (DiffuseColor * DiffuseTerm + SpecularTerm * FresnelTerm(SpecularColor, lh)) * b_Lights[i].Color.rgb * LightAttenuation * Albedo;
 
 			////-----------------------------Original BRDF--------------------------------------
 			//vec3 LightDir = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;

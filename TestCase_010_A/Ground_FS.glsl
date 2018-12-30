@@ -24,6 +24,7 @@ uniform float u_Metalness = 0.0;
 
 uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
+uniform sampler2D u_LTC_DisneyDiffuse_MatrixTexture;
 
 const float PI = 3.14159265;
 
@@ -31,25 +32,43 @@ vec3 integrateLTCSpecular(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCM
 {	
 	//将变换矩阵转换到切线空间
 	float JacobianNom = determinant(vLTCMatrix);
-	vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
+	//vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
+	vec3 LightPositionInTangentSpace = vLTCMatrix * normalize(u_LightPosition - vFragPos);
 	if(LightPositionInTangentSpace.z < 0)
 		return vec3(0);
 	float JacobianDenom = pow(length(LightPositionInTangentSpace), 3);
 	LightPositionInTangentSpace = normalize(LightPositionInTangentSpace);
 	vec3 VSum = vec3(LightPositionInTangentSpace.z/* / PI*/);
 	VSum *= JacobianNom / JacobianDenom;
+	//VSum /= JacobianDenom;
+	//VSum *= JacobianNom;
 
 	return VSum;
 }
 
 vec3 integrateLTCDiffuse(vec3 vNormal, vec3 vViewDir, vec3 vFragPos, mat3 vLTCMatrix)
 {
+	////将变换矩阵转换到切线空间
+	//vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
+	//if(LightPositionInTangentSpace.z < 0)
+	//	return vec3(0);
+	//LightPositionInTangentSpace = normalize(LightPositionInTangentSpace);
+	//vec3 VSum = vec3(LightPositionInTangentSpace.z/* / PI*/);
+
+	//return VSum;
+
+	//------------------------------Disney Diffuse------------------------------
 	//将变换矩阵转换到切线空间
-	vec3 LightPositionInTangentSpace = vLTCMatrix * (u_LightPosition - vFragPos);
+	float JacobianNom = determinant(vLTCMatrix);
+	vec3 LightPositionInTangentSpace = vLTCMatrix * normalize(u_LightPosition - vFragPos);
 	if(LightPositionInTangentSpace.z < 0)
 		return vec3(0);
+	float JacobianDenom = pow(length(LightPositionInTangentSpace), 3);
 	LightPositionInTangentSpace = normalize(LightPositionInTangentSpace);
 	vec3 VSum = vec3(LightPositionInTangentSpace.z/* / PI*/);
+	VSum *= JacobianNom / JacobianDenom;
+	//VSum /= JacobianDenom;
+	//VSum *= JacobianNom;
 
 	return VSum;
 }
@@ -130,17 +149,37 @@ float DisneyDiffuse(float NdotV, float NdotL, float LdotH, float perceptualRough
     return lightScatter * viewScatter;
 }
 
+float lambda(const float alpha, const float cosTheta)
+{
+    const float a = 1.0f / alpha / tan(acos(cosTheta));
+    return (cosTheta < 1.0f) ? 0.5f * (-1.0f + sqrt(1.0f + 1.0f/a/a)) : 0.0f;    
+}
+
 // Ref: http://jcgt.org/published/0003/02/03/paper.pdf
 float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
 {
+	//float a          = roughness;
+ //   float a2         = a * a;
+
+ //   float lambdaV    = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
+ //   float lambdaL    = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
+
+ //   // Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
+ //   return 0.5f / (lambdaV + lambdaL + 1e-5f);
+
+	// Original formulation: Fit code
 	float a          = roughness;
-    float a2         = a * a;
-
-    float lambdaV    = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
-    float lambdaL    = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
-
-    // Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
-    return 0.5f / (lambdaV + lambdaL + 1e-5f);
+	float a2         = a * a;
+	float G2;
+    if (NdotL <= 0.0f)
+        G2 = 0;
+    else
+    {
+		const float LambdaV = lambda(a2, NdotV);
+        const float LambdaL = lambda(a2, NdotL);
+        G2 = 1.0f/(1.0f + LambdaV + LambdaL);
+    }
+	return G2;
 }
 
 float GGXTerm (float NdotH, float roughness)
@@ -148,6 +187,24 @@ float GGXTerm (float NdotH, float roughness)
     float a2 = roughness * roughness;
     float d = (NdotH * a2 - NdotH) * NdotH + 1.0f; // 2 mad
     return 1.0 / PI * a2 / (d * d + 1e-7f);
+}
+
+float GGXTermFit (float NdotH, float roughness)
+{
+    //float a2 = roughness * roughness;
+    //float d = (NdotH * a2 - NdotH) * NdotH + 1.0f; // 2 mad
+    //return 1.0 / PI * a2 / (d * d + 1e-7f);
+
+	//Fit code
+	float a2 = roughness * roughness;
+	//const vec3 H = normalize(V + L);
+    //const float slopex = TdotH/NdotH;
+    //const float slopey = BdotH/NdotH;
+	float TanTheta = tan(acos(NdotH));
+    float D = 1.0f / (1.0f + (TanTheta * TanTheta)/a2/a2);
+    D = D*D;
+    D = D/(3.14159f * a2*a2 * NdotH*NdotH*NdotH*NdotH);
+	return D;
 }
 
 vec3 FresnelTerm (vec3 F0, float cosA)
@@ -187,9 +244,10 @@ void main()
 		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
 		vec3 Kd = vec3(1.0) - F;
 
-		vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), u_Roughness);
+		vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), u_Roughness * u_Roughness);
 
 		vec4 LTCMatrixComponents = texture2D(u_LTC_MatrixTexture, UV);
+		vec4 Schlick = texture2D(u_LTC_MagnitueTexture, UV);
 		mat3 LTCMatrix = mat3
 		(
 			vec3(1, 0, LTCMatrixComponents.y),
@@ -197,19 +255,42 @@ void main()
 			vec3(LTCMatrixComponents.w, 0, LTCMatrixComponents.x)
 		);
 
+		//mat3 LTCMatrix = mat3(
+  //          vec3(LTCMatrixComponents.x, 0, LTCMatrixComponents.y),
+  //          vec3(  0,  1,    0),
+  //          vec3(LTCMatrixComponents.z, 0, LTCMatrixComponents.w)
+  //      );
+
+		//mat3 LTCMatrix = mat3
+		//(
+		//	vec3(LTCMatrixComponents.x, 0, LTCMatrixComponents.y),
+		//	vec3(0, LTCMatrixComponents.z, 0),
+		//	vec3(LTCMatrixComponents.w, 0, Schlick.x)
+		//);
+
+		vec4 DisneyDiffuseComponents = texture2D(u_LTC_DisneyDiffuse_MatrixTexture, UV);
+		mat3 DisneyDiffuseMatrix = mat3
+		(
+			vec3(1, 0, DisneyDiffuseComponents.y),
+			vec3(0, DisneyDiffuseComponents.z, 0),
+			vec3(DisneyDiffuseComponents.w, 0, DisneyDiffuseComponents.x)
+		);
+
 		//着色点上的切线空间正交基
 		vec3 Tangent = normalize(ViewDir - GroundNormal * dot(ViewDir, GroundNormal));
 		vec3 Bitangent = cross(GroundNormal, Tangent);
 		mat3 TangentSpaceInverseMatrix = transpose(mat3(Tangent, Bitangent, GroundNormal));
 
-		vec3 Diffuse = integrateLTCDiffuse(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, TangentSpaceInverseMatrix);
+		vec3 Diffuse = integrateLTCDiffuse(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, DisneyDiffuseMatrix * TangentSpaceInverseMatrix);
 		vec3 Specular = integrateLTCSpecular(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix * TangentSpaceInverseMatrix);
-		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
+		Specular /= PI;
+		//Specular *= Schlick.x;
+		//Specular *= SpecularColor * Schlick.y + (1.0 - SpecularColor) * Schlick.z;
 		//Specular *= F;
 		//Diffuse *= DiffuseColor * Schlick.x + (1.0 - DiffuseColor) * Schlick.y;
 
-		ResultColor = u_Intensity * (Diffuse * DiffuseColor * Kd * DiffuseLightAttenuation + Specular * SpecularLightAttenuation);
+		ResultColor = u_Intensity * (Diffuse * DiffuseColor/* * Kd*/ * DiffuseLightAttenuation + Specular * DiffuseLightAttenuation);
 		//vec3 ResultColor = u_Intensity * Diffuse * DiffuseColor * LightAttenuation * Kd;
 		//vec3 ResultColor = u_Intensity * Specular * LightAttenuation;
 	}
@@ -221,49 +302,52 @@ void main()
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
 		vec3 H = normalize(ViewDir + LightDir);
 
-		//----------------original BRDF---------------------
-		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
-		float LightAttenuation = 1.0f / (Distance * Distance);
+		////----------------original BRDF---------------------
+		//float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
+		//float LightAttenuation = 1.0f / (Distance * Distance);
 
-		vec3 SpecularColor;
-		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
-
-		vec3 F0 = SpecularColor;
-		vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
-		float NDF = DistributionGGX(GroundNormal, H, u_Roughness);
-		float G = GeometrySmith(GroundNormal, ViewDir, LightDir, u_Roughness);
-		vec3 Specular = NDF * G * F / (4 * max(dot(GroundNormal, ViewDir), 0.0f) * max(dot(GroundNormal, LightDir), 0.0f) + 0.001);//0.001是为了避免除0
-
-		vec3 Ks = F;
-		vec3 Kd = vec3(1.0) - Ks;
-
-		float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
-		ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular/* / PI*/) * u_LightColor * LightAttenuation * NormaldotLightDir;
-		////------------------BRDF in Unity---------------------
-		//float Smoothness = 1 - sqrt(u_Roughness);
-		//float Roughness = u_Roughness;
-		//float oneMinusReflectivity;
 		//vec3 SpecularColor;
 		//vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 
-		////H = SafeNormalize(LightDir + ViewDir);
-		//float nv = abs(dot(GroundNormal, ViewDir));
-		//float nl = saturate(dot(GroundNormal, LightDir));
-		//float nh = saturate(dot(GroundNormal, H));
-		//float lv = saturate(dot(LightDir, ViewDir));
-		//float lh = saturate(dot(LightDir, H));
-		//// Diffuse term
-	 //   float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
-		//// Specular term
-		//float DoubleRoughness = Roughness * Roughness;
-		//float V = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
+		//vec3 F0 = SpecularColor;
+		//vec3 F = FresnelSchlickRoughness(max(dot(H, ViewDir), 0.0f), F0, u_Roughness);
+		//float NDF = DistributionGGX(GroundNormal, H, u_Roughness);
+		//float G = GeometrySmith(GroundNormal, ViewDir, LightDir, u_Roughness);
+		//vec3 Specular = NDF * G * F / (4 * max(dot(GroundNormal, ViewDir), 0.0f) * max(dot(GroundNormal, LightDir), 0.0f) + 0.001);//0.001是为了避免除0
+
+		//vec3 Ks = F;
+		//vec3 Kd = vec3(1.0) - Ks;
+
+		//float NormaldotLightDir = max(dot(GroundNormal, LightDir), 0.0f);
+		////ResultColor = u_Intensity * (Kd * DiffuseColor /*/ PI */+ Specular/* / PI*/) * u_LightColor * LightAttenuation * NormaldotLightDir;
+		//ResultColor = u_Intensity * (Specular/* / PI*/) * u_LightColor * LightAttenuation * NormaldotLightDir;
+		//------------------BRDF in Unity---------------------
+		float Smoothness = 1 - sqrt(u_Roughness);
+		float Roughness = u_Roughness;
+		float oneMinusReflectivity;
+		vec3 SpecularColor;
+		vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
+
+		//H = SafeNormalize(LightDir + ViewDir);
+		float nv = abs(dot(GroundNormal, ViewDir));
+		float nl = saturate(dot(GroundNormal, LightDir));
+		float nh = saturate(dot(GroundNormal, H));
+		float lv = saturate(dot(LightDir, ViewDir));
+		float lh = saturate(dot(LightDir, H));
+
+		// Diffuse term
+	    float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
+		// Specular term
+		float DoubleRoughness = Roughness * Roughness;
+		float G = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
 		//float D = GGXTerm (nh, DoubleRoughness);
-		//float SpecularTerm = V * D * PI / 4.0; // Torrance-Sparrow model, Fresnel is applied later
-		//SpecularTerm = max(0, SpecularTerm * nl);
+		float D = GGXTermFit(nh, DoubleRoughness);
+		float SpecularTerm = G * D * PI / 4.0 / nv; // Torrance-Sparrow model, Fresnel is applied later
+		SpecularTerm = max(0, SpecularTerm * nl);
 	
-		//float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
-		//float LightAttenuation = 1.0f / ( Distance * Distance);
-	 //   ResultColor =  (DiffuseColor * (u_LightColor * DiffuseTerm) + SpecularTerm * u_LightColor * FresnelTerm(SpecularColor, lh)) * LightAttenuation;
+		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
+		float LightAttenuation = 1.0f / ( Distance * Distance);
+	    ResultColor =  (DiffuseColor * (u_LightColor * DiffuseTerm) + SpecularTerm * u_LightColor * FresnelTerm(SpecularColor, lh)) * LightAttenuation;
 	}
 
 	//vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));

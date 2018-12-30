@@ -6,7 +6,7 @@
 
 int main()
 {
-	ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
+	//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
 	ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
 
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CGround>("Ground", 1));

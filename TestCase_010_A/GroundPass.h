@@ -21,6 +21,7 @@ private:
 	bool   m_EnableLTC = true;
 	int m_LTCMatrixTexture = -1;
 	int m_LTCMagnitueTexture = -1;
+	int m_LTC_DisneyDiffuse_MatrixTexture = -1;
 	int m_OldKeyPStatus = -1;
 	glm::vec4 m_Albedo;
 	glm::vec3 m_LightSourcePos;
