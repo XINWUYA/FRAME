@@ -29,6 +29,7 @@
 \usepackage[english]{babel}
 \usepackage{subfigure}
 \usepackage{multirow}
+\usepackage{caption}
 \begin{document}
 \section{算法部分}
 描述一个完整的基于物理的渲染（$PBR$）,一般意义上所使用的反射率方程为：
@@ -62,6 +63,7 @@ $$
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\columnwidth]{ParameterizingSphericalDistributionsLTC.png}
+    \captionsetup{font={small}}
 	\caption{使用LTC参数化的球面分布。通过对基本余弦分布应用不同的矩阵拟合新的分布情况：(a)原始球面余弦分布；(b)粗糙度；(c)各向异性；(d)偏斜方向。}
 	\label{fig:ParameterizingSphericalDistributionsLTC}
 \end{figure}
@@ -81,6 +83,7 @@ $$D\approx\rho(\omega_v,\omega_i)\cos\theta_i$$
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\columnwidth]{LTCFittingBRDF.png}
+    \captionsetup{font={small}}
 	\caption{使用LTC拟合BRDF，图中分别为不同的$(\theta_v, \alpha)$组合下拟合的效果}
 	\label{fig:LTCFittingBRDF}
 \end{figure}
@@ -96,6 +99,7 @@ $$D_o(\omega_o=(x,y,z))=\frac{\max(0,z)}{\pi}$$
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\columnwidth]{PolygonIntegration.png}
+    \captionsetup{font={small}}
 	\caption{多边形在球面积分的等价替换，图下方的多边形是由图上方的多边形乘上矩阵$M^{-1}$,由于线性变换不会改变直线与多边形的交点个数，因此在分布中生成的样本在图上方和图下方两种情况下具有相同的相交点个数，因此两种情况下的球面多边形积分是相同的。}
 	\label{fig:PolygonIntegration}
 \end{figure}
