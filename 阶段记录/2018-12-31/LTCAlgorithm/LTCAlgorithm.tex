@@ -238,8 +238,23 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 	\label{fig:LTCResult}
 \end{figure}
 
-当渲染不同数量的光源时，使用BRDF方式以及本文算法的帧率和提升的渲染时间如下表所示：
-
+当渲染不同数量的光源时，使用BRDF方式以及本文算法的帧率和提升的渲染时间如表\ref{tab:TimeConsuming}所示：
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|}
+          \hline
+           & 100个光源 & 500个光源 & 1000个光源 & 5000个光源 \\
+          \hline
+          BRDF帧率(fps) & 118 & 23 & 12 & 2 \\
+          \hline
+          本文算法帧率(fps) & 285 & 56 & 28 & 5 \\
+          \hline
+          本文算法时间提升(ms) & 4.97 & 25.62 & 47.62 & 255.49 \\
+          \hline
+    \end{tabular}
+    \caption{本文算法以及BRDF的渲染效率}
+    \label{tab:TimeConsuming}
+\end{table}
 
 \bibliographystyle{plain}%
 \bibliography{LTC_bibfile}
