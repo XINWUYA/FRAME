@@ -48,14 +48,14 @@
 L_o(p,\omega_o)=\int_{\Omega}f_r(p,\omega_i,\omega_o)L_i(p,w_i)n\cdot \omega_id\omega_i
 \end{equation}
 
-其中$p$为要着色的点的坐标，$\omega_o$为观察方向，$\omega_i$为入射方向向量，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射照度与入射方向上的辐射照度的比率。
+其中$p$着色点，n是表面法线，$\omega_o$为观察方向，$\omega_i$为光线入射方向，$L_i$是来自$\omega_i$方向上的辐射亮度，$L_o$是着色点在上半球空间接受到的辐射度，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射照度与入射方向上的辐射照度的比率。
 当前主流的游戏引擎（如Unity、Unreal等）都在使用基于微面元理论的BRDF模型：
 \begin{equation}
 \label{eq:BRDFFunction}
 f_r(\omega_i,\omega_o)=f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}
 \end{equation}
 
-其中D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
+其中$f_d$是漫反射系数，D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
 
 所以我们通常使用的反射率方程是：
 \begin{equation}
@@ -83,7 +83,7 @@ D=\frac{\alpha^2\chi^+(\theta_h)}{\pi\cos^4\theta_h(\alpha^2+\tan^2\theta_h)^2}
 \label{eq:Fresnel}
 F=F_0+(1-F_0)(1-(h\cdot \omega_o)^5)
 \end{equation}
-其中$F_0$为入射光垂直表面时的菲涅尔反射率的值，即平面的基础反射率。
+其中$F_0$为入射光垂直表面时的菲涅尔反射率的值，即表面的基础反射率。
 
 对于几何遮挡函数G，本文采用了近年来越来越多的引擎开始使用的更精确的一种遮挡函数\cite{lagarde2014moving}：
 \begin{equation}
@@ -101,12 +101,13 @@ G=\frac{\chi^+(\omega_o\cdot h)\chi^+(\omega_i\cdot h)}{1+\Lambda(\omega_o)+\Lam
 \label{eq:DisneyDiffuse}
 f_d = \frac{c}{\pi}(1+(F_D-1)(1-cos\theta_l)^5)(1+(F_D-1)(1-cos\theta_v)^5)
 \end{equation}
-其中:
+其中$\theta_l$是$\omega_i$和法线$n$的夹角，$\theta_v$是$\omega_o$和$n$的夹角，并且:
 \begin{equation}
 F_D=0.5+2\alpha\cos^2\theta_d
 \end{equation}
+其中$\theta_d$是入射向量$\omega_i$和中间向量$h$的夹角。
 
-可以初步看到，渲染时因为要按照上诉公式去分别计算D、F、G项以及$f_d$，再得到最终的辐射度$L_o$，所以即使是在一个单点光源的环境下，着色器所需要的计算量也很大。
+可以初步看到，渲染时因为要按照上诉公式去分别计算D、F、G项以及$f_d$，再得到最终的辐射度$L_o$，所以即使是在一个单点光源的环境下，着色点渲染时所需要的计算量也很大。
 
 \subsection{使用LTC方法近似BRDF积分}
 Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transform consin）的方法\cite{Heitz2016Real}，来近似计算BRDF积分。如Fig-\ref{fig:Distribution Approxmation}所示：
@@ -138,7 +139,7 @@ B_c(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
     d & 0 & 1
   \end{bmatrix}
 \end{equation}
-对于不同的观察角度$\theta_o$和不同的粗糙度$\alpha$，拟合出不同的矩阵$M_s$，可以将预计算好的$M_s$的逆矩阵存入二维纹理中。作者提出在BRDF分布上对一个多边形光源区域$P$的积分，等效于在余弦分布上对另一个多边形区域$P_c$的积分（多边形$P_c$是对多边形$P$乘上矩阵$M_s$的逆矩阵之后，得到的新的多边形）：
+以二维纹理的纹理坐标u作为观察角度$\theta_o$，以纹理坐标v作为粗糙度$\alpha$，拟合出不同的矩阵$M_s$。可以将预计算好的$M_s$的逆矩阵存入二维纹理里坐标(u,v)所对应的纹素中。作者提出在BRDF分布上对一个多边形光源区域$P$的积分，等效于在余弦分布上对另一个多边形区域$P_c$的积分（多边形$P_c$是对多边形$P$乘上矩阵$M_s$的逆矩阵之后，得到的新的多边形）：
 \begin{equation}
 \label{eq:IntegrationApproxmation}
 \int_PB_s(\omega)d\omega=\int_{P_c}B_c(\omega_c)d\omega_c
@@ -210,6 +211,7 @@ L_o=\sum_{\omega_i}(\frac{\omega_c.z}{(\omega_c\cdot\omega_c)^2}|M_s^{-1}|L_i+\f
 \label{eq:FinalEquation4MPL}
 L_o=|M_s^{-1}|\sum_{\omega_i}\frac{\omega_c.z}{(\omega_c\cdot\omega_c)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{\omega_c^,.z}{(\omega_c^,\cdot\omega_c^,)^2}L_i
 \end{equation}
+
 而使用BRDF方式来计算多点光源光照的公式如下：
 \begin{equation}
 \label{eq:BRDFFinalEquation4MPL}
@@ -218,6 +220,42 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 其中$D$、$F$、$G$、$f_d$需要分别按照式\ref{eq:GGXD}、\ref{eq:Fresnel}、\ref{eq:GeometryShadow}、\ref{eq:DisneyDiffuse}来计算。
 
 从式\ref{eq:FinalEquation4MPL}、\ref{eq:BRDFFinalEquation4MPL}可以看出，本文用LTC的方式来实现多点光源光照，计算量比使用BRDF方式要少很多，从而达到本文要实现的目标：以更快的速率实现多点光源下基于物理的光照效果。除此之外，使用本文LTC渲染点光源的方法，不会因为BRDF公式（$DFG$以及$f_d$项）的复杂性而增加渲染时间， 也就是说，即使未来BRDF因为要达到更加物理真实的效果而变得更加复杂，使用本文的方法是不会降低渲染帧率的。本文算法对于点光源在基于物理的渲染上具有很好的可扩展性。甚至可以让复杂的点光源PBR光照在移动平台上也能快速实现出较好的效果。
+
+\subsection{实验结果}
+在有100个点光源的场景中，使用BRDF方式以及本文的算法所实现的渲染结果如Fig\ref{fig:BRDFResult}和Fig\ref{fig:LTCResult}所示：
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\columnwidth]{BRDFResult.png}
+    \captionsetup{font={small}}
+	\caption{使用BRDF方式渲染的结果}
+	\label{fig:BRDFResult}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.0\columnwidth]{LTCResult.png}
+    \captionsetup{font={small}}
+	\caption{使用本文算法渲染的结果}
+	\label{fig:LTCResult}
+\end{figure}
+
+当渲染不同数量的光源时，使用BRDF方式以及本文算法的帧率和提升的渲染时间如表\ref{tab:TimeConsuming}所示：
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|}
+          \hline
+           & 100个光源 & 500个光源 & 1000个光源 & 5000个光源 \\
+          \hline
+          BRDF帧率(fps) & 118 & 23 & 12 & 2 \\
+          \hline
+          本文算法帧率(fps) & 285 & 56 & 28 & 5 \\
+          \hline
+          本文算法时间提升(ms) & 4.97 & 25.62 & 47.62 & 255.49 \\
+          \hline
+    \end{tabular}
+    \caption{本文算法以及BRDF的渲染效率}
+    \label{tab:TimeConsuming}
+\end{table}
 
 \bibliographystyle{plain}%
 \bibliography{LTC_bibfile}
