@@ -7,4 +7,4 @@
 \contentsline {subsection}{\numberline {0.1.3}使用LTC方法来计算单点光源光照}{4}{subsection.0.1.3}
 \contentsline {subsection}{\numberline {0.1.4}使用LTC方法来计算多个点光源光照}{5}{subsection.0.1.4}
 \contentsline {subsection}{\numberline {0.1.5}实验结果}{6}{subsection.0.1.5}
-\contentsline {chapter}{Bibliography}{9}{chapter*.6}
+\contentsline {chapter}{Bibliography}{9}{chapter*.5}
