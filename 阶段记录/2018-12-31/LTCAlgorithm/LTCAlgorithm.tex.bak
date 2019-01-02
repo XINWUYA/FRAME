@@ -45,6 +45,7 @@
 \subsection{反射率方程}
 为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的光照渲染：
 \begin{equation}
+\label{eq:ReflectionFunction}
 L_o(p,\omega_o)=\int_{\Omega}f_r(p,\omega_i,\omega_o)L_i(p,w_i)n\cdot \omega_id\omega_i
 \end{equation}
 
@@ -110,7 +111,7 @@ F_D=0.5+2\alpha\cos^2\theta_d
 可以初步看到，渲染时因为要按照上诉公式去分别计算D、F、G项以及$f_d$，再得到最终的辐射度$L_o$，所以即使是在一个单点光源的环境下，着色点渲染时所需要的计算量也很大。
 
 \subsection{使用LTC方法近似BRDF积分}
-Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transform consin）的方法\cite{Heitz2016Real}，来近似计算BRDF积分。如Fig-\ref{fig:Distribution Approxmation}所示：
+Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transform consin）的数学方法\cite{Heitz2016Real}，来近似计算BRDF积分。如图\ref{fig:Distribution Approxmation}所示：
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\columnwidth]{DistributionApproxmation.png}
@@ -120,18 +121,19 @@ Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transfo
 \end{figure}
 图中，上面是在某种粗糙度$\alpha$以及观察向量$\omega_o$下的BRDF分布，分布函数如下：
 \begin{equation}
+\label{eq:BRDFDistribution}
 B_s(\omega_i) =  \frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i
 \end{equation}
 
 下面是一个截断余弦（Clamped Cosine）分布，它的分布函数如下：
 \begin{equation}
 \label{eq:ClampedCosine}
-B_c(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
+C(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
 \end{equation}
 
 其中$\omega_i$是单位向量。
 
-作者提出可以在下面的余弦分布上乘以一个3x3的线性变换矩阵$M_s$，来近似得到上面的BRDF分布。该矩阵$M$的形式如下：
+作者提出可以在下面的余弦分布上乘以一个3x3的线性变换矩阵$M_s$，来近似得到上面的BRDF分布。该矩阵$M_s$的形式如下：
 \begin{equation}
   M_s=\begin{bmatrix}
     a & 0 & b \\
@@ -139,77 +141,81 @@ B_c(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
     d & 0 & 1
   \end{bmatrix}
 \end{equation}
+
 以二维纹理的纹理坐标u作为观察角度$\theta_o$，以纹理坐标v作为粗糙度$\alpha$，拟合出不同的矩阵$M_s$。可以将预计算好的$M_s$的逆矩阵存入二维纹理里坐标(u,v)所对应的纹素中。作者提出在BRDF分布上对一个多边形光源区域$P$的积分，等效于在余弦分布上对另一个多边形区域$P_c$的积分（多边形$P_c$是对多边形$P$乘上矩阵$M_s$的逆矩阵之后，得到的新的多边形）：
 \begin{equation}
 \label{eq:IntegrationApproxmation}
-\int_PB_s(\omega)d\omega=\int_{P_c}B_c(\omega_c)d\omega_c
+\int_PB_s(\omega)d\omega=\int_{P_c}C(\omega_s)d\omega_s
 \end{equation}
-其中$\omega$是在BRDF分布下的光线入射向量，而$\omega_c$是$\omega$乘上矩阵$M_s$作线性变换之后的新的入射向量。
+其中$\omega$是在BRDF分布下的光线入射向量，而$\omega_s$是$\omega$乘上矩阵$M_s^{-1}$作线性变换之后的新的入射向量。
 
 \subsection{使用LTC方法来计算单点光源光照}
 将上式-\ref{eq:IntegrationApproxmation}中的$\omega$看作单位球上的无限小的面积，那么上式中对$\omega$的积分实际上就是在对一个点光源进行光照计算。那么一个着色点接受到来自$\omega$方向上的点光源的镜面辐射度为：
 \begin{equation}
 \label{eq:MistakeEquation}
-L_s = B_s(\omega)=B_c(\omega_c)
+L_s = B_s(\omega)=C(\omega_s)
 \end{equation}
-其中$\omega_c$是对$\omega$乘上线性余弦变换矩阵$M_s$的逆矩阵之后得到的新的向量，即：
+其中$\omega_s$是对$\omega$乘上线性余弦变换矩阵$M_s$的逆矩阵之后得到的新的向量，即：
 \begin{equation}
 \label{eq:SpecularOmega}
-\omega_c = M_s^{-1}\omega
+\omega_s = M_s^{-1}\omega
 \end{equation}
-但是实际上在式\ref{eq:IntegrationApproxmation}中无限小的$d\omega$和$d\omega_c$的面积是不一样的（因为$d\omega_c$是$d\omega$作线性变换得到的，线性变换的过程中会改变面积大小）。所以式\ref{eq:MistakeEquation}是不成立的，还需要乘上两个$\omega$的面积比例：
+但是实际上在式\ref{eq:IntegrationApproxmation}中无限小的$d\omega$和$d\omega_s$的面积是不一样的（因为$d\omega_s$是$d\omega$作线性变换得到的，线性变换的过程中会改变面积大小）。所以式\ref{eq:MistakeEquation}是不成立的，还需要乘上两个$\omega$的面积比例：
 \begin{equation}
 \label{eq:RightEquation}
-L_s = B_s(\omega)=B_c(\omega_c)\frac{\partial\omega_c}{\partial\omega}
+L_s = B_s(\omega)=C(\omega_s)\frac{\partial\omega_s}{\partial\omega}
 \end{equation}
-作者在文中已经给出了$\frac{\partial\omega_c}{\partial\omega}$的推导结果，即：
+作者在文中已经给出了$\frac{\partial\omega_s}{\partial\omega}$的推导结果，即：
 \begin{equation}
 \label{eq:RightEquation}
-B_s(\omega)=B_c(\omega_c)\frac{\partial\omega_c}{\partial\omega} =B_c(\omega_c)\frac{|M_s^{-1}|}{||M_s^{-1}\omega||^3}
+B_s(\omega)=C(\omega_s)\frac{\partial\omega_s}{\partial\omega} =C(\omega_s)\frac{|M_s^{-1}|}{||M_s^{-1}\omega||^3}
 \end{equation}
 
 同样的，本文对式\ref{eq:DisneyDiffuse}中的Disney漫反射也使用LTC方法拟合出另一个线性余弦变换矩阵$M_d$。那么一个着色点接受到来自$\omega$方向上的点光源的漫反射辐射度为：
 \begin{equation}
-L_d=B_d(\omega)=B_c(\omega_c^,) = B_c(\omega_c^,)\frac{|M_d^{-1}|}{||M_d^{-1}\omega||^3}
+\label{eq:DiffuseApproximation}
+L_d=B_d(\omega)= C(\omega_d)\frac{|M_d^{-1}|}{||M_d^{-1}\omega||^3}
 \end{equation}
 其中：
 \begin{equation}
+\label{eq:DiffuseDistribution}
 B_d(\omega)=f_dn\cdot\omega_i
 \end{equation}
 \begin{equation}
 \label{eq:DiffuseOmega}
-\omega_c^, = M_d^{-1}\omega
+\omega_d = M_d^{-1}\omega
 \end{equation}
 
-所以，着色点接受到的来自$\omega$方向上的点光源的辐射度为：
+所以，综合式\ref{eq:BRDFFunction}、式\ref{eq:BRDFDistribution}、式\ref{eq:RightEquation}、式\ref{eq:DiffuseApproximation}以及式\ref{eq:DiffuseDistribution}，着色点接受到的来自$\omega$方向上的点光源的辐射度为：
 \begin{equation}
 \label{eq:LTCSinglePointLight}
-L_o=f_rL_in\cdot\omega=(B_s(\omega)+B_d(\omega))L_i=(B_c(\omega_c)\frac{|M_s^{-1}|}{||M_s^{-1}\omega||^3}+B_c(\omega_c^,)\frac{|M_d^{-1}|}{||M_d^{-1}\omega||^3})L_i
+L_o=f_rL_in\cdot\omega=(B_s(\omega)+B_d(\omega))L_i=(C(\omega_s)\frac{|M_s^{-1}|}{||M_s^{-1}\omega||^3}+C(\omega_d)\frac{|M_d^{-1}|}{||M_d^{-1}\omega||^3})L_i
 \end{equation}
 
 由式\ref{eq:ClampedCosine}、式\ref{eq:SpecularOmega}、式\ref{eq:DiffuseOmega}可以得到：
 \begin{equation}
-B_c(\omega_c)=\frac{(M_s^{-1}\omega).z}{||M_s^{-1}\omega||}
+C(\omega_s)=\frac{(M_s^{-1}\omega).z}{||M_s^{-1}\omega||}
 \end{equation}
 \begin{equation}
-B_c(\omega_c^,)=\frac{(M_d^{-1}\omega).z}{||M_d^{-1}\omega||}
+C(\omega_d)=\frac{(M_d^{-1}\omega).z}{||M_d^{-1}\omega||}
 \end{equation}
 代入式\ref{eq:LTCSinglePointLight}可得：
 \begin{equation}
 \label{eq:FinalEquation4SPL}
-L_o=\frac{\omega_c.z}{(\omega_c\cdot\omega_c)^2}|M_s^{-1}|L_i+\frac{\omega_c^,.z}{(\omega_c^,\cdot\omega_c^,)^2}|M_d^{-1}|L_i
+L_o=\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}|M_s^{-1}|L_i+\frac{\omega_d.z}{(\omega_d\cdot\omega_d)^2}|M_d^{-1}|L_i
 \end{equation}
+
 可以看到，借助LTC方法来计算点光源的辐照度，只需要计算几次向量乘法、平方以及矩阵的行列式就可以了，计算量相当简单（不需要求矩阵的逆，因为本文在预计算的二维纹理中存储的就是$M^{-1}$，而不是$M$）。
 
 \subsection{使用LTC方法来计算多个点光源光照}
 由式\ref{eq:FinalEquation4SPL}可得，着色点在多个点光源光照下的辐射照度为：
 \begin{equation}
-L_o=\sum_{\omega_i}(\frac{\omega_c.z}{(\omega_c\cdot\omega_c)^2}|M_s^{-1}|L_i+\frac{\omega_c^,.z}{(\omega_c^,\cdot\omega_c^,)^2}|M_d^{-1}|L_i)
+L_o=\sum_{\omega_i}(\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}|M_s^{-1}|L_i+\frac{\omega_d.z}{(\omega_d\cdot\omega_d)^2}|M_d^{-1}|L_i)
 \end{equation}
-其中$\omega_c=M_s^{-1}\omega_i$、$\omega_c^,=M_d^{-1}\omega_i$。因为对同一个着色点来说，对任何点光源$M_s^{-1}$和$M_d^{-1}$是定值，所以：
+其中$\omega_s=M_s^{-1}\omega_i$、$\omega_d=M_d^{-1}\omega_i$。因为对同一个着色点来说，对任何点光源$M_s^{-1}$和$M_d^{-1}$是定值，所以：
 \begin{equation}
 \label{eq:FinalEquation4MPL}
-L_o=|M_s^{-1}|\sum_{\omega_i}\frac{\omega_c.z}{(\omega_c\cdot\omega_c)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{\omega_c^,.z}{(\omega_c^,\cdot\omega_c^,)^2}L_i
+L_o=|M_s^{-1}|\sum_{\omega_i}\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{\omega_d.z}{(\omega_d\cdot\omega_d)^2}L_i
 \end{equation}
 
 而使用BRDF方式来计算多点光源光照的公式如下：
@@ -222,21 +228,41 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 从式\ref{eq:FinalEquation4MPL}、\ref{eq:BRDFFinalEquation4MPL}可以看出，本文用LTC的方式来实现多点光源光照，计算量比使用BRDF方式要少很多，从而达到本文要实现的目标：以更快的速率实现多点光源下基于物理的光照效果。除此之外，使用本文LTC渲染点光源的方法，不会因为BRDF公式（$DFG$以及$f_d$项）的复杂性而增加渲染时间， 也就是说，即使未来BRDF因为要达到更加物理真实的效果而变得更加复杂，使用本文的方法是不会降低渲染帧率的。本文算法对于点光源在基于物理的渲染上具有很好的可扩展性。甚至可以让复杂的点光源PBR光照在移动平台上也能快速实现出较好的效果。
 
 \subsection{实验结果}
-在有100个点光源的场景中，使用BRDF方式以及本文的算法所实现的渲染结果如Fig\ref{fig:BRDFResult}和Fig\ref{fig:LTCResult}所示：
-\begin{figure}
-	\centering
-	\includegraphics[width=1.0\columnwidth]{BRDFResult.png}
-    \captionsetup{font={small}}
-	\caption{使用BRDF方式渲染的结果}
-	\label{fig:BRDFResult}
-\end{figure}
+本文的实验环境是：Intel(R)Xeon(R)CPU E3-1230 V2@3.30GHz，16GB内存，NVIDIA GeForce GTX 1060 6GB显卡。
 
+在有100个点光源的场景中，使用BRDF方式以及本文的算法在场景粗糙度$\alpha=0.27$时所实现的渲染结果如图\ref{fig:BRDFResultAndLTCResult}所示：
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=1.0\columnwidth]{BRDFResult.png}
+%    \captionsetup{font={small}}
+%	\caption{使用BRDF方式渲染的结果}
+%	\label{fig:BRDFResult}
+%\end{figure}
+%
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=1.0\columnwidth]{LTCResult.png}
+%    \captionsetup{font={small}}
+%	\caption{使用本文算法渲染的结果}
+%	\label{fig:LTCResult}
+%\end{figure}
 \begin{figure}
 	\centering
-	\includegraphics[width=1.0\columnwidth]{LTCResult.png}
+    \subfigure[使用BRDF方式渲染的结果]{
+		\begin{minipage}[t]{1.0\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDFResult.png}
+		\end{minipage}
+    }
+    \subfigure[使用本文算法渲染的结果]{
+		\begin{minipage}[t]{1.0\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTCResult.png}
+		\end{minipage}
+    }
     \captionsetup{font={small}}
-	\caption{使用本文算法渲染的结果}
-	\label{fig:LTCResult}
+    \caption{使用BRDF和本文算法结果的对比}
+    \label{fig:BRDFResultAndLTCResult}
 \end{figure}
 
 当渲染不同数量的光源时，使用BRDF方式以及本文算法的帧率和提升的渲染时间如表\ref{tab:TimeConsuming}所示：
