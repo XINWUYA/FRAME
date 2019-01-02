@@ -1,5 +1,9 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: LTCAlgorithm.aux
 The style file: plain.bst
-I found no \citation commands---while reading file LTCAlgorithm.aux
-I found no \bibdata command---while reading file LTCAlgorithm.aux
-(There were 2 error messages)
+Illegal, another \bibstyle command---line 49 of file LTCAlgorithm.aux
+ : \bibstyle
+ :          {plain}
+I'm skipping whatever remains of this command
+Database file #1: LTC_bibfile.bib
+Warning--can't use both volume and number fields in schlick1994inexpensive
+(There was 1 error message)

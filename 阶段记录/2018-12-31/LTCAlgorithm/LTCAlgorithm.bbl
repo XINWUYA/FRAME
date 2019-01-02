@@ -1,3 +1,30 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{burley2012physically}
+Brent Burley and Walt Disney~Animation Studios.
+\newblock Physically-based shading at disney.
+\newblock In {\em ACM SIGGRAPH}, volume 2012, pages 1--7, 2012.
+
+\bibitem{Heitz2016Real}
+Eric Heitz, Jonathan Dupuy, Stephen Hill, and David Neubelt.
+\newblock Real-time polygonal-light shading with linearly transformed cosines.
+\newblock {\em Acm Transactions on Graphics}, 35(4):41, 2016.
+
+\bibitem{lagarde2014moving}
+Sebastien Lagarde and Charles De~Rousiers.
+\newblock Moving frostbite to pbr.
+\newblock {\em Proc. Physically Based Shading Theory Practice}, 2014.
+
+\bibitem{schlick1994inexpensive}
+Christophe Schlick.
+\newblock An inexpensive brdf model for physically-based rendering.
+\newblock In {\em Computer graphics forum}, volume~13, pages 233--246. Wiley
+  Online Library, 1994.
+
+\bibitem{Walter2007Microfacet}
+Bruce Walter, Stephen~R. Marschner, Hongsong Li, and Kenneth~E. Torrance.
+\newblock Microfacet models for refraction through rough surfaces.
+\newblock In {\em Eurographics Symposium on Rendering Techniques, Grenoble,
+  France}, pages 195--206, 2007.
 
 \end{thebibliography}

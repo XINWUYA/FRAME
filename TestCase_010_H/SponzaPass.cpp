@@ -28,6 +28,7 @@ void CSponzaPass::initV()
 	Texture2D4Mag.Type4WrapS = Texture2D4Mag.Type4WrapT = GL_CLAMP_TO_EDGE;
 	m_LTCMatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_mat.dds", Texture2D4Mat);
 	m_LTCMagnitueTexture = loadTextureFromFile("../Textures/LTCLight/ltc_amp.dds", Texture2D4Mag);
+	m_LTC_DisneyDiffuse_MatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_DisneyDiffuse_NoPI_N32_mat.dds");
 	m_pLightSource = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"));
 	m_pSponza = std::dynamic_pointer_cast<CSponza>(ElayGraphics::ResourceManager::getGameObjectByName("Sponza"));
 
@@ -35,6 +36,7 @@ void CSponzaPass::initV()
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(m_SponzaModelMatrix));
 	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture);
 	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture);
+	m_pShader->setTextureUniformValue("u_LTC_DisneyDiffuse_MatrixTexture", m_LTC_DisneyDiffuse_MatrixTexture);
 	m_pSponza->initModel(*m_pShader);
 
 	auto pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
@@ -98,6 +100,15 @@ void CSponzaPass::updateV()
 	}
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_P) == GLFW_RELEASE)
 		m_OldKeyPStatus = GLFW_RELEASE;
+
+	if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_PRESS && m_OldKeyKStatus != GLFW_PRESS)
+	{
+		m_OldKeyKStatus = GLFW_PRESS;
+		m_EnableKeyK = !m_EnableKeyK;
+		m_pShader->setIntUniformValue("u_EnableKeyK", m_EnableKeyK);
+	}
+	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_RELEASE)
+		m_OldKeyKStatus = GLFW_RELEASE;
 
 	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);

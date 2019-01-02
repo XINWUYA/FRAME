@@ -1,0 +1,7 @@
+\BOOKMARK [0][-]{chapter*.1}{Contents}{}% 1
+\BOOKMARK [1][-]{section.0.1}{0.1 算法部分}{chapter*.1}% 2
+\BOOKMARK [2][-]{subsection.0.1.1}{0.1.1 反射率方程}{section.0.1}% 3
+\BOOKMARK [2][-]{subsection.0.1.2}{0.1.2 使用LTC方法近似BRDF积分}{section.0.1}% 4
+\BOOKMARK [2][-]{subsection.0.1.3}{0.1.3 使用LTC方法来计算单点光源光照}{section.0.1}% 5
+\BOOKMARK [2][-]{subsection.0.1.4}{0.1.4 使用LTC方法来计算多个点光源光照}{section.0.1}% 6
+\BOOKMARK [0][-]{chapter*.3}{Bibliography}{}% 7
