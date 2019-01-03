@@ -16,6 +16,8 @@ void CModel::init(const CShader &vShader) const
 	vShader.setIntUniformValue(m_DiffuseTextureNamePrefix, 0);
 	vShader.setIntUniformValue(m_SpecularTextureNamePrefix, 1);
 	vShader.setIntUniformValue(m_NormalTextureNamePrefix, 2);
+	vShader.setIntUniformValue(m_RoughnessTextureNamePrefix, 3);
+	vShader.setIntUniformValue(m_MetallicTextureNamePrefix, 4);
 }
 
 //************************************************************************************
@@ -111,6 +113,8 @@ GLvoid CModel::__processTextures(const aiMesh *vAiMesh, std::vector<SMeshTexture
 	__loadTextureFromMaterial(aiTextureType_DIFFUSE, pAiMat, m_DiffuseTextureNamePrefix, voTextures);
 	__loadTextureFromMaterial(aiTextureType_SPECULAR, pAiMat, m_SpecularTextureNamePrefix, voTextures);
 	__loadTextureFromMaterial(aiTextureType_HEIGHT, pAiMat, m_NormalTextureNamePrefix, voTextures);
+	__loadTextureFromMaterial(aiTextureType_SHININESS, pAiMat, m_RoughnessTextureNamePrefix, voTextures);
+	__loadTextureFromMaterial(aiTextureType_AMBIENT, pAiMat, m_MetallicTextureNamePrefix, voTextures);
 }
 
 //************************************************************************************
@@ -120,6 +124,12 @@ GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMat
 	_ASSERT(vMat);
 	GLint TextureCount = vMat->GetTextureCount(vTextureType);
 	int TextureIndex = -1;
+	if (TextureCount <= 0)
+	{
+		SMeshTexture MeshTexture;
+		voTextures.push_back(MeshTexture);
+		return;
+	}
 	for (GLint i = 0; i < TextureCount; ++i)
 	{
 		aiString Str;

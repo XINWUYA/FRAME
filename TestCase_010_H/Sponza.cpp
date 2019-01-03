@@ -9,7 +9,7 @@ void CSponza::initV()
 {
 	/*rotate(glm::vec3(-90, 0, 0));
 	scale(glm::vec3(10, 10, 1));*/
-	setModel(ElayGraphics::ResourceManager::getOrCreateModel("../Model/sponza/sponza.obj"));
+	setModel(ElayGraphics::ResourceManager::getOrCreateModel("../Model/SponzaPBR/SponzaPBR.obj"));
 }
 
 void CSponza::updateV()

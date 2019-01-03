@@ -5,9 +5,9 @@
 %%
 %% $Id: template.tex,v 1.10 2007/01/09 05:10:46 aloft Exp $
 
-
+\documentclass{article}
 %\documentclass[dvipdfm]{CASthesis}
-\documentclass[pdftex]{CASthesis}
+%\documentclass[pdftex]{CASthesis}
 % 可选参数：
 % notypeinfo 取消扉页的LaTeX版本信息
 %
@@ -41,7 +41,7 @@
 
 
 \section{算法部分}
-本文算法要实现的目标是：用LTC的方式来近似实现多点光源下基于物理的光照效果，同时渲染速率要比常用的BRDF方式更高。
+本文算法要实现的目标是：用LTC的方式来近似实现多点光源下基于物理的光照效果，同时渲染效率要比常用的BRDF方式更高。
 \subsection{反射率方程}
 为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的光照渲染：
 \begin{equation}
@@ -70,6 +70,7 @@ L_o(p,\omega_o)=\int_\Omega(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})
 \label{eq:GGXD}
 D=\frac{\alpha^2\chi^+(\theta_h)}{\pi\cos^4\theta_h(\alpha^2+\tan^2\theta_h)^2}
 \end{equation}
+
 其中$h$表示中间向量，$\alpha$表示表面粗糙度，$\theta_h$是法向量$n$与中间向量$h$的夹角，并且：
 \begin{equation}
 \chi^+(\theta_h)=
@@ -142,7 +143,7 @@ C(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
   \end{bmatrix}
 \end{equation}
 
-以二维纹理的纹理坐标u作为观察角度$\theta_o$，以纹理坐标v作为粗糙度$\alpha$，拟合出不同的矩阵$M_s$。可以将预计算好的$M_s$的逆矩阵存入二维纹理里坐标(u,v)所对应的纹素中。作者提出在BRDF分布上对一个多边形光源区域$P$的积分，等效于在余弦分布上对另一个多边形区域$P_c$的积分（多边形$P_c$是对多边形$P$乘上矩阵$M_s$的逆矩阵之后，得到的新的多边形）：
+以二维纹理的纹理坐标u作为观察角度$\theta_o$，以纹理坐标v作为粗糙度$\alpha$，拟合出不同的矩阵$M_s$。可以将预计算好的$M_s$的逆矩阵存入二维纹理坐标(u,v)所对应的纹素中。作者提出在BRDF分布上对一个多边形光源区域$P$的积分，等效于在余弦分布上对另一个多边形区域$P_c$的积分（多边形$P_c$是对多边形$P$乘上矩阵$M_s$的逆矩阵之后，得到的新的多边形）：
 \begin{equation}
 \label{eq:IntegrationApproxmation}
 \int_PB_s(\omega)d\omega=\int_{P_c}C(\omega_s)d\omega_s

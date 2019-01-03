@@ -19,7 +19,7 @@ struct SMeshVertex
 
 struct SMeshTexture
 {
-	GLint ID = 0;
+	GLint ID = -1;
 	std::string TexturePath;
 	std::string TextureUniformName;
 

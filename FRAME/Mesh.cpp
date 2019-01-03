@@ -31,7 +31,7 @@ GLvoid CMesh::init(const CShader& vioShader) const
 GLvoid CMesh::update(const CShader& vShader) const
 {
 	//_WARNING(m_Textures.size() > 5, "Texture num of some mesh is greater than 5.");
-	for (int i = 0; i < m_Textures.size(); ++i)
+	for (size_t i = 0; i < m_Textures.size(); ++i)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, m_Textures[i].ID); 

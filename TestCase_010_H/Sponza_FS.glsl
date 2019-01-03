@@ -38,6 +38,8 @@ uniform sampler2D u_LTC_MatrixTexture;
 uniform sampler2D u_LTC_MagnitueTexture;
 uniform sampler2D u_LTC_DisneyDiffuse_MatrixTexture;
 uniform sampler2D u_DiffuseTexture;
+uniform sampler2D u_RoughnessTexture;
+uniform sampler2D u_MetallicTexture;
 
 const float PI = 3.14159265;
 
@@ -272,6 +274,8 @@ void main()
 
 	vec3 SpecularColor;
 	vec3 Albedo = texture(u_DiffuseTexture, v2f_TexCoords).rgb;
+	float Roughness = texture(u_RoughnessTexture, v2f_TexCoords).r;
+	float Metallic = texture(u_MetallicTexture, v2f_TexCoords).r;
 	vec3 DiffuseColor = DiffuseAndSpecularFromMetallic (u_Albedo, u_Metalness, /*out*/ SpecularColor);
 	vec3 ResultColor;
 
@@ -443,7 +447,7 @@ void main()
 
 	//vec3 ReinhardMappedColor = ResultColor / (ResultColor + vec3(1.0));
 	//vec3 GammaedColor = pow(ReinhardMappedColor, vec3(1.0 / 2.2));
-	vec3 GammaedColor = ResultColor;
+	vec3 GammaedColor = vec3(ResultColor);
 	//if(GammaedColor.r <= 0.0001 && GammaedColor.g <= 0.0001 && GammaedColor.b <= 0.0001)
 	//	GammaedColor = vec3(1, 0, 0);
 

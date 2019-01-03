@@ -25,6 +25,8 @@ private:
 	std::string				   m_DiffuseTextureNamePrefix = "u_DiffuseTexture";
 	std::string				   m_SpecularTextureNamePrefix = "u_SpecularTexture";
 	std::string				   m_NormalTextureNamePrefix = "u_NormalTexture";
+	std::string				   m_RoughnessTextureNamePrefix = "u_RoughnessTexture";
+	std::string				   m_MetallicTextureNamePrefix = "u_MetallicTexture";
 	const aiScene             *m_pScene;
 
 	GLvoid __loadModel(const std::string& vPath);
