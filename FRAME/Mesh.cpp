@@ -17,7 +17,7 @@ CMesh::~CMesh()
 //Function:
 GLvoid CMesh::__init()
 {
-	m_VAO = createVAO(&m_Vertices[0], m_Vertices.size() * sizeof(SMeshVertex), { 3,3,2 }, &m_Indices[0], m_Indices.size() * sizeof(GLint));
+	m_VAO = createVAO(&m_Vertices[0], m_Vertices.size() * sizeof(SMeshVertex), { 3,3,2,3 }, &m_Indices[0], m_Indices.size() * sizeof(GLint));
 }
 
 //************************************************************************************

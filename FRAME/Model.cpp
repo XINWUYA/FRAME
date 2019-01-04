@@ -33,7 +33,7 @@ GLvoid CModel::update(const CShader& vShader) const
 GLvoid CModel::__loadModel(const std::string& vPath)
 {
 	Assimp::Importer ModelImpoter;
-	m_pScene = ModelImpoter.ReadFile(vPath, aiProcess_Triangulate);
+	m_pScene = ModelImpoter.ReadFile(vPath, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (!m_pScene || !m_pScene->mRootNode || m_pScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE)
 	{
 		std::cerr << "Error::Model:: " << ModelImpoter.GetErrorString() << std::endl;
@@ -83,6 +83,7 @@ GLvoid CModel::__processVertex(const aiMesh *vAiMesh, std::vector<SMeshVertex> &
 		else {
 			Vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 		}
+		Vertex.Tangent = glm::vec3(vAiMesh->mTangents[i].x, vAiMesh->mTangents[i].y, vAiMesh->mTangents[i].z);
 		voVertices.push_back(Vertex);
 	}
 }
