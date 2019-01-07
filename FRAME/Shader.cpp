@@ -230,7 +230,7 @@ GLvoid CShader::setTextureUniformValue(const std::string& vTextureUniformName, G
 	glActiveTexture(GL_TEXTURE0 + BindingIndex);
 	glUniform1i(glGetUniformLocation(m_ShaderProgram, vTextureUniformName.c_str()), BindingIndex);
 	glBindTexture(vTextureType, vTextureID);
-	m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet[vTextureUniformName] = { vTextureID, BindingIndex, vTextureType };
+	m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet[vTextureUniformName] = std::make_tuple(vTextureID, BindingIndex, vTextureType);
 }
 
 //************************************************************************************
