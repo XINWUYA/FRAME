@@ -36,20 +36,23 @@ GLvoid CCamera::__processMovement4KeyCallback(GLint vKey, GLint vScancode, GLint
 //Function:
 GLvoid CCamera::__processRotate4CursorCallback(GLdouble vPosX, GLdouble vPosY)
 {
-	std::array<double, 2> CursorOffset = CInputManager::getOrCreateInstance()->getCursorOffset();
-	CursorOffset[0] *= m_Sensitivity;
-	CursorOffset[1] *= m_Sensitivity;
-	m_Yaw += glm::radians(CursorOffset[0]);
-	m_Pitch += glm::radians(CursorOffset[1]);
-	if (m_Pitch > glm::radians(89.0))
-		m_Pitch = glm::radians(89.0);
-	else if (m_Pitch < glm::radians(-89.0))
-		m_Pitch = glm::radians(-89.0);
-	m_CameraFront.x = cos(m_Pitch) * cos(m_Yaw);
-	m_CameraFront.y = sin(m_Pitch);
-	m_CameraFront.z = cos(m_Pitch) * sin(m_Yaw);
-	m_CameraFront = glm::normalize(m_CameraFront);
-	m_CameraRight = normalize(cross(m_UpVector, -m_CameraFront));
+	if (m_IsEnableCursor)
+	{
+		std::array<double, 2> CursorOffset = CInputManager::getOrCreateInstance()->getCursorOffset();
+		CursorOffset[0] *= m_Sensitivity;
+		CursorOffset[1] *= m_Sensitivity;
+		m_Yaw += glm::radians(CursorOffset[0]);
+		m_Pitch += glm::radians(CursorOffset[1]);
+		if (m_Pitch > glm::radians(89.0))
+			m_Pitch = glm::radians(89.0);
+		else if (m_Pitch < glm::radians(-89.0))
+			m_Pitch = glm::radians(-89.0);
+		m_CameraFront.x = cos(m_Pitch) * cos(m_Yaw);
+		m_CameraFront.y = sin(m_Pitch);
+		m_CameraFront.z = cos(m_Pitch) * sin(m_Yaw);
+		m_CameraFront = glm::normalize(m_CameraFront);
+		m_CameraRight = normalize(cross(m_UpVector, -m_CameraFront));
+	}
 }
 
 //************************************************************************************

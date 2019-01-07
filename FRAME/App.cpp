@@ -90,9 +90,9 @@ GLvoid CApp::update()
 //Function:
 GLvoid CApp::__calculateTime()
 {
-	GLdouble CurrentTime = glfwGetTime();
-	m_DeltaTime = CurrentTime - m_LastFrameTime;
-	m_LastFrameTime = CurrentTime;
+	m_CurrentTime = glfwGetTime();
+	m_DeltaTime = m_CurrentTime - m_LastFrameTime;
+	m_LastFrameTime = m_CurrentTime;
 
 	++m_FrameCounter;
 	m_TimeCounter += m_DeltaTime;
@@ -116,6 +116,13 @@ GLdouble CApp::getDeltaTime() const
 GLdouble CApp::getFrameRateInMilliSecond() const
 {
 	return m_DeltaTime * 1000;
+}
+
+//************************************************************************************
+//Function:
+GLdouble CApp::getCurrentTime() const
+{
+	return m_CurrentTime;
 }
 
 //************************************************************************************

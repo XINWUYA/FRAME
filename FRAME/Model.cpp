@@ -111,16 +111,20 @@ GLvoid CModel::__processTextures(const aiMesh *vAiMesh, std::vector<SMeshTexture
 	if (vAiMesh->mMaterialIndex < 0)
 		return;
 	aiMaterial *pAiMat = m_pScene->mMaterials[vAiMesh->mMaterialIndex];
-	__loadTextureFromMaterial(aiTextureType_DIFFUSE, pAiMat, m_DiffuseTextureNamePrefix, voTextures);
+	ElayGraphics::STexture Texture2DInSRGBSpace;
+	Texture2DInSRGBSpace.isSRGBSpace = GL_TRUE;
+	ElayGraphics::STexture Texture2D4Roughness;
+	Texture2D4Roughness.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
+	__loadTextureFromMaterial(aiTextureType_DIFFUSE, pAiMat, m_DiffuseTextureNamePrefix, voTextures/*, Texture2DInSRGBSpace*/);
 	__loadTextureFromMaterial(aiTextureType_SPECULAR, pAiMat, m_SpecularTextureNamePrefix, voTextures);
 	__loadTextureFromMaterial(aiTextureType_HEIGHT, pAiMat, m_NormalTextureNamePrefix, voTextures);
-	__loadTextureFromMaterial(aiTextureType_SHININESS, pAiMat, m_RoughnessTextureNamePrefix, voTextures);
+	__loadTextureFromMaterial(aiTextureType_SHININESS, pAiMat, m_RoughnessTextureNamePrefix, voTextures/*, Texture2D4Roughness*/);
 	__loadTextureFromMaterial(aiTextureType_AMBIENT, pAiMat, m_MetallicTextureNamePrefix, voTextures);
 }
 
 //************************************************************************************
 //Function:
-GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix, std::vector<SMeshTexture>& voTextures)
+GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix, std::vector<SMeshTexture>& voTextures, ElayGraphics::STexture Texture2D/* = ElayGraphics::STexture()*/)
 {
 	_ASSERT(vMat);
 	GLint TextureCount = vMat->GetTextureCount(vTextureType);
@@ -152,7 +156,7 @@ GLvoid CModel::__loadTextureFromMaterial(aiTextureType vTextureType, const aiMat
 		if (!Skip)
 		{
 			SMeshTexture MeshTexture;
-			MeshTexture.ID = loadTextureFromFile(TexturePath);
+			MeshTexture.ID = loadTextureFromFile(TexturePath, Texture2D);
 			MeshTexture.TexturePath = TexturePath;
 			MeshTexture.TextureUniformName = vTextureNamePrefix + std::to_string(++TextureIndex);
 			voTextures.push_back(MeshTexture);

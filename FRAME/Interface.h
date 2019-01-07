@@ -20,6 +20,7 @@ namespace ElayGraphics
 		FRAME_DLLEXPORTS void   updateApp();
 		FRAME_DLLEXPORTS int    getFramesPerSecond();
 		FRAME_DLLEXPORTS double getDeltaTime();
+		FRAME_DLLEXPORTS double getCurrentTime();
 		FRAME_DLLEXPORTS double getFrameRateInMilliSecond();
 	}
 
@@ -45,6 +46,7 @@ namespace ElayGraphics
 		FRAME_DLLEXPORTS void setMainCameraFarPlane(double vFarPlane);
 		FRAME_DLLEXPORTS void setMainCameraMoveSpeed(double vMoveSpeed);
 		FRAME_DLLEXPORTS void setMainCameraFov(double vFov);
+		FRAME_DLLEXPORTS void setIsEnableCursor(bool vIsEnableCursor);
 	}
 
 	namespace ResourceManager

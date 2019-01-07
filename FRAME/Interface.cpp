@@ -29,6 +29,13 @@ double ElayGraphics::App::getDeltaTime()
 
 //************************************************************************************
 //Function:
+double ElayGraphics::App::getCurrentTime()
+{
+	return CApp::getOrCreateInstance()->getCurrentTime();
+}
+
+//************************************************************************************
+//Function:
 double ElayGraphics::App::getFrameRateInMilliSecond()
 {
 	return CApp::getOrCreateInstance()->getFrameRateInMilliSecond();
@@ -130,6 +137,13 @@ void ElayGraphics::Camera::setMainCameraMoveSpeed(double vMoveSpeed)
 void ElayGraphics::Camera::setMainCameraFov(double vFov)
 {
 	CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setFov(vFov);
+}
+
+//************************************************************************************
+//Function:
+void ElayGraphics::Camera::setIsEnableCursor(bool vIsEnableCursor)
+{
+	CResourceManager::getOrCreateInstance()->fecthOrCreateMainCamera()->setEnableCursor(vIsEnableCursor);
 }
 
 //************************************************************************************

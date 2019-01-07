@@ -291,6 +291,7 @@ GLint genTexture(ElayGraphics::STexture& vioTexture)
 		vioTexture.Type4MinFilter = GL_LINEAR_MIPMAP_LINEAR;
 	glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, vioTexture.Type4MinFilter);
 	glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, vioTexture.Type4MagFilter);
+	//glTexParameteri(TextureType, GL_TEXTURE_MAX_LEVEL, 4);
 	if (vioTexture.isMipmap) 
 		glGenerateMipmap(TextureType);
 	glBindTexture(TextureType, 0);
@@ -332,10 +333,12 @@ void configureCommonTexture(const std::string& vFilePath, ElayGraphics::STexture
 		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RG;
 		break;
 	case 3:
-		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RGB;
+		voTexture2D.InternalFormat = voTexture2D.isSRGBSpace ? GL_SRGB : GL_RGB;
+		voTexture2D.ExternalFormat = GL_RGB;
 		break;
 	case 4:
-		voTexture2D.InternalFormat = voTexture2D.ExternalFormat = GL_RGBA;
+		voTexture2D.InternalFormat = voTexture2D.isSRGBSpace ? GL_SRGB_ALPHA : GL_RGBA;
+		voTexture2D.ExternalFormat = GL_RGBA;
 		break;
 	default:
 		break;

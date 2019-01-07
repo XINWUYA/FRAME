@@ -17,6 +17,7 @@ public:
 	GLvoid update();
 	GLdouble getDeltaTime() const;
 	GLdouble getFrameRateInMilliSecond() const;
+	GLdouble getCurrentTime() const;
 	GLuint	 getFramesPerSecond() const;
 
 private:
@@ -26,6 +27,7 @@ private:
 	GLFWwindow  *m_pWindow;
 	GLdouble     m_DeltaTime = 0.0;
 	GLdouble     m_LastFrameTime = 0.0;
+	GLdouble     m_CurrentTime = 0.0;
 	GLdouble	 m_TimeCounter = 0.0;
 	GLuint		 m_FramesPerSecond = 0;
 	GLuint		 m_FrameCounter = 0;

@@ -6,6 +6,7 @@
 #include <Assimp/scene.h>
 #include <Assimp/postprocess.h>
 #include "Mesh.h"
+#include "Common.h"
 
 class CShader;
 
@@ -35,5 +36,5 @@ private:
 	GLvoid __processVertex(const aiMesh *vAiMesh, std::vector<SMeshVertex> &voVertices);
 	GLvoid __processIndices(const aiMesh *vAiMesh, std::vector<GLint> &voIndices);
 	GLvoid __processTextures(const aiMesh *vAiMesh, std::vector<SMeshTexture> &voTextures);
-	GLvoid __loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix,std::vector<SMeshTexture>& voTextures);
+	GLvoid __loadTextureFromMaterial(aiTextureType vTextureType, const aiMaterial *vMat, const std::string& vTextureNamePrefix, std::vector<SMeshTexture>& voTextures, ElayGraphics::STexture Texture2D = ElayGraphics::STexture());
 };

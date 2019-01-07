@@ -22,7 +22,7 @@ public:
 	void setFarPlane(GLdouble vFarPlane) { m_Far = vFarPlane; }
 	void setMoveSpeed(GLdouble vMoveSpeed) { m_MoveSpeed = vMoveSpeed; }
 	void setFov(GLdouble vFov) { m_Fov = vFov; }
-	
+	void setEnableCursor(bool vIsEnableCursor) { m_IsEnableCursor = vIsEnableCursor; }
 
 private:
 	GLvoid __processMovement4KeyCallback(GLint vKey, GLint vScancode, GLint vAction, GLint vMode);
@@ -43,4 +43,5 @@ private:
 	GLdouble m_Sensitivity =0.03;
 	GLdouble m_Near = 0.1;
 	GLdouble m_Far = 100.0;
+	GLboolean m_IsEnableCursor = true;
 };
