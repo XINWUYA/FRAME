@@ -1,0 +1,9 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: LTCAlgorithm.aux
+The style file: plain.bst
+Illegal, another \bibstyle command---line 59 of file LTCAlgorithm.aux
+ : \bibstyle
+ :          {plain}
+I'm skipping whatever remains of this command
+Database file #1: LTC_bibfile.bib
+Warning--can't use both volume and number fields in schlick1994inexpensive
+(There was 1 error message)

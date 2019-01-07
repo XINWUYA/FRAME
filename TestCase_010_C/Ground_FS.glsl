@@ -41,59 +41,59 @@ const float PI = 3.14159265;
 
 float integrateLTCSpecular(vec3 vFrag2Light, mat3 vLTCMatrix)
 {	
-	if(u_EnableKeyK)
-	{
-		vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
-		if(LightPositionInTangentSpace.z < 0)
-			return 0.0;
-		float DistanceFromFrag2TransformedLight = length(LightPositionInTangentSpace);
-		float JacobianDenom = pow(DistanceFromFrag2TransformedLight, 3);
-		return LightPositionInTangentSpace.z / DistanceFromFrag2TransformedLight/* / PI*/ / JacobianDenom;
-	}
+	//if(u_EnableKeyK)
+	//{
+	//	vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
+	//	if(LightPositionInTangentSpace.z < 0)
+	//		return 0.0;
+	//	float DistanceFromFrag2TransformedLight = length(LightPositionInTangentSpace);
+	//	float JacobianDenom = pow(DistanceFromFrag2TransformedLight, 3);
+	//	return LightPositionInTangentSpace.z / DistanceFromFrag2TransformedLight/* / PI*/ / JacobianDenom;
+	//}
+	////else
+	//	//return vfrag2light.z;
+
+	////--------------------------------------------------------------------------
+
+	////if(u_EnableLTC)
 	//else
-		//return vfrag2light.z;
-
-	//--------------------------------------------------------------------------
-
-	//if(u_EnableLTC)
-	else
-	{
+	//{
 		vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
 		if(LightPositionInTangentSpace.z < 0)
 			return 0.0;
 		float DistanceFromFrag2TransformedLight = dot(LightPositionInTangentSpace, LightPositionInTangentSpace);		//这种要比上面那种length快一点点
 		return LightPositionInTangentSpace.z / (DistanceFromFrag2TransformedLight * DistanceFromFrag2TransformedLight);
-	}
+	//}
 	//else
 	//	return vFrag2Light.z;
 }
 
 float integrateLTCDiffuse(vec3 vFrag2Light, mat3 vLTCMatrix, float vDistance)
 {
-	//vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
-	//if(LightPositionInTangentSpace.z < 0)
-	//	return 0.0;
-	//float DistanceFromFrag2Light = vDistance;
-	//return LightPositionInTangentSpace.z/* / DistanceFromFrag2Light*//* / PI*/;
+	vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
+	if(LightPositionInTangentSpace.z < 0)
+		return 0.0;
+	float DistanceFromFrag2Light = vDistance;
+	return LightPositionInTangentSpace.z/* / DistanceFromFrag2Light*//* / PI*/;
 
-	//------------------------------Disney Diffuse------------------------------
-	if(u_EnableKeyK)
-	{
-		vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
-		if(LightPositionInTangentSpace.z < 0)
-			return 0.0;
-		float DistanceFromFrag2TransformedLight = length(LightPositionInTangentSpace);
-		float JacobianDenom = pow(DistanceFromFrag2TransformedLight, 3);
-		return LightPositionInTangentSpace.z / DistanceFromFrag2TransformedLight/* / PI*/ / JacobianDenom;
-	}
-	else
-	{
-		vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
-		if(LightPositionInTangentSpace.z < 0)
-			return 0.0;
-		float DistanceFromFrag2TransformedLight = dot(LightPositionInTangentSpace, LightPositionInTangentSpace);		//这种要比上面那种length快一点点
-		return LightPositionInTangentSpace.z / (DistanceFromFrag2TransformedLight * DistanceFromFrag2TransformedLight);
-	}
+	////------------------------------Disney Diffuse------------------------------
+	//if(u_EnableKeyK)
+	//{
+	//	vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
+	//	if(LightPositionInTangentSpace.z < 0)
+	//		return 0.0;
+	//	float DistanceFromFrag2TransformedLight = length(LightPositionInTangentSpace);
+	//	float JacobianDenom = pow(DistanceFromFrag2TransformedLight, 3);
+	//	return LightPositionInTangentSpace.z / DistanceFromFrag2TransformedLight/* / PI*/ / JacobianDenom;
+	//}
+	//else
+	//{
+	//	vec3 LightPositionInTangentSpace = vLTCMatrix * vFrag2Light;
+	//	if(LightPositionInTangentSpace.z < 0)
+	//		return 0.0;
+	//	float DistanceFromFrag2TransformedLight = dot(LightPositionInTangentSpace, LightPositionInTangentSpace);		//这种要比上面那种length快一点点
+	//	return LightPositionInTangentSpace.z / (DistanceFromFrag2TransformedLight * DistanceFromFrag2TransformedLight);
+	//}
 }
 
 vec2 LTC_Coords(float vCosTheta, float vRoughness)
@@ -200,7 +200,7 @@ float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
 	float a          = roughness;
 	float a2         = a * a;
 	float G2;
-    if (NdotL <= 0.0f)
+    if (NdotL <= 0.0f || NdotV <= 0.0f)
         G2 = 0;
     else
     {
@@ -225,6 +225,8 @@ float GGXTermFit (float NdotH, float roughness)
     //return 1.0 / PI * a2 / (d * d + 1e-7f);
 
 	//Fit code
+	if(NdotH < 0.0)
+			return 0.0;
 	float a2 = roughness * roughness;
 	//const vec3 H = normalize(V + L);
     //const float slopex = TdotH/NdotH;
@@ -232,7 +234,7 @@ float GGXTermFit (float NdotH, float roughness)
 	float TanTheta = tan(acos(NdotH));
     float D = 1.0f / (1.0f + (TanTheta * TanTheta)/a2/a2);
     D = D*D;
-    D = D/(3.14159f * a2*a2 * NdotH*NdotH*NdotH*NdotH);
+    D = D/(3.14159f * a2*a2 * NdotH*NdotH*NdotH*NdotH + 1e-7f);
 	return D;
 }
 
@@ -264,7 +266,7 @@ void main()
 
 	if(u_EnableLTC)
 	{
-		vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), /*u_Roughness * */u_Roughness);
+		vec2 UV = LTC_Coords(dot(GroundNormal, ViewDir), u_Roughness * u_Roughness);
 
 		vec4 LTCMatrixComponents = texture2D(u_LTC_MatrixTexture, UV);
 		mat3 LTCMatrix = mat3
@@ -294,44 +296,52 @@ void main()
 		for(int i = 0; i < u_LightNum; ++i)
 		{
 			vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
-			float DistanceFromFrag2Light = length(Frag2Light);
-			Frag2Light /= DistanceFromFrag2Light;
-			//if(u_EnableLTC)
+			if (dot(GroundNormal, Frag2Light) < 0.0)
 			{
-				float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
-				float DiffuseLightAttenuation = SpecularLightAttenuation / DistanceFromFrag2Light;
-				Diffuse += integrateLTCDiffuse(Frag2Light, DisneyDiffuseTangentSpaceMatrix, DistanceFromFrag2Light) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
-				//Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light * DistanceFromFrag2Light);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要慢一些
-				Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
+				Diffuse  += vec3(0.0);
+				Specular += vec3(0.0);
 			}
-			//else
-			//{
-			//	//if(u_EnableKeyK)
-			//	//{
-			//		vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
-			//		float DistanceFromFrag2Light = length(Frag2Light);
-			//		//float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
-			//		float DiffuseLightAttenuation = 1.0 / (DistanceFromFrag2Light * DistanceFromFrag2Light);
-			//		//Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * DiffuseLightAttenuation * b_Lights[i].Color.rgb;
-			//		Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light * DistanceFromFrag2Light);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要慢一些
-			//		Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb/* * SpecularLightAttenuation*/;
+			else
+			{
+				float DistanceFromFrag2Light = length(Frag2Light);
+				Frag2Light /= DistanceFromFrag2Light;
+				//if(u_EnableLTC)
+				{
+					float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
+					float DiffuseLightAttenuation = SpecularLightAttenuation / DistanceFromFrag2Light;
+					Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
+					//Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light * DistanceFromFrag2Light);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要慢一些
+					Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
+				}
+				//else
+				//{
+				//	//if(u_EnableKeyK)
+				//	//{
+				//		vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
+				//		float DistanceFromFrag2Light = length(Frag2Light);
+				//		//float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
+				//		float DiffuseLightAttenuation = 1.0 / (DistanceFromFrag2Light * DistanceFromFrag2Light);
+				//		//Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * DiffuseLightAttenuation * b_Lights[i].Color.rgb;
+				//		Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / (DistanceFromFrag2Light * DistanceFromFrag2Light * DistanceFromFrag2Light);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要慢一些
+				//		Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb/* * SpecularLightAttenuation*/;
 
-			//		//Diffuse += b_Lights[i].Position.rgb * b_Lights[i].Color.rgb;
-			//		//Specular += b_Lights[i].Color.rgb;
-			//	//}
-			//	//else
-			//	//{
-			//	//	vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
-			//	//	//float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
-			//	//	//float DiffuseLightAttenuation = SpecularLightAttenuation / DistanceFromFrag2Light;
-			//	//	//Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
-			//	//	Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / pow(dot(Frag2Light, Frag2Light), 1.5);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要快一点点
-			//	//	Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb/* * SpecularLightAttenuation*/;
+				//		//Diffuse += b_Lights[i].Position.rgb * b_Lights[i].Color.rgb;
+				//		//Specular += b_Lights[i].Color.rgb;
+				//	//}
+				//	//else
+				//	//{
+				//	//	vec3 Frag2Light = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
+				//	//	//float SpecularLightAttenuation = 1.0 / DistanceFromFrag2Light;
+				//	//	//float DiffuseLightAttenuation = SpecularLightAttenuation / DistanceFromFrag2Light;
+				//	//	//Diffuse += integrateLTCDiffuse(Frag2Light, TangentSpaceInverseMatrix, DistanceFromFrag2Light) * b_Lights[i].Color.rgb * DiffuseLightAttenuation;
+				//	//	Diffuse += dot(Frag2Light, GroundNormal) * b_Lights[i].Color.rgb / pow(dot(Frag2Light, Frag2Light), 1.5);	//Diffuse改成这种计算方式，速度会比用矩阵转换到切线空间要快一点点
+				//	//	Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * b_Lights[i].Color.rgb/* * SpecularLightAttenuation*/;
 
-			//	//	//Diffuse += b_Lights[i].Position.rgb * b_Lights[i].Color.rgb;
-			//	//	//Specular += b_Lights[i].Color.rgb;
-			//	//}
-			//}
+				//	//	//Diffuse += b_Lights[i].Position.rgb * b_Lights[i].Color.rgb;
+				//	//	//Specular += b_Lights[i].Color.rgb;
+				//	//}
+				//}
+			}
 		}
 
 		//for(int i = 0; i < u_LightNum; ++i)
@@ -360,11 +370,10 @@ void main()
 		//	//}
 		//}
 
-		Specular *= JacobianNom;
+		Specular *= JacobianNom / PI;
 
 		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
-		Specular /= PI;
 		//Diffuse *= DiffuseColor * Schlick.x + (1.0 - DiffuseColor) * Schlick.y;
 		//Diffuse *= (1.0 - SpecularColor) * (Schlick.x - Schlick.y);
 
@@ -397,40 +406,16 @@ void main()
 			// Specular term
 			float DoubleRoughness = Roughness * Roughness;
 			float G = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
-			float D = GGXTerm (nh, DoubleRoughness);
-			float SpecularTerm = G * D * PI / 4.0 / nv/* / nl*//*/PI*/; // Cook-Torrance model, Fresnel is applied later
+			//float D = GGXTerm (nh, DoubleRoughness);
+			float D = GGXTermFit(nh, DoubleRoughness);
+			float SpecularTerm = G * D/* * PI*/ / 4.0 / nv/* / nl*//*/PI*/; // Cook-Torrance model, Fresnel is applied later
 			//SpecularTerm = SpecularTerm/* * nl*/;
 			//float SpecularTerm = V * D * PI / 4.0; // Torrance-Sparrow model, Fresnel is applied later
 			//SpecularTerm = SpecularTerm * nl;
-			SpecularTerm = max(0, SpecularTerm * nl);
+			SpecularTerm = max(0, SpecularTerm/* * nl*/);
 	
 			float LightAttenuation = 1.0f / ( Distance * Distance);
 			ResultColor += (DiffuseColor * DiffuseTerm + SpecularTerm * FresnelTerm(SpecularColor, lh)) * b_Lights[i].Color.rgb * LightAttenuation;
-
-			////-----------------------------Fit BRDF--------------------------------------
-			//vec3 LightDir = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
-			//float Distance = length(LightDir);
-			//LightDir = normalize(LightDir);
-			////vec3 H = SafeNormalize(LightDir + ViewDir);
-			//vec3 H = normalize(LightDir + ViewDir);
-			//float nl = saturate(dot(GroundNormal, LightDir));
-			//float nh = saturate(dot(GroundNormal, H));
-			//float lv = saturate(dot(LightDir, ViewDir));
-			//float lh = saturate(dot(LightDir, H));
-			//float nv = saturate(dot(GroundNormal, ViewDir));
-			//// Diffuse term
-			////float DiffuseTerm = /*DisneyDiffuse(nv, nl, lh, Roughness) * */nl;
-			//vec3 DiffuseTerm = max(vec3(0), (1 - FresnelTerm(SpecularColor, lh)) * nl);
-			//// Specular term
-			//float DoubleRoughness = Roughness * Roughness;
-			//float G = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
-			//float D = GGXTermFit(H, DoubleRoughness);
-			//float SpecularTerm = G * D /** PI*/ / 4.0/* / ViewDir.z*/;
-			//SpecularTerm = SpecularTerm * nl;
-	
-			//float LightAttenuation = 1.0f / ( Distance * Distance);
-			//ResultColor += (DiffuseColor * DiffuseTerm + SpecularTerm * FresnelTerm(SpecularColor, lh)) * b_Lights[i].Color.rgb * LightAttenuation;
-			////ResultColor = vec3(D);
 
 			////-----------------------------Original BRDF--------------------------------------
 			//vec3 LightDir = b_Lights[i].Position.rgb - v2f_FragPosInWorldSpace;
