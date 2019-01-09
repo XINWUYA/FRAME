@@ -22,7 +22,11 @@ void CLightSource::initV()
 	SLight Light;
 	for (int i = 0; i < m_MaxLightNum; ++i)
 	{
-		Light.Position = { UPosX(E), UPosY(E), UPosZ(E),1.0 };
+		float x = UPosX(E);
+		float y = UPosY(E);
+		float z = UPosZ(E);
+
+		Light.Position = { x, y, z, 1.0 };
 		Light.Color = { UColor(E),UColor(E) ,UColor(E) ,1.0 };
 		m_LightSet.push_back(Light);
 	}

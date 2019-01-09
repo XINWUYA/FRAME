@@ -8,6 +8,7 @@
 int main()
 {
 	//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
+	ElayGraphics::WINDOW_KEYWORD::setWindowSize(1280, 720);
 	ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
 	ElayGraphics::Camera::setIsEnableCursor(false);
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CSponza>("Sponza", 1));

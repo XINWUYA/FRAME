@@ -61,10 +61,10 @@
     <None Include="LightSource_VS.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Sponza_FS.glsl">
+    <None Include="Sponza_VS.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Sponza_VS.glsl">
+    <None Include="Sponza_FS.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

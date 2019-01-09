@@ -26,6 +26,7 @@ void CSponzaPass::initV()
 	ElayGraphics::STexture Texture2D4Mat, Texture2D4Mag;
 	Texture2D4Mat.Type4WrapS = Texture2D4Mat.Type4WrapT = GL_CLAMP_TO_EDGE;
 	Texture2D4Mag.Type4WrapS = Texture2D4Mag.Type4WrapT = GL_CLAMP_TO_EDGE;
+	Texture2D4Mat.isMipmap = Texture2D4Mag.isMipmap = false;
 	m_LTCMatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_mat.dds", Texture2D4Mat);
 	m_LTCMagnitueTexture = loadTextureFromFile("../Textures/LTCLight/ltc_amp.dds", Texture2D4Mag);
 	m_LTC_DisneyDiffuse_MatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_DisneyDiffuse_NoPI_N32_mat.dds");
@@ -56,6 +57,7 @@ void CSponzaPass::updateV()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_MULTISAMPLE);
 
 	m_pShader->activeShader();
 	bool DiffuseColorChanged = false;
