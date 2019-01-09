@@ -84,6 +84,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_J(Sponza+Movin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_K(Sponza+MovingLight+CatchCameraPos)", "TestCase_010_K\TestCase_010_K.vcxproj", "{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_A_1(Ground+PointLight+RoughnessTexture)", "TestCase_010_A_1\TestCase_010_A_1.vcxproj", "{227AAF96-DA09-406E-AF83-469E95290916}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5D97C4F5-A511-4318-A61E-50A39C30176E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChangeRoughnessTexture(CapstureScreen)", "ChangeRoughnessTexture\ChangeRoughnessTexture.vcxproj", "{226287BA-B941-4406-8052-CAED875D2236}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -404,9 +410,28 @@ Global
 		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x64.Build.0 = Release|x64
 		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x86.ActiveCfg = Release|Win32
 		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x86.Build.0 = Release|Win32
+		{227AAF96-DA09-406E-AF83-469E95290916}.Debug|x64.ActiveCfg = Debug|x64
+		{227AAF96-DA09-406E-AF83-469E95290916}.Debug|x64.Build.0 = Debug|x64
+		{227AAF96-DA09-406E-AF83-469E95290916}.Debug|x86.ActiveCfg = Debug|Win32
+		{227AAF96-DA09-406E-AF83-469E95290916}.Debug|x86.Build.0 = Debug|Win32
+		{227AAF96-DA09-406E-AF83-469E95290916}.Release|x64.ActiveCfg = Release|x64
+		{227AAF96-DA09-406E-AF83-469E95290916}.Release|x64.Build.0 = Release|x64
+		{227AAF96-DA09-406E-AF83-469E95290916}.Release|x86.ActiveCfg = Release|Win32
+		{227AAF96-DA09-406E-AF83-469E95290916}.Release|x86.Build.0 = Release|Win32
+		{226287BA-B941-4406-8052-CAED875D2236}.Debug|x64.ActiveCfg = Debug|x64
+		{226287BA-B941-4406-8052-CAED875D2236}.Debug|x64.Build.0 = Debug|x64
+		{226287BA-B941-4406-8052-CAED875D2236}.Debug|x86.ActiveCfg = Debug|Win32
+		{226287BA-B941-4406-8052-CAED875D2236}.Debug|x86.Build.0 = Debug|Win32
+		{226287BA-B941-4406-8052-CAED875D2236}.Release|x64.ActiveCfg = Release|x64
+		{226287BA-B941-4406-8052-CAED875D2236}.Release|x64.Build.0 = Release|x64
+		{226287BA-B941-4406-8052-CAED875D2236}.Release|x86.ActiveCfg = Release|Win32
+		{226287BA-B941-4406-8052-CAED875D2236}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{226287BA-B941-4406-8052-CAED875D2236} = {5D97C4F5-A511-4318-A61E-50A39C30176E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D515167-7B8B-4B7D-BF16-31B78D444E75}

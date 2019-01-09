@@ -2,6 +2,8 @@
 #include <initializer_list>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 #include <gli.hpp>
 #include <iostream>
 #include <numeric>
@@ -494,7 +496,31 @@ GLint genFBO(const std::initializer_list<ElayGraphics::STexture>& vTextureAttach
 	return FBO;
 }
 
+//************************************************************************************
+//Function:
 bool floatEqual(float vFloatNum1, float vFloatNum2)
 {
 	return std::abs(vFloatNum1 - vFloatNum2) < 0.00001;
+}
+
+//************************************************************************************
+//Function:
+int captureScreen2Img(const std::string& vFileName, int vQuality)
+{
+	size_t Start = vFileName.find_last_of('.');
+	std::string FilePostfix = vFileName.substr(Start + 1, vFileName.size() - Start);
+	int WindowWidth = 0, WindowHeight = 0;
+	WindowWidth = ElayGraphics::WINDOW_KEYWORD::WINDOW_WIDTH;
+	WindowHeight = ElayGraphics::WINDOW_KEYWORD::WINDOW_HEIGHT;
+	GLbyte* pScreenData = new GLbyte[WindowWidth * WindowHeight * 4];
+	glReadPixels(0, 0, WindowWidth, WindowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pScreenData);
+	if (FilePostfix == "tga")
+		return stbi_write_tga(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData);
+	else if (FilePostfix == "png")
+		return stbi_write_png(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData, WindowWidth * 4);
+	else if (FilePostfix == "bmp")
+		return stbi_write_bmp(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData);
+	else if (FilePostfix == "jpg")
+		return stbi_write_jpg(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData, vQuality);
+	return -1;
 }
