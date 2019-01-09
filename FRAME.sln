@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.106
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frame_4_SubsurfaceScattering_Exp", "Frame_4_SubsurfaceScattering_Exp\Frame_4_SubsurfaceScattering_Exp.vcxproj", "{982E388C-A65B-474C-8D6B-B4D39EA7153C}"
 EndProject
@@ -81,6 +81,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_I(Sponza+MultiPointLight+Fit+RoughnessTexture)", "TestCase_010_I\TestCase_010_I.vcxproj", "{A05207E7-F016-4DCB-A9BC-A28327085BE9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_J(Sponza+MovingLight)", "TestCase_010_J\TestCase_010_J.vcxproj", "{E8F66657-9166-4AD8-8C76-E3A9AC4CC749}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCase_010_K(Sponza+MovingLight+CatchCameraPos)", "TestCase_010_K\TestCase_010_K.vcxproj", "{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -394,6 +396,14 @@ Global
 		{E8F66657-9166-4AD8-8C76-E3A9AC4CC749}.Release|x64.Build.0 = Release|x64
 		{E8F66657-9166-4AD8-8C76-E3A9AC4CC749}.Release|x86.ActiveCfg = Release|Win32
 		{E8F66657-9166-4AD8-8C76-E3A9AC4CC749}.Release|x86.Build.0 = Release|Win32
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Debug|x64.ActiveCfg = Debug|x64
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Debug|x64.Build.0 = Debug|x64
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Debug|x86.ActiveCfg = Debug|Win32
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Debug|x86.Build.0 = Debug|Win32
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x64.ActiveCfg = Release|x64
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x64.Build.0 = Release|x64
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x86.ActiveCfg = Release|Win32
+		{E8E4EC87-68AB-4DBD-9E81-10774F091CCB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

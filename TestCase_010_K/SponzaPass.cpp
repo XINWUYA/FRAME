@@ -27,6 +27,7 @@ void CSponzaPass::initV()
 	ElayGraphics::STexture Texture2D4Mat, Texture2D4Mag;
 	Texture2D4Mat.Type4WrapS = Texture2D4Mat.Type4WrapT = GL_CLAMP_TO_EDGE;
 	Texture2D4Mag.Type4WrapS = Texture2D4Mag.Type4WrapT = GL_CLAMP_TO_EDGE;
+	Texture2D4Mat.isMipmap = Texture2D4Mag.isMipmap = false;
 	m_LTCMatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_mat.dds", Texture2D4Mat);
 	m_LTCMagnitueTexture = loadTextureFromFile("../Textures/LTCLight/ltc_amp.dds", Texture2D4Mag);
 	m_LTC_DisneyDiffuse_MatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_DisneyDiffuse_NoPI_N32_mat.dds");
@@ -40,40 +41,13 @@ void CSponzaPass::initV()
 	m_pShader->setTextureUniformValue("u_LTC_DisneyDiffuse_MatrixTexture", m_LTC_DisneyDiffuse_MatrixTexture);
 	m_pSponza->initModel(*m_pShader);
 
-	auto pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
-	auto LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
-	m_LightInfoSSBO = genBuffer(GL_SHADER_STORAGE_BUFFER, LightInfoByteSize, pLightInfo, GL_STATIC_DRAW, 1);
+	m_pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
+	m_LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
+	m_LightInfoSSBO = genBuffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoByteSize, m_pLightInfo, GL_STATIC_DRAW, 1);
 	auto LightNum = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightNum");
 	m_pShader->setIntUniformValue("u_LightNum", LightNum);
 
-	//m_CameraPosFileOut.open("CameraPos.txt", std::ios::out | std::ios::app | std::ios::binary);
-	std::ifstream CameraFileIn("CameraPos.txt",std::ios::in);
-	if (!CameraFileIn)
-		std::cout << "Error : Failed open file." << std::endl;
-	else
-	{
-		std::string str;
-		getline(CameraFileIn, str);
-		float a = sizeof(str);
-		float b = sizeof(' ');
-		float c = sizeof(glm::vec3);
-		CameraFileIn.seekg(0, std::ios::end);
-		const int FileLength = CameraFileIn.tellg();
-		CameraFileIn.seekg(0, std::ios::beg);
-		const int CameraPosNum = FileLength / (sizeof(glm::vec3) + 4 * sizeof(char)) ;
-		m_CameraMoveSteps = CameraPosNum;
-		m_CameraPosSet.reserve(CameraPosNum);
-		float TempX, TempY, TempZ;
-		for(int i = 0; i < CameraPosNum; ++i)
-		{
-			
-			CameraFileIn >> TempX;
-			CameraFileIn >> TempY;
-			CameraFileIn >> TempZ;
-			m_CameraPosSet.emplace_back(TempX, TempY, TempZ);
-		}
-		CameraFileIn.close();
-	}
+	__initRoamingPathFromFile("CameraPos.txt");
 }
 
 //************************************************************************************
@@ -86,10 +60,9 @@ void CSponzaPass::updateV()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_MULTISAMPLE);
 
-	auto pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
-	auto LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
-	transferData2Buffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoSSBO, { 0 }, { static_cast<int>(LightInfoByteSize) }, { pLightInfo });
+	transferData2Buffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoSSBO, { 0 }, { static_cast<int>(m_LightInfoByteSize) }, { m_pLightInfo });
 
 	m_pShader->activeShader();
 	bool DiffuseColorChanged = false;
@@ -143,10 +116,6 @@ void CSponzaPass::updateV()
 	}
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_RELEASE)
 		m_OldKeyKStatus = GLFW_RELEASE;
-
-	/*glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
-	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);*/
-	//m_CameraPosFileOut << CameraPos.x << " " << CameraPos.y << " " << CameraPos.z << std::endl;
 	
 	ElayGraphics::Camera::setMainCameraPos(m_CameraPosSet[m_CurrentFrame]);
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", m_CameraPosSet[m_CurrentFrame].x, m_CameraPosSet[m_CurrentFrame].y, m_CameraPosSet[m_CurrentFrame].z);
@@ -157,4 +126,37 @@ void CSponzaPass::updateV()
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+//************************************************************************************
+//Function:
+void CSponzaPass::__initRoamingPathFromFile(const std::string& vFileName)
+{
+	std::ifstream CameraFileIn(vFileName, std::ios::in);
+	if (!CameraFileIn)
+		std::cout << "Error : Failed open file." << std::endl;
+	else
+	{
+		std::string str;
+		getline(CameraFileIn, str);
+		float a = sizeof(str);
+		float b = sizeof(' ');
+		float c = sizeof(glm::vec3);
+		CameraFileIn.seekg(0, std::ios::end);
+		const int FileLength = CameraFileIn.tellg();
+		CameraFileIn.seekg(0, std::ios::beg);
+		const int CameraPosNum = FileLength / (sizeof(glm::vec3) + 4 * sizeof(char));
+		m_CameraMoveSteps = CameraPosNum;
+		m_CameraPosSet.reserve(CameraPosNum);
+		float TempX, TempY, TempZ;
+		for (int i = 0; i < CameraPosNum; ++i)
+		{
+
+			CameraFileIn >> TempX;
+			CameraFileIn >> TempY;
+			CameraFileIn >> TempZ;
+			m_CameraPosSet.emplace_back(TempX, TempY, TempZ);
+		}
+		CameraFileIn.close();
+	}
 }

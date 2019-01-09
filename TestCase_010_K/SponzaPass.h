@@ -6,6 +6,7 @@
 
 class CLightSource;
 class CSponza;
+struct SLight;
 
 class CSponzaPass : public IRenderPass
 {
@@ -17,6 +18,8 @@ public:
 	virtual void updateV() override;
 
 private:
+	void __initRoamingPathFromFile(const std::string& vFileName);
+
 	float  m_Roughness = 0.0f;
 	float  m_Metalness = 0.0f;
 	float  m_Intensity = 0.0f;
@@ -30,8 +33,10 @@ private:
 	int m_OldKeyKStatus = -1;
 	int m_CameraMoveSteps = 0;
 	int m_CurrentFrame = 0;
+	size_t	  m_LightInfoByteSize = 0;
 	glm::vec4 m_Albedo;
 	glm::vec3 m_LightSourcePos;
+	SLight*	  m_pLightInfo = nullptr;
 	std::shared_ptr<CLightSource> m_pLightSource;
 	std::shared_ptr<CSponza> m_pSponza;
 	glm::mat4 m_SponzaModelMatrix;

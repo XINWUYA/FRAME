@@ -4,6 +4,7 @@
 
 class CLightSource;
 class CSponza;
+struct SLight;
 
 class CSponzaPass : public IRenderPass
 {
@@ -26,8 +27,10 @@ private:
 	int m_LightInfoSSBO = -1;
 	int m_OldKeyPStatus = -1;
 	int m_OldKeyKStatus = -1;
+	size_t	  m_LightInfoByteSize = 0;
 	glm::vec4 m_Albedo;
 	glm::vec3 m_LightSourcePos;
+	SLight*	  m_pLightInfo = nullptr;
 	std::shared_ptr<CLightSource> m_pLightSource;
 	std::shared_ptr<CSponza> m_pSponza;
 	glm::mat4 m_SponzaModelMatrix;

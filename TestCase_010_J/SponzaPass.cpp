@@ -26,11 +26,15 @@ void CSponzaPass::initV()
 	ElayGraphics::STexture Texture2D4Mat, Texture2D4Mag;
 	Texture2D4Mat.Type4WrapS = Texture2D4Mat.Type4WrapT = GL_CLAMP_TO_EDGE;
 	Texture2D4Mag.Type4WrapS = Texture2D4Mag.Type4WrapT = GL_CLAMP_TO_EDGE;
+	Texture2D4Mat.isMipmap = Texture2D4Mag.isMipmap = false;
 	m_LTCMatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_mat.dds", Texture2D4Mat);
 	m_LTCMagnitueTexture = loadTextureFromFile("../Textures/LTCLight/ltc_amp.dds", Texture2D4Mag);
 	m_LTC_DisneyDiffuse_MatrixTexture = loadTextureFromFile("../Textures/LTCLight/ltc_DisneyDiffuse_NoPI_N32_mat.dds");
 	m_pLightSource = std::dynamic_pointer_cast<CLightSource>(ElayGraphics::ResourceManager::getGameObjectByName("LightSource"));
 	m_pSponza = std::dynamic_pointer_cast<CSponza>(ElayGraphics::ResourceManager::getGameObjectByName("Sponza"));
+
+	m_pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
+	m_LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
 
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(m_SponzaModelMatrix));
@@ -39,9 +43,7 @@ void CSponzaPass::initV()
 	m_pShader->setTextureUniformValue("u_LTC_DisneyDiffuse_MatrixTexture", m_LTC_DisneyDiffuse_MatrixTexture);
 	m_pSponza->initModel(*m_pShader);
 
-	auto pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
-	auto LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
-	m_LightInfoSSBO = genBuffer(GL_SHADER_STORAGE_BUFFER, LightInfoByteSize, pLightInfo, GL_STATIC_DRAW, 1);
+	m_LightInfoSSBO = genBuffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoByteSize, m_pLightInfo, GL_STATIC_DRAW, 1);
 	auto LightNum = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightNum");
 	m_pShader->setIntUniformValue("u_LightNum", LightNum);
 }
@@ -56,10 +58,9 @@ void CSponzaPass::updateV()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_MULTISAMPLE);
 
-	auto pLightInfo = ElayGraphics::ResourceManager::getSharedDataByName<SLight*>("LightInfo");
-	auto LightInfoByteSize = ElayGraphics::ResourceManager::getSharedDataByName<size_t>("LightInfoByteSize");
-	transferData2Buffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoSSBO, { 0 }, { static_cast<int>(LightInfoByteSize) }, { pLightInfo });
+	transferData2Buffer(GL_SHADER_STORAGE_BUFFER, m_LightInfoSSBO, { 0 }, { static_cast<int>(m_LightInfoByteSize) }, { m_pLightInfo });
 
 	m_pShader->activeShader();
 	bool DiffuseColorChanged = false;
@@ -114,7 +115,7 @@ void CSponzaPass::updateV()
 	else if (ElayGraphics::InputManager::getKeyStatus(GLFW_KEY_K) == GLFW_RELEASE)
 		m_OldKeyKStatus = GLFW_RELEASE;
 
-	glm::vec3 CameraPos = ElayGraphics::Camera::getMainCameraPos();
+	const glm::vec3 &CameraPos = ElayGraphics::Camera::getMainCameraPos();
 	m_pShader->setFloatUniformValue("u_CameraPosInWorldSpace", CameraPos.x, CameraPos.y, CameraPos.z);
 	m_pSponza->updateModel(*m_pShader);
 	glDisable(GL_CULL_FACE);
