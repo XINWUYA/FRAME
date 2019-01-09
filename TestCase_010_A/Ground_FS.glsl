@@ -171,7 +171,7 @@ float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
 	float a          = roughness;
 	float a2         = a * a;
 	float G2;
-    if (NdotL <= 0.0f)
+    if (NdotL <= 0.0f || NdotV <= 0.0f)
         G2 = 0;
     else
     {
@@ -196,6 +196,8 @@ float GGXTermFit (float NdotH, float roughness)
     //return 1.0 / PI * a2 / (d * d + 1e-7f);
 
 	//Fit code
+	if(NdotH < 0.0)
+			return 0.0;
 	float a2 = roughness * roughness;
 	//const vec3 H = normalize(V + L);
     //const float slopex = TdotH/NdotH;
@@ -203,7 +205,7 @@ float GGXTermFit (float NdotH, float roughness)
 	float TanTheta = tan(acos(NdotH));
     float D = 1.0f / (1.0f + (TanTheta * TanTheta)/a2/a2);
     D = D*D;
-    D = D/(3.14159f * a2*a2 * NdotH*NdotH*NdotH*NdotH);
+    D = D/(3.14159f * a2*a2 * NdotH*NdotH*NdotH*NdotH + 1e-7f);
 	return D;
 }
 
@@ -233,6 +235,12 @@ void main()
 		vec3 ViewDir = normalize(u_CameraPosInWorldSpace - v2f_FragPosInWorldSpace);
 
 		vec3 LightDir = normalize(u_LightPosition - v2f_FragPosInWorldSpace);
+
+		if (dot(GroundNormal, LightDir) < 0.0)
+		{
+			ResultColor = vec3(0.0); 
+		}
+
 		vec3 H = normalize(ViewDir + LightDir);
 		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);	//length可以变成dot，减少开方运算
 		float SpecularLightAttenuation = 1.0 / Distance;
@@ -281,7 +289,7 @@ void main()
 		vec3 Bitangent = cross(GroundNormal, Tangent);
 		mat3 TangentSpaceInverseMatrix = transpose(mat3(Tangent, Bitangent, GroundNormal));
 
-		vec3 Diffuse = integrateLTCDiffuse(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, DisneyDiffuseMatrix * TangentSpaceInverseMatrix);
+		vec3 Diffuse = integrateLTCDiffuse(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, /*DisneyDiffuseMatrix * */TangentSpaceInverseMatrix);
 		vec3 Specular = integrateLTCSpecular(GroundNormal, ViewDir, v2f_FragPosInWorldSpace, LTCMatrix * TangentSpaceInverseMatrix);
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
 		Specular /= PI;
@@ -336,14 +344,14 @@ void main()
 		float lh = saturate(dot(LightDir, H));
 
 		// Diffuse term
-	    float DiffuseTerm = DisneyDiffuse(nv, nl, lh, Roughness) * nl;
+	    float DiffuseTerm = /*DisneyDiffuse(nv, nl, lh, Roughness) * */nl;
 		// Specular term
 		float DoubleRoughness = Roughness * Roughness;
 		float G = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
 		//float D = GGXTerm (nh, DoubleRoughness);
 		float D = GGXTermFit(nh, DoubleRoughness);
-		float SpecularTerm = G * D * PI / 4.0 / nv; // Torrance-Sparrow model, Fresnel is applied later
-		SpecularTerm = max(0, SpecularTerm * nl);
+		float SpecularTerm = G * D/* * PI*/ / 4.0 / nv; // Torrance-Sparrow model, Fresnel is applied later
+		SpecularTerm = max(0, SpecularTerm/* * nl*/);
 	
 		float Distance = length(u_LightPosition - v2f_FragPosInWorldSpace);
 		float LightAttenuation = 1.0f / ( Distance * Distance);

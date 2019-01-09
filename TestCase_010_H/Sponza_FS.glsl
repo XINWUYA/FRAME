@@ -340,7 +340,7 @@ void main()
 		//Specular += integrateLTCSpecular(Frag2Light, LTCTangentSpaceMatrix) * u_LightColor.rgb;
 		////-----------------------------------------------------Single Point Light-------------------------------------------------------------
 
-		Specular *= JacobianNom/* / PI*/;
+		Specular *= JacobianNom / PI;
 
 		vec2 Schlick = texture2D(u_LTC_MagnitueTexture, UV).xy;
 		Specular *= SpecularColor * Schlick.x + (1.0 - SpecularColor) * Schlick.y;
@@ -375,7 +375,7 @@ void main()
 			float DoubleRoughness = Roughness * Roughness;
 			float G = SmithJointGGXVisibilityTerm(nl, nv, DoubleRoughness);
 			float D = GGXTermFit (nh, DoubleRoughness);
-			float SpecularTerm = G * D * PI / 4.0 / nv; // Torrance-Sparrow model, Fresnel is applied later
+			float SpecularTerm = G * D/* * PI*/ / 4.0 / nv; // Torrance-Sparrow model, Fresnel is applied later
 			SpecularTerm = max(0, SpecularTerm/* * nl*/);
 	
 			float LightAttenuation = 1.0f / ( Distance * Distance);
