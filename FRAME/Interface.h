@@ -43,6 +43,7 @@ namespace ElayGraphics
 	namespace Camera
 	{
 		FRAME_DLLEXPORTS const glm::dvec3& getMainCameraPos();
+		FRAME_DLLEXPORTS void setMainCameraPos(glm::dvec3 vCameraPos);
 		FRAME_DLLEXPORTS void setMainCameraFarPlane(double vFarPlane);
 		FRAME_DLLEXPORTS void setMainCameraMoveSpeed(double vMoveSpeed);
 		FRAME_DLLEXPORTS void setMainCameraFov(double vFov);
