@@ -15,11 +15,11 @@ Abdul Bezrati.
 \newblock Real-time lighting via light linked list.
 \newblock {\em GPU Pro 360 Guide to Lighting}, page~6, 2018.
 
-\bibitem{lambert1760photometria}
-Johann~Heinrich Lambert.
-\newblock {\em Photometria sive de mensura et gradibus luminis, colorum et
-  umbrae}.
-\newblock Klett, 1760.
+\bibitem{Bouknight1970A}
+W.~Jack Bouknight.
+\newblock A procedure for generation of three-dimensional half-toned computer
+  graphics presentations.
+\newblock {\em Communications of the Acm}, 13(9):527--536, 1970.
 
 \bibitem{blinn1977models}
 James~F Blinn.

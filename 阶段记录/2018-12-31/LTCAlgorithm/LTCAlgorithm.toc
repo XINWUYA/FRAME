@@ -10,5 +10,6 @@
 \contentsline {subsection}{\numberline {0.2.2}使用LTC方法近似BRDF积分}{4}{subsection.0.2.2}
 \contentsline {subsection}{\numberline {0.2.3}使用LTC方法来计算单点光源光照}{5}{subsection.0.2.3}
 \contentsline {subsection}{\numberline {0.2.4}使用LTC方法来计算多个点光源光照}{7}{subsection.0.2.4}
-\contentsline {subsection}{\numberline {0.2.5}实验结果}{7}{subsection.0.2.5}
-\contentsline {chapter}{Bibliography}{11}{chapter*.5}
+\contentsline {subsection}{\numberline {0.2.5}光源裁剪}{8}{subsection.0.2.5}
+\contentsline {subsection}{\numberline {0.2.6}实验结果}{9}{subsection.0.2.6}
+\contentsline {chapter}{Bibliography}{11}{chapter*.6}
