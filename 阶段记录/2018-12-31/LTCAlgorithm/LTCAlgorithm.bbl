@@ -1,4 +1,111 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{harada2012forward+}
+Takahiro Harada, Jay McKee, and Jason~C Yang.
+\newblock Forward+: Bringing deferred lighting to the next level.
+\newblock 2012.
+
+\bibitem{Olsson2012Clustered}
+O.~Olsson, M.~Billeter, and U.~Assarsson.
+\newblock Clustered deferred and forward shading.
+\newblock In {\em Acm Siggraph}, 2012.
+
+\bibitem{bezrati2018real}
+Abdul Bezrati.
+\newblock Real-time lighting via light linked list.
+\newblock {\em GPU Pro 360 Guide to Lighting}, page~6, 2018.
+
+\bibitem{lambert1760photometria}
+Johann~Heinrich Lambert.
+\newblock {\em Photometria sive de mensura et gradibus luminis, colorum et
+  umbrae}.
+\newblock Klett, 1760.
+
+\bibitem{blinn1977models}
+James~F Blinn.
+\newblock Models of light reflection for computer synthesized pictures.
+\newblock In {\em ACM SIGGRAPH computer graphics}, volume~11, pages 192--198.
+  ACM, 1977.
+
+\bibitem{Nicodemus1965Directional}
+Fred~E. Nicodemus.
+\newblock Directional reflectance and emissivity of an opaque surface.
+\newblock {\em Applied Optics}, 4(7):767--773, 1965.
+
+\bibitem{Montes2012AnOO}
+R.~Montes and Carlos Ure{\~n}a.
+\newblock An overview of brdf models.
+\newblock 2012.
+
+\bibitem{Granier2003A}
+X~Granier and W~Heidrich.
+\newblock A simple layered rgb brdf model.
+\newblock {\em Graphical Models}, 65(4):171--184, 2003.
+
+\bibitem{Nayar1995Visual}
+S~K Nayar and .~Oren, M.
+\newblock Visual appearance of matte surfaces.
+\newblock {\em Science}, 267(5201):1153--1156, 1995.
+
+\bibitem{schlick1994inexpensive}
+Christophe Schlick.
+\newblock An inexpensive brdf model for physically-based rendering.
+\newblock In {\em Computer graphics forum}, volume~13, pages 233--246. Wiley
+  Online Library, 1994.
+
+\bibitem{Beckmann1963The}
+Petr Beckmann and Andre Spizzichino.
+\newblock {\em The Scattering of Electromagnetic Waves From Rough Surfaces}.
+\newblock 1963.
+
+\bibitem{torrance1967theory}
+Kenneth~E Torrance and Ephraim~M Sparrow.
+\newblock Theory for off-specular reflection from roughened surfaces.
+\newblock {\em Josa}, 57(9):1105--1114, 1967.
+
+\bibitem{cook1982reflectance}
+Robert~L Cook and Kenneth~E. Torrance.
+\newblock A reflectance model for computer graphics.
+\newblock {\em ACM Transactions on Graphics (TOG)}, 1(1):7--24, 1982.
+
+\bibitem{Pont2002Bidirectional}
+Sylvia~C Pont and Jan~J Koenderink.
+\newblock Bidirectional reflectance distribution function of specular surfaces
+  with hemispherical pits.
+\newblock {\em Journal of the Optical Society of America A Optics Image Science
+  and Vision}, 19(12):2456, 2002.
+
+\bibitem{kelemen2001microfacet}
+Csaba Kelemen and Laszlo Szirmay-Kalos.
+\newblock A microfacet based coupled specular-matte brdf model with importance
+  sampling.
+\newblock In {\em Eurographics Short Presentations}, volume~2, page~4, 2001.
+
+\bibitem{Ngan2005Experimental}
+Addy Ngan, Fr¨¦do Durand, and Wojciech Matusik.
+\newblock Experimental analysis of brdf models.
+\newblock In {\em Proc Eurographics Symposium on Rendering}, 2005.
+
+\bibitem{phong1975illumination}
+Bui~Tuong Phong.
+\newblock Illumination for computer generated pictures.
+\newblock {\em Communications of the ACM}, 18(6):311--317, 1975.
+
+\bibitem{Walter2007Microfacet}
+Bruce Walter, Stephen~R. Marschner, Hongsong Li, and Kenneth~E. Torrance.
+\newblock Microfacet models for refraction through rough surfaces.
+\newblock In {\em Eurographics Symposium on Rendering Techniques, Grenoble,
+  France}, pages 195--206, 2007.
+
+\bibitem{Matusik2003A}
+Matusik and Wojciech.
+\newblock A data-driven reflectance model.
+\newblock In {\em Acm Siggraph}, page 759, 2003.
+
+\bibitem{lagarde2014moving}
+Sebastien Lagarde and Charles De~Rousiers.
+\newblock Moving frostbite to pbr.
+\newblock {\em Proc. Physically Based Shading Theory Practice}, 2014.
 
 \bibitem{burley2012physically}
 Brent Burley and Walt Disney~Animation Studios.
@@ -9,22 +116,5 @@ Brent Burley and Walt Disney~Animation Studios.
 Eric Heitz, Jonathan Dupuy, Stephen Hill, and David Neubelt.
 \newblock Real-time polygonal-light shading with linearly transformed cosines.
 \newblock {\em Acm Transactions on Graphics}, 35(4):41, 2016.
-
-\bibitem{lagarde2014moving}
-Sebastien Lagarde and Charles De~Rousiers.
-\newblock Moving frostbite to pbr.
-\newblock {\em Proc. Physically Based Shading Theory Practice}, 2014.
-
-\bibitem{schlick1994inexpensive}
-Christophe Schlick.
-\newblock An inexpensive brdf model for physically-based rendering.
-\newblock In {\em Computer graphics forum}, volume~13, pages 233--246. Wiley
-  Online Library, 1994.
-
-\bibitem{Walter2007Microfacet}
-Bruce Walter, Stephen~R. Marschner, Hongsong Li, and Kenneth~E. Torrance.
-\newblock Microfacet models for refraction through rough surfaces.
-\newblock In {\em Eurographics Symposium on Rendering Techniques, Grenoble,
-  France}, pages 195--206, 2007.
 
 \end{thebibliography}

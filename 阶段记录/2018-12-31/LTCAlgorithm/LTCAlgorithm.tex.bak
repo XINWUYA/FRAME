@@ -5,9 +5,9 @@
 %%
 %% $Id: template.tex,v 1.10 2007/01/09 05:10:46 aloft Exp $
 
-\documentclass{article}
+%\documentclass{article}
 %\documentclass[dvipdfm]{CASthesis}
-%\documentclass[pdftex]{CASthesis}
+\documentclass[pdftex]{CASthesis}
 % 可选参数：
 % notypeinfo 取消扉页的LaTeX版本信息
 %
@@ -38,6 +38,12 @@
 %% 正文部分
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
+
+\section{相关工作}
+\subsection{大量点光源光照}
+为什么要渲染大量点光源？现如今有很多关于在场景中实时绘制大量点光源的算法，比如Forward+算法\cite{harada2012forward+}里将屏幕分块来进行光源剔除，而为了解决分块中包含的光源太多以及深度不连续等等问题，分簇着色\cite{Olsson2012Clustered}在分块着色的基础上，将分块从二维的屏幕空间延伸到三维的观察空间，在深度上进一步划分。而LLL 算法\cite{bezrati2018real}为每个像素建立了一个GPU光源链表，在进行光源剔除的同时使得在延迟渲染中，可以在一遍Pass中同时渲染不透明和半透明物体，让半透明物体和粒子的光照渲染变得更加简单。但是这些算法都是在对大量的点光源进行光源剔除，当点光源的光照模型不是Phong模型，而是诸如GGX BRDF等等基于物理的复杂光照模型时，渲染效率依然会很低。
+\subsection{实时光照模型}
+用于点光源渲染的光照模型有很多。Bouknight曾提出Lambert模型\cite{}，但是只适用于粗糙表面。Phong模型加入了镜面反射，而Blinn-Phong模型\cite{}是对Phong模型的扩展，修正了Phong模型的镜面光效果，计算效率也更高。但是它们都不符合物理规律。在基于物理的渲染中，通常使用一个双向反射分布函数\cite{Nicodemus1965Directional} 来表示物体表面的反射辐射度占入射辐照度的比率。完全遵循物理规律的BRDF函数会非常复杂，实际渲染中通常都是使用近似的方法，不同的近似方法会形成不同的BRDF模型。如今已经有很多比较理想的经验BRDF模型\cite{Montes2012AnOO}，比如基于分层理论的Granier-Heidrich BRDF模型\cite{Granier2003A}、基于几何观点的Oren-Nayar模型\cite{Nayar1995Visual}、基于实验的Schlick BRDF模型\cite{schlick1994inexpensive}等等，不过在实时渲染以及游戏引擎中使用最多的还是Cook等人在Beckman\cite{Beckmann1963The}和Torrance-Sparrow\cite{torrance1967theory}的基础上提出的基于微面元理论的Cook-Torrance BRDF模型\cite{cook1982reflectance}，该理论认为任何表面都是由非常小的微观面元组成，每个微观面元都有自己的粗糙度。除此之外还有很多Cook-Torrance BRDF模型的变种\cite{Pont2002Bidirectional}\cite{schlick1994inexpensive}\cite{kelemen2001microfacet}，该模型也被实验证明能够很好地模拟真实的表面\cite{Ngan2005Experimental}。对于该模型中的微观面元法线分布函数，比较流行的是Beckmann\cite{Beckmann1963The}、Phong\cite{phong1975illumination}以及GGX\cite{Walter2007Microfacet}等分布函数，但是只有GGX在高光中心处衰减较快，远离高光中心后衰减会变得很慢，使得GGX高光产生拖尾效应，而这一点非常符合现实情况\cite{Matusik2003A}。
 
 
 \section{算法部分}
