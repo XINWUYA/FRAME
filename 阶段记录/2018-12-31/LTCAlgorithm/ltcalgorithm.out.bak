@@ -3,10 +3,16 @@
 \BOOKMARK [2][-]{subsection.0.1.1}{0.1.1 大量点光源光照}{section.0.1}% 3
 \BOOKMARK [2][-]{subsection.0.1.2}{0.1.2 实时光照模型}{section.0.1}% 4
 \BOOKMARK [2][-]{subsection.0.1.3}{0.1.3 Linearly Transformed cosine}{section.0.1}% 5
-\BOOKMARK [1][-]{section.0.2}{0.2 算法部分}{chapter*.1}% 6
-\BOOKMARK [2][-]{subsection.0.2.1}{0.2.1 反射率方程}{section.0.2}% 7
-\BOOKMARK [2][-]{subsection.0.2.2}{0.2.2 使用LTC方法近似BRDF积分}{section.0.2}% 8
-\BOOKMARK [2][-]{subsection.0.2.3}{0.2.3 使用LTC方法来计算单点光源光照}{section.0.2}% 9
-\BOOKMARK [2][-]{subsection.0.2.4}{0.2.4 使用LTC方法来计算多个点光源光照}{section.0.2}% 10
-\BOOKMARK [2][-]{subsection.0.2.5}{0.2.5 光源裁剪}{section.0.2}% 11
-\BOOKMARK [2][-]{subsection.0.2.6}{0.2.6 实验结果}{section.0.2}% 12
+\BOOKMARK [1][-]{section.0.2}{0.2 Related Work}{chapter*.1}% 6
+\BOOKMARK [2][-]{subsection.0.2.1}{0.2.1 Large Number of Point Lights Illumination}{section.0.2}% 7
+\BOOKMARK [2][-]{subsection.0.2.2}{0.2.2 Real-time Lighting Model}{section.0.2}% 8
+\BOOKMARK [2][-]{subsection.0.2.3}{0.2.3 Linearly Transformed Cosine}{section.0.2}% 9
+\BOOKMARK [1][-]{section.0.3}{0.3 算法部分}{chapter*.1}% 10
+\BOOKMARK [2][-]{subsection.0.3.1}{0.3.1 反射率方程}{section.0.3}% 11
+\BOOKMARK [2][-]{subsection.0.3.2}{0.3.2 使用LTC方法近似BRDF积分}{section.0.3}% 12
+\BOOKMARK [2][-]{subsection.0.3.3}{0.3.3 使用LTC方法来计算单点光源光照}{section.0.3}% 13
+\BOOKMARK [2][-]{subsection.0.3.4}{0.3.4 使用LTC方法来计算多个点光源光照}{section.0.3}% 14
+\BOOKMARK [2][-]{subsection.0.3.5}{0.3.5 光源裁剪}{section.0.3}% 15
+\BOOKMARK [2][-]{subsection.0.3.6}{0.3.6 Fresnel项近似}{section.0.3}% 16
+\BOOKMARK [2][-]{subsection.0.3.7}{0.3.7 实验结果}{section.0.3}% 17
+\BOOKMARK [0][-]{chapter*.7}{Bibliography}{}% 18

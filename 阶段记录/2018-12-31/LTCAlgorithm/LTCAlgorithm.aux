@@ -50,59 +50,118 @@
 \@writefile{toc}{\contentsline {section}{\numberline {0.1}相关工作}{1}{section.0.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {0.1.1}大量点光源光照}{1}{subsection.0.1.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {0.1.2}实时光照模型}{1}{subsection.0.1.2}}
+\citation{harada2012forward+}
+\citation{Olsson2012Clustered}
+\citation{bezrati2018real}
+\citation{Bouknight1970A}
+\citation{phong1975illumination}
+\citation{blinn1977models}
+\citation{Nicodemus1965Directional}
+\citation{Montes2012AnOO}
+\citation{Granier2003A}
+\citation{Nayar1995Visual}
+\citation{schlick1994inexpensive}
+\citation{cook1982reflectance}
+\citation{Beckmann1963The}
+\citation{torrance1967theory}
+\citation{Pont2002Bidirectional}
+\citation{schlick1994inexpensive}
+\citation{kelemen2001microfacet}
+\citation{Ngan2005Experimental}
+\citation{Beckmann1963The}
+\citation{phong1975illumination}
+\citation{Walter2007Microfacet}
+\citation{Matusik2003A}
+\citation{lagarde2014moving}
+\citation{Bouknight1970A}
+\citation{burley2012physically}
 \@writefile{toc}{\contentsline {subsection}{\numberline {0.1.3}Linearly Transformed cosine}{2}{subsection.0.1.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {0.2}算法部分}{2}{section.0.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.1}反射率方程}{2}{subsection.0.2.1}}
-\newlabel{eq:ReflectionFunction}{{1}{2}{反射率方程\relax }{equation.0.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.2}Related Work}{2}{section.0.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.1}Large Number of Point Lights Illumination}{2}{subsection.0.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.2}Real-time Lighting Model}{3}{subsection.0.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.3}Linearly Transformed Cosine}{4}{subsection.0.2.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.3}算法部分}{4}{section.0.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.1}反射率方程}{4}{subsection.0.3.1}}
+\newlabel{eq:ReflectionFunction}{{1}{4}{反射率方程\relax }{equation.0.3.1}{}}
+\newlabel{eq:BRDFFunction}{{2}{4}{反射率方程\relax }{equation.0.3.2}{}}
 \citation{Walter2007Microfacet}
 \citation{schlick1994inexpensive}
 \citation{lagarde2014moving}
 \citation{burley2012physically}
-\newlabel{eq:BRDFFunction}{{2}{3}{反射率方程\relax }{equation.0.2.2}{}}
-\newlabel{eq:GGXD}{{4}{3}{反射率方程\relax }{equation.0.2.4}{}}
-\newlabel{eq:Fresnel}{{6}{3}{反射率方程\relax }{equation.0.2.6}{}}
-\newlabel{eq:GeometryShadow}{{7}{3}{反射率方程\relax }{equation.0.2.7}{}}
 \citation{Heitz2016Real}
-\newlabel{eq:DisneyDiffuse}{{9}{4}{反射率方程\relax }{equation.0.2.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.2}使用LTC方法近似BRDF积分}{4}{subsection.0.2.2}}
-\newlabel{eq:BRDFDistribution}{{11}{4}{使用LTC方法近似BRDF积分\relax }{equation.0.2.11}{}}
-\newlabel{eq:ClampedCosine}{{12}{4}{使用LTC方法近似BRDF积分\relax }{equation.0.2.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 使用余弦分布乘上矩阵M来近似BRDF分布\relax }}{5}{figure.caption.2}}
+\newlabel{eq:GGXD}{{4}{5}{反射率方程\relax }{equation.0.3.4}{}}
+\newlabel{eq:Fresnel}{{6}{5}{反射率方程\relax }{equation.0.3.6}{}}
+\newlabel{eq:GeometryShadow}{{7}{5}{反射率方程\relax }{equation.0.3.7}{}}
+\newlabel{eq:DisneyDiffuse}{{9}{5}{反射率方程\relax }{equation.0.3.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 使用余弦分布乘上矩阵M来近似BRDF分布\relax }}{6}{figure.caption.2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:Distribution Approxmation}{{1}{5}{使用余弦分布乘上矩阵M来近似BRDF分布\relax \relax }{figure.caption.2}{}}
-\newlabel{eq:IntegrationApproxmation}{{14}{5}{使用LTC方法近似BRDF积分\relax }{equation.0.2.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.3}使用LTC方法来计算单点光源光照}{5}{subsection.0.2.3}}
-\newlabel{eq:MistakeEquation}{{15}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.15}{}}
-\newlabel{eq:SpecularOmega}{{16}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.16}{}}
-\newlabel{eq:RightEquation}{{17}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.17}{}}
-\newlabel{eq:RightEquation}{{18}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.18}{}}
-\newlabel{eq:DiffuseApproximation}{{19}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.19}{}}
-\newlabel{eq:DiffuseDistribution}{{20}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.20}{}}
-\newlabel{eq:DiffuseOmega}{{21}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.21}{}}
-\newlabel{eq:LTCSinglePointLight}{{22}{6}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.22}{}}
-\newlabel{eq:FinalEquation4SPL}{{25}{7}{使用LTC方法来计算单点光源光照\relax }{equation.0.2.25}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.4}使用LTC方法来计算多个点光源光照}{7}{subsection.0.2.4}}
-\newlabel{eq:FinalEquation4MPL}{{27}{7}{使用LTC方法来计算多个点光源光照\relax }{equation.0.2.27}{}}
-\newlabel{eq:BRDFFinalEquation4MPL}{{28}{7}{使用LTC方法来计算多个点光源光照\relax }{equation.0.2.28}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.5}光源裁剪}{8}{subsection.0.2.5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.2.5.1}在光源做线性变换之前进行光源裁剪}{8}{subsubsection.0.2.5.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 第一次光源裁剪\relax }}{8}{figure.caption.3}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {正常情况下使用LTC方法计算单个点光源}}}{8}{figure.caption.3}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {正常情况下使用BRDF方法计算单个点光源}}}{8}{figure.caption.3}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {当点光源在着色点切平面以下，并且不做第一次裁剪时使用LTC方法计算光照}}}{8}{figure.caption.3}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {当点光源在着色点切平面以下时，使用BRDF方法计算光照}}}{8}{figure.caption.3}}
-\newlabel{fig:FirstLightClip}{{2}{8}{第一次光源裁剪\relax \relax }{figure.caption.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.2.5.2}在光源做线性变换之后进行光源裁剪}{9}{subsubsection.0.2.5.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 第二次光源裁剪\relax }}{9}{figure.caption.4}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {不做第二次裁剪时使用LTC方法计算多个点光源光照}}}{9}{figure.caption.4}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {做第二次裁剪时使用LTC方法计算多个点光源光照}}}{9}{figure.caption.4}}
-\newlabel{fig:SecondLightClip}{{3}{9}{第二次光源裁剪\relax \relax }{figure.caption.4}{}}
+\newlabel{fig:Distribution Approxmation}{{1}{6}{使用余弦分布乘上矩阵M来近似BRDF分布\relax \relax }{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.2}使用LTC方法近似BRDF积分}{6}{subsection.0.3.2}}
+\newlabel{eq:BRDFDistribution}{{11}{6}{使用LTC方法近似BRDF积分\relax }{equation.0.3.11}{}}
+\newlabel{eq:ClampedCosine}{{12}{6}{使用LTC方法近似BRDF积分\relax }{equation.0.3.12}{}}
+\newlabel{eq:IntegrationApproxmation}{{14}{7}{使用LTC方法近似BRDF积分\relax }{equation.0.3.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.3}使用LTC方法来计算单点光源光照}{7}{subsection.0.3.3}}
+\newlabel{eq:MistakeEquation}{{15}{7}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.15}{}}
+\newlabel{eq:SpecularOmega}{{16}{7}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.16}{}}
+\newlabel{eq:RightEquation}{{17}{7}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.17}{}}
+\newlabel{eq:RightEquation}{{18}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.18}{}}
+\newlabel{eq:DiffuseApproximation}{{19}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.19}{}}
+\newlabel{eq:DiffuseDistribution}{{20}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.20}{}}
+\newlabel{eq:DiffuseOmega}{{21}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.21}{}}
+\newlabel{eq:LTCSinglePointLight}{{22}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.22}{}}
+\newlabel{eq:FinalEquation4SPL}{{25}{8}{使用LTC方法来计算单点光源光照\relax }{equation.0.3.25}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.4}使用LTC方法来计算多个点光源光照}{9}{subsection.0.3.4}}
+\newlabel{eq:FinalEquation4MPL}{{27}{9}{使用LTC方法来计算多个点光源光照\relax }{equation.0.3.27}{}}
+\newlabel{eq:BRDFFinalEquation4MPL}{{28}{9}{使用LTC方法来计算多个点光源光照\relax }{equation.0.3.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.5}光源裁剪}{9}{subsection.0.3.5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.3.5.1}在光源做线性变换之前进行光源裁剪}{9}{subsubsection.0.3.5.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 第一次光源裁剪\relax }}{10}{figure.caption.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {正常情况下使用LTC方法计算单个点光源}}}{10}{figure.caption.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {正常情况下使用BRDF方法计算单个点光源}}}{10}{figure.caption.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {当点光源在着色点切平面以下，并且不做第一次裁剪时使用LTC方法计算光照}}}{10}{figure.caption.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {当点光源在着色点切平面以下时，使用BRDF方法计算光照}}}{10}{figure.caption.3}}
+\newlabel{fig:FirstLightClip}{{2}{10}{第一次光源裁剪\relax \relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.3.5.2}在光源做线性变换之后进行光源裁剪}{11}{subsubsection.0.3.5.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 第二次光源裁剪\relax }}{11}{figure.caption.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {不做第二次裁剪时使用LTC方法计算多个点光源光照}}}{11}{figure.caption.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {做第二次裁剪时使用LTC方法计算多个点光源光照}}}{11}{figure.caption.4}}
+\newlabel{fig:SecondLightClip}{{3}{11}{第二次光源裁剪\relax \relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.6}Fresnel项近似}{11}{subsection.0.3.6}}
+\citation{karis2013real}
 \bibstyle{plain}
 \bibdata{LTC_bibfile}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.6}实验结果}{10}{subsection.0.2.6}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 本文算法以及BRDF的渲染效率\relax }}{10}{table.caption.6}}
-\newlabel{tab:TimeConsuming}{{1}{10}{本文算法以及BRDF的渲染效率\relax \relax }{table.caption.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 使用BRDF和本文算法结果的对比\relax }}{11}{figure.caption.5}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {使用BRDF方式渲染的结果}}}{11}{figure.caption.5}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {使用本文算法渲染的结果}}}{11}{figure.caption.5}}
-\newlabel{fig:BRDFResultAndLTCResult}{{4}{11}{使用BRDF和本文算法结果的对比\relax \relax }{figure.caption.5}{}}
+\newlabel{eq:BRDFIntegration}{{31}{12}{Fresnel项近似\relax }{equation.0.3.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.7}实验结果}{12}{subsection.0.3.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 使用BRDF和本文算法结果的对比\relax }}{13}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {使用BRDF方式渲染的结果}}}{13}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {使用本文算法渲染的结果}}}{13}{figure.caption.5}}
+\newlabel{fig:BRDFResultAndLTCResult}{{4}{13}{使用BRDF和本文算法结果的对比\relax \relax }{figure.caption.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 本文算法以及BRDF的渲染效率\relax }}{14}{table.caption.6}}
+\newlabel{tab:TimeConsuming}{{1}{14}{本文算法以及BRDF的渲染效率\relax \relax }{table.caption.6}{}}
+\bibcite{harada2012forward+}{{1}{}{{}}{{}}}
+\bibcite{Olsson2012Clustered}{{2}{}{{}}{{}}}
+\bibcite{bezrati2018real}{{3}{}{{}}{{}}}
+\bibcite{Bouknight1970A}{{4}{}{{}}{{}}}
+\bibcite{blinn1977models}{{5}{}{{}}{{}}}
+\bibcite{Nicodemus1965Directional}{{6}{}{{}}{{}}}
+\bibcite{Montes2012AnOO}{{7}{}{{}}{{}}}
+\bibcite{Granier2003A}{{8}{}{{}}{{}}}
+\bibcite{Nayar1995Visual}{{9}{}{{}}{{}}}
+\bibcite{schlick1994inexpensive}{{10}{}{{}}{{}}}
+\bibcite{Beckmann1963The}{{11}{}{{}}{{}}}
+\bibcite{torrance1967theory}{{12}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{15}{chapter*.7}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\bibcite{cook1982reflectance}{{13}{}{{}}{{}}}
+\bibcite{Pont2002Bidirectional}{{14}{}{{}}{{}}}
+\bibcite{kelemen2001microfacet}{{15}{}{{}}{{}}}
+\bibcite{Ngan2005Experimental}{{16}{}{{}}{{}}}
+\bibcite{phong1975illumination}{{17}{}{{}}{{}}}
+\bibcite{Walter2007Microfacet}{{18}{}{{}}{{}}}
+\bibcite{Matusik2003A}{{19}{}{{}}{{}}}
+\bibcite{lagarde2014moving}{{20}{}{{}}{{}}}
+\bibcite{burley2012physically}{{21}{}{{}}{{}}}
+\bibcite{Heitz2016Real}{{22}{}{{}}{{}}}
+\bibcite{karis2013real}{{23}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers

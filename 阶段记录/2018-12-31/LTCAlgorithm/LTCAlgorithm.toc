@@ -17,5 +17,6 @@
 \contentsline {subsection}{\numberline {0.3.5}光源裁剪}{9}{subsection.0.3.5}
 \contentsline {subsubsection}{\numberline {0.3.5.1}在光源做线性变换之前进行光源裁剪}{9}{subsubsection.0.3.5.1}
 \contentsline {subsubsection}{\numberline {0.3.5.2}在光源做线性变换之后进行光源裁剪}{11}{subsubsection.0.3.5.2}
-\contentsline {subsection}{\numberline {0.3.6}实验结果}{11}{subsection.0.3.6}
+\contentsline {subsection}{\numberline {0.3.6}Fresnel项近似}{11}{subsection.0.3.6}
+\contentsline {subsection}{\numberline {0.3.7}实验结果}{12}{subsection.0.3.7}
 \contentsline {chapter}{Bibliography}{15}{chapter*.7}

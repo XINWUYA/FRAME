@@ -317,6 +317,35 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
     \end{cases}
 \end{equation}
 
+\subsection{Fresnel项近似}
+【注：Fresnel项近似其实不是本文的创新，原作者虽然在论文中没有给出这部分的描述，但是在原作者的后续报告中提供的附加文档里有说明这部分，建议这部分不写入我们的论文中。】
+
+实际上本文在拟合镜面BRDF分布和余弦分布时，是将Fresnel项提出来单独考虑的（否则会增加拟合的难度并且还需要用三维纹理而不是二维纹理来存储矩阵M，因为不提出来的话还需要多考虑一个积分变量：基础反射率$F_0$），也就是说实际上拟合时用的镜面BRDF积分是：
+\begin{equation}
+L_s=\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i d\omega_i
+\end{equation}
+那么缺少的Fresnel项怎么办？本文对原积分做如下变换（该方法借鉴于Brian Karis提出的Image-Based Lighting算法中预计算二维查找纹理(2D look-up texture)的思想\cite{karis2013real}）：
+\begin{equation}
+\label{eq:BRDFIntegration}
+L_s=\int_{\Omega}\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i d\omega_i \\
+\end{equation}
+将式\ref{eq:Fresnel}代入上式，得：
+\begin{equation}
+\begin{aligned}
+L_s&=\int_{\Omega}(F_0+(1-F_0)(1-(h\cdot\omega_o)^5))\frac{DG}{4(\omega_o\cdot n)}d\omega_i\\
+&=F_0\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i+(1-F_0)\int_{\Omega}(1-(h\cdot\omega_o)^5)\frac{DG}{4(\omega_o\cdot n)}d\omega_i\\
+&\approx F_0\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i+(1-F_0)\int_{\Omega}(1-(h\cdot\omega_o)^5)d\omega_i\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i
+\end{aligned}
+\end{equation}
+其中$\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i$可以用本文算法式\ref{eq:FinalEquation4MPL}中的镜面部分来计算。记$f_s=\int_{\Omega}(1-(h\cdot\omega_o)^5)d\omega_i$，本文在拟合BRDF分布和余弦分布的同时，计算出$f_s$并将其存入到另一张纹理，在执行光照计算出再从这张预计算的纹理里取出$f_s$，乘到式\ref{eq:FinalEq4MPLAfterClippping}的镜面部分上，就可以模拟出近似的Fresnel。即加上Fresnel后式\ref{eq:FinalEq4MPLAfterClippping} 更新为：
+\begin{equation}
+L_o=
+\begin{cases}
+0, &\omega_i\cdot n<0 \\
+|M_s^{-1}|\sum_{\omega_i}\frac{max(\omega_s.z,0)}{(\omega_s\cdot\omega_s)^2}L_i+f_s|M_d^{-1}|\sum_{\omega_i}\frac{max(\omega_d.z,0)}{(\omega_d\cdot\omega_d)^2}L_i, &\omega_i\cdot n>0
+\end{cases}
+\end{equation}
+
 \subsection{实验结果}
 本文的实验环境是：Intel(R)Xeon(R)CPU E3-1230 V2@3.30GHz，16GB内存，NVIDIA GeForce GTX 1060 6GB显卡。
 
