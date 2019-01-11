@@ -14,9 +14,10 @@
 \contentsline {subsection}{\numberline {0.3.2}使用LTC方法近似BRDF积分}{6}{subsection.0.3.2}
 \contentsline {subsection}{\numberline {0.3.3}使用LTC方法来计算单点光源光照}{7}{subsection.0.3.3}
 \contentsline {subsection}{\numberline {0.3.4}使用LTC方法来计算多个点光源光照}{9}{subsection.0.3.4}
-\contentsline {subsection}{\numberline {0.3.5}光源裁剪}{9}{subsection.0.3.5}
-\contentsline {subsubsection}{\numberline {0.3.5.1}在光源做线性变换之前进行光源裁剪}{9}{subsubsection.0.3.5.1}
-\contentsline {subsubsection}{\numberline {0.3.5.2}在光源做线性变换之后进行光源裁剪}{11}{subsubsection.0.3.5.2}
-\contentsline {subsection}{\numberline {0.3.6}Fresnel项近似}{11}{subsection.0.3.6}
-\contentsline {subsection}{\numberline {0.3.7}实验结果}{12}{subsection.0.3.7}
+\contentsline {section}{\numberline {0.4}算法实现细节}{9}{section.0.4}
+\contentsline {subsection}{\numberline {0.4.1}光源裁剪}{9}{subsection.0.4.1}
+\contentsline {subsubsection}{\numberline {0.4.1.1}在光源做线性变换之前进行光源裁剪}{10}{subsubsection.0.4.1.1}
+\contentsline {subsubsection}{\numberline {0.4.1.2}在光源做线性变换之后进行光源裁剪}{11}{subsubsection.0.4.1.2}
+\contentsline {subsection}{\numberline {0.4.2}Fresnel项近似}{12}{subsection.0.4.2}
+\contentsline {section}{\numberline {0.5}实验结果}{12}{section.0.5}
 \contentsline {chapter}{Bibliography}{15}{chapter*.7}

@@ -12,7 +12,8 @@
 \BOOKMARK [2][-]{subsection.0.3.2}{0.3.2 使用LTC方法近似BRDF积分}{section.0.3}% 12
 \BOOKMARK [2][-]{subsection.0.3.3}{0.3.3 使用LTC方法来计算单点光源光照}{section.0.3}% 13
 \BOOKMARK [2][-]{subsection.0.3.4}{0.3.4 使用LTC方法来计算多个点光源光照}{section.0.3}% 14
-\BOOKMARK [2][-]{subsection.0.3.5}{0.3.5 光源裁剪}{section.0.3}% 15
-\BOOKMARK [2][-]{subsection.0.3.6}{0.3.6 Fresnel项近似}{section.0.3}% 16
-\BOOKMARK [2][-]{subsection.0.3.7}{0.3.7 实验结果}{section.0.3}% 17
-\BOOKMARK [0][-]{chapter*.7}{Bibliography}{}% 18
+\BOOKMARK [1][-]{section.0.4}{0.4 算法实现细节}{chapter*.1}% 15
+\BOOKMARK [2][-]{subsection.0.4.1}{0.4.1 光源裁剪}{section.0.4}% 16
+\BOOKMARK [2][-]{subsection.0.4.2}{0.4.2 Fresnel项近似}{section.0.4}% 17
+\BOOKMARK [1][-]{section.0.5}{0.5 实验结果}{chapter*.1}% 18
+\BOOKMARK [0][-]{chapter*.7}{Bibliography}{}% 19

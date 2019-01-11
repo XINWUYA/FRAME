@@ -62,35 +62,35 @@ Since the physics-based BRDF model is complex and computationally intensive, Eri
 \section{算法部分}
 本文算法要实现的目标是：用LTC的方式来近似实现多点光源下基于物理的光照效果，同时渲染效率要比常用的BRDF方式更高。
 \subsection{反射率方程}
-为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的光照渲染：
+为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的实时光照渲染：
 \begin{equation}
 \label{eq:ReflectionFunction}
 L_o(p,\omega_o)=\int_{\Omega}f_r(p,\omega_i,\omega_o)L_i(p,w_i)n\cdot \omega_id\omega_i
 \end{equation}
 
-其中$p$着色点，n是表面法线，$\omega_o$为观察方向，$\omega_i$为光线入射方向，$L_i$是来自$\omega_i$方向上的辐射亮度，$L_o$是着色点在上半球空间接受到的辐射度，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射照度与入射方向上的辐射照度的比率。
-当前主流的游戏引擎（如Unity、Unreal等）都在使用基于微面元理论的BRDF模型：
+其中$p$是着色点，n是表面法线，$\omega_o$为观察方向，$\omega_i$为光线入射方向，$L_i$是来自$\omega_i$方向上的辐射亮度，$L_o$是着色点在上半球空间接受到的辐射度，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射亮度与入射方向上的辐射照度的比率。
+当前主流的游戏引擎都在使用基于微面元理论的Cook-Torrance BRDF模型：
 \begin{equation}
 \label{eq:BRDFFunction}
 f_r(\omega_i,\omega_o)=f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}
 \end{equation}
 
-其中$f_d$是漫反射系数，D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
+其中$f_d$是漫反射系数，$\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}$一起构成了镜面反射系数，D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
 
-所以我们通常使用的反射率方程是：
+所以对于各向同性材质，我们通常使用的反射率方程是：
 \begin{equation}
 L_o(p,\omega_o)=\int_\Omega(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_i(p,\omega_i)n\cdot\omega_id\omega_i
 \end{equation}
 
 本文采用的D、F、G函数与Unity引擎内部使用的函数一致。
 
-对于法线分布函数D本文采用GGX分布\cite{Walter2007Microfacet}
+对于法线分布函数D本文采用GGX分布\cite{Walter2007Microfacet}（因为这是最常用的一种，能够很好地表现出高光拖尾效应）
 \begin{equation}
 \label{eq:GGXD}
 D=\frac{\alpha^2\chi^+(\theta_h)}{\pi\cos^4\theta_h(\alpha^2+\tan^2\theta_h)^2}
 \end{equation}
 
-其中$h$表示中间向量，$\alpha$表示表面粗糙度，$\theta_h$是法向量$n$与中间向量$h$的夹角，并且：
+其中$h$表示中间向量(half-vector)，$\alpha$表示表面粗糙度，$\theta_h$是法向量$n$与中间向量$h$的夹角，并且：
 \begin{equation}
 \chi^+(\theta_h)=
 \begin{cases}
@@ -104,14 +104,14 @@ D=\frac{\alpha^2\chi^+(\theta_h)}{\pi\cos^4\theta_h(\alpha^2+\tan^2\theta_h)^2}
 \label{eq:Fresnel}
 F=F_0+(1-F_0)(1-(h\cdot \omega_o)^5)
 \end{equation}
-其中$F_0$为入射光垂直表面时的菲涅尔反射率的值，即表面的基础反射率。
+其中$F_0$为入射光垂直表面时的菲涅尔反射率的值，即表面的基础反射率，$h$是中间向量，$\omega_o$是观察方向。
 
 对于几何遮挡函数G，本文采用了近年来越来越多的引擎开始使用的更精确的一种遮挡函数\cite{lagarde2014moving}：
 \begin{equation}
 \label{eq:GeometryShadow}
 G=\frac{\chi^+(\omega_o\cdot h)\chi^+(\omega_i\cdot h)}{1+\Lambda(\omega_o)+\Lambda(\omega_i)}
 \end{equation}
-其中：
+其中$h$是中间向量，$\omega_i$是光线入射向量，$\omega_o$是观察向量，并且：
 \begin{equation}
 \Lambda(m)=\frac{-1+\sqrt{1+\alpha^2\tan^2(\theta_m)}}{2}
 \end{equation}
@@ -122,16 +122,16 @@ G=\frac{\chi^+(\omega_o\cdot h)\chi^+(\omega_i\cdot h)}{1+\Lambda(\omega_o)+\Lam
 \label{eq:DisneyDiffuse}
 f_d = \frac{c}{\pi}(1+(F_D-1)(1-cos\theta_l)^5)(1+(F_D-1)(1-cos\theta_v)^5)
 \end{equation}
-其中$\theta_l$是$\omega_i$和法线$n$的夹角，$\theta_v$是$\omega_o$和$n$的夹角，并且:
+其中$\theta_l$是$\omega_i$和法线$n$的夹角，$\theta_v$是$\omega_o$和$n$的夹角，c是材质的漫反射颜色，并且:
 \begin{equation}
 F_D=0.5+2\alpha\cos^2\theta_d
 \end{equation}
 其中$\theta_d$是入射向量$\omega_i$和中间向量$h$的夹角。
 
-可以初步看到，渲染时因为要按照上诉公式去分别计算D、F、G项以及$f_d$，再得到最终的辐射度$L_o$，所以即使是在一个单点光源的环境下，着色点渲染时所需要的计算量也很大。
+可以初步看到，渲染时因为要按照上诉公式去分别计算D、F、G项以及$f_d$，再得到最终的出射辐射度$L_o$，所以即使是在一个单点光源的环境下，着色点渲染时所需要的计算量也很大。
 
 \subsection{使用LTC方法近似BRDF积分}
-Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transform consin）的数学方法\cite{Heitz2016Real}，来近似计算BRDF积分。如图\ref{fig:Distribution Approxmation}所示：
+Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transform Cosine）的数学方法\cite{Heitz2016Real}，来近似计算镜面BRDF积分。如图\ref{fig:Distribution Approxmation}所示：
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\columnwidth]{DistributionApproxmation.png}
@@ -139,7 +139,7 @@ Eric Heitz等人在解决区域光源光照时提出了一种名为线性转换余弦分布（Linear Transfo
 	\caption{使用余弦分布乘上矩阵M来近似BRDF分布}
 	\label{fig:Distribution Approxmation}
 \end{figure}
-图中，上面是在某种粗糙度$\alpha$以及观察向量$\omega_o$下的BRDF分布，分布函数如下：
+图中，上面是在某种粗糙度$\alpha$以及观察向量$\omega_o$下的镜面BRDF分布，分布函数如下：
 \begin{equation}
 \label{eq:BRDFDistribution}
 B_s(\omega_i) =  \frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i
@@ -167,7 +167,7 @@ C(\omega_i=(x,y,z)) = \frac{1}{\pi}max(0,z)
 \label{eq:IntegrationApproxmation}
 \int_PB_s(\omega)d\omega=\int_{P_c}C(\omega_s)d\omega_s
 \end{equation}
-其中$\omega$是在BRDF分布下的光线入射向量，而$\omega_s$是$\omega$乘上矩阵$M_s^{-1}$作线性变换之后的新的入射向量。
+其中$\omega$是在原始BRDF分布下的光线入射向量，而$\omega_s$是$\omega$乘上矩阵$M_s^{-1}$作线性变换之后的新的入射向量。
 
 \subsection{使用LTC方法来计算单点光源光照}
 将上式-\ref{eq:IntegrationApproxmation}中的$\omega$看作单位球上的无限小的面积，那么上式中对$\omega$的积分实际上就是在对一个点光源进行光照计算。那么一个着色点接受到来自$\omega$方向上的点光源的镜面辐射度为：
@@ -206,11 +206,12 @@ B_d(\omega)=f_dn\cdot\omega_i
 \omega_d = M_d^{-1}\omega
 \end{equation}
 
-所以，综合式\ref{eq:BRDFFunction}、式\ref{eq:BRDFDistribution}、式\ref{eq:RightEquation}、式\ref{eq:DiffuseApproximation}以及式\ref{eq:DiffuseDistribution}，着色点接受到的来自$\omega$方向上的点光源的辐射度为：
+所以，综合式\ref{eq:BRDFFunction}、式\ref{eq:BRDFDistribution}、式\ref{eq:RightEquation}、式\ref{eq:DiffuseApproximation}以及式\ref{eq:DiffuseDistribution}，可以得出着色点在$\omega$方向上的点光源照射下的出射辐射度为：
 \begin{equation}
 \label{eq:LTCSinglePointLight}
 L_o=f_rL_in\cdot\omega=(B_s(\omega)+B_d(\omega))L_i=(C(\omega_s)\frac{|M_s^{-1}|}{||M_s^{-1}\omega||^3}+C(\omega_d)\frac{|M_d^{-1}|}{||M_d^{-1}\omega||^3})L_i
 \end{equation}
+其中$L_i$是$\omega$方向上的点光源的辐射亮度。
 
 由式\ref{eq:ClampedCosine}、式\ref{eq:SpecularOmega}、式\ref{eq:DiffuseOmega}可以得到：
 \begin{equation}
@@ -232,7 +233,7 @@ L_o=\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}|M_s^{-1}|L_i+\frac{\omega_d.z}{
 \begin{equation}
 L_o=\sum_{\omega_i}(\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}|M_s^{-1}|L_i+\frac{\omega_d.z}{(\omega_d\cdot\omega_d)^2}|M_d^{-1}|L_i)
 \end{equation}
-其中$\omega_s=M_s^{-1}\omega_i$、$\omega_d=M_d^{-1}\omega_i$。因为对同一个着色点来说，对任何点光源$M_s^{-1}$和$M_d^{-1}$是定值，所以：
+其中$\omega_s=M_s^{-1}\omega_i$、$\omega_d=M_d^{-1}\omega_i$。因为对同一个着色点来说，对任何方向上的点光源$M_s^{-1}$和$M_d^{-1}$是定值，所以：
 \begin{equation}
 \label{eq:FinalEquation4MPL}
 L_o=|M_s^{-1}|\sum_{\omega_i}\frac{\omega_s.z}{(\omega_s\cdot\omega_s)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{\omega_d.z}{(\omega_d\cdot\omega_d)^2}L_i
@@ -245,13 +246,16 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 \end{equation}
 其中$D$、$F$、$G$、$f_d$需要分别按照式\ref{eq:GGXD}、\ref{eq:Fresnel}、\ref{eq:GeometryShadow}、\ref{eq:DisneyDiffuse}来计算。
 
-从式\ref{eq:FinalEquation4MPL}、\ref{eq:BRDFFinalEquation4MPL}可以看出，本文用LTC的方式来实现多点光源光照，计算量比使用BRDF方式要少很多，从而达到本文要实现的目标：以更快的速率实现多点光源下基于物理的光照效果。除此之外，使用本文LTC渲染点光源的方法，不会因为BRDF公式（$DFG$以及$f_d$项）的复杂性而增加渲染时间， 也就是说，即使未来BRDF因为要达到更加物理真实的效果而变得更加复杂，使用本文的方法是不会降低渲染帧率的。本文算法对于点光源在基于物理的渲染上具有很好的可扩展性。甚至可以让复杂的点光源PBR光照在移动平台上也能快速实现出较好的效果。
+从式\ref{eq:FinalEquation4MPL}、\ref{eq:BRDFFinalEquation4MPL}可以看出，本文用LTC的方式来实现多点光源光照，计算量比使用BRDF方式要少很多（只需要根据观察角度和粗糙度从预计算好的二维纹理中取出变换矩阵$M_d^{-1}$和$M_s^{-1}$，然后对场景中的每个点光源计算矩阵变换之后的$\omega_d$和$\omega_s$，再用$\omega_d$和$\omega_s$的z分量分别除以对应向量的自身点积的平方，再将每个点光源的计算结果求和，再乘上对应的变换矩阵行列式的值，就能得到对应的漫反射出射辐射度和镜面反射出射辐射度），从而达到本文要实现的目标：以更快的速率实现多点光源下基于物理的光照效果。除此之外，使用本文LTC 渲染点光源的方法，不会因为BRDF 公式（$DFG$ 以及$f_d$ 项）的复杂性而增加渲染时间， 也就是说，即使未来BRDF模型因为要达到更加物理真实的效果而变得更加复杂，使用本文的方法是不会降低渲染帧率的。所以本文算法对于点光源在基于物理的渲染上具有很好的可扩展性。甚至可以让复杂的点光源PBR 光照在移动平台上也能快速实现出较好的效果。
 
+\section{算法实现细节}
 \subsection{光源裁剪}
 按照上述的方法，当变换前和变换后的的光源位置均处于微平面以上时，使用LTC和BRDF方法的效果相似。如图\ref{fig:FirstLightClip}中$(a)$和$(b)$，其中光源初始位置为$(0, 0, 1)$，地面粗糙度为$\alpha=0.5$。
-但是需要对光源位置在变换前后为以下两种情况时出现的错误结果做出处理：
+但是在以下两种情况下可能会出现光照异常（需要做光源裁剪）：
+1. 当点光源的初始位置位于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置变换到半球面以上。
+2. 当点光源的初始位置位于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置变换到半球面以下。
 \subsubsection{在光源做线性变换之前进行光源裁剪}
-当点光源的初始位置于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置移动到半球面以上，如图\ref{fig:FirstLightClip}中的$(c)$和$(d)$。
+当点光源的初始位置位于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置变换到半球面以上，如图\ref{fig:FirstLightClip}中的$(c)$和$(d)$。
 
 \begin{figure}[h]
     \centering
@@ -288,7 +292,7 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 按照实际中的真实效果，当点光源位于平面以下时，平面表面应当无任何光照效果。但是从图\ref{fig:FirstLightClip}中的$(c)$和$(d)$，其中光源初始位置为$(0, 0, -0.158731)$，地面粗糙度为$\alpha=0.5$，可以看出使用LTC 的方法在平面上有明显的“漏光”，这是因为本文的变换矩阵$M$在拟合时事先假定光源初始时一定处于切平面以上。如果光源初始时处于切平面以下，按照式\ref{eq:SpecularOmega} 和\ref{eq:DiffuseOmega}，乘上矩阵$M$之后，光源有可能被变换到切平面以上（即$\omega_s.z > 0$或$\omega_d.z > 0$），导致漏光现象的出现。所以对于这类光源，我们需要在计算光照前先将其裁剪去掉。
 
 \subsubsection{在光源做线性变换之后进行光源裁剪}
-当点光源的初始位置于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置有可能变换到半球面以下，导致$\omega_s.z < 0$或$\omega_d.z < 0$。但是本文在拟合BRDF分布时用的是式\ref{eq:ClampedCosine}中的截断余弦分布，在半球面以下分布的值应该为0，所以需要在光源变换之后再做一次裁剪，保证式\ref{eq:FinalEquation4SPL}不会算出负的$L_o$。如果不做该次裁剪，在单点光源光照下正常（因为负值的出射辐射度在输出到颜色缓冲区时被截断为0），但是在多点光源光照下会出现不正常的结果，如图\ref{fig:SecondLightClip}所示：
+当点光源的初始位置位于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置有可能变换到半球面以下，导致$\omega_s.z < 0$或$\omega_d.z < 0$。但是本文在拟合BRDF分布时用的是式\ref{eq:ClampedCosine}中的截断余弦分布，在半球面以下分布的值应该为0，所以需要在光源变换之后再做一次裁剪，保证式\ref{eq:FinalEquation4SPL}不会算出负的$L_o$。如果不做该次裁剪，在单点光源光照下正常（因为负值的出射辐射度在输出到颜色缓冲区时被截断为0），但是在多点光源光照下会出现不正常的结果，如图\ref{fig:SecondLightClip}所示：
 \begin{figure}[h]
     \centering
 	\subfigure[不做第二次裁剪时使用LTC方法计算多个点光源光照]{
@@ -346,7 +350,7 @@ L_o=
 \end{cases}
 \end{equation}
 
-\subsection{实验结果}
+\section{实验结果}
 本文的实验环境是：Intel(R)Xeon(R)CPU E3-1230 V2@3.30GHz，16GB内存，NVIDIA GeForce GTX 1060 6GB显卡。
 
 在有100个点光源的场景中，使用BRDF方式以及本文的算法在场景粗糙度$\alpha=0.27$时所实现的渲染结果如图\ref{fig:BRDFResultAndLTCResult}所示：

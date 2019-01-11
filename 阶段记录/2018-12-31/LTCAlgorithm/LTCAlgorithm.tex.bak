@@ -49,25 +49,35 @@
 \subsection{Linearly Transformed cosine}
 由于基于物理的BRDF模型公式复杂并且计算量较大，所以Eric Heitz等人在实现面光源光照时，提出了一种名为Linearly Transformed Cosine的数学方法，用一个线性矩阵和余弦分布来拟合BRDF分布。本文工作受此启发，使用Linearly Transformed Cosine来实现基于物理的大量点光源光照，以达到降低计算量的目的。
 
+\section{Related Work}
+\subsection{Large Number of Point Lights Illumination}
+In scene rendering, it's still difficult to guarantee both the effect and speed when the number of light sources is large, especially when the lights are dynamic. In recent years, there are many algorithms for rendering a large number of point sources in the scene in realtime, such as Forward+\cite{harada2012forward+} algorithm divided the screen into tiles to culling the lights. In order to solve the problem of too many lights in tiles and the depth's discontinuity, clustering shading\cite{Olsson2012Clustered} on the basis of tiled shading, the tiles are extended from two-dimensional screen space to the three-dimensional observation space, further divided in depth.  LLL\cite{bezrati2018real} algorithm creates a GPU light link list for each pixel, which enables culling lights as well as rendering opaque and translucent objects simultaneously in one pass in deferred shading, makes it even simpler for shading the translucent objects and particles.
+
+\subsection{Real-time Lighting Model}
+There are many lighting models for point light source rendering. Bouknight has proposed the Lambert model \cite{Bouknight1970A}, which gives the treatment of rough surfaces. The Phong\cite{phong1975illumination} model incorporates specular reflection, and the Blinn-Phong model \cite{blinn1977models} is an extension of the Phong model, which corrects the specular light effect of the Phong model and is more computationally efficient. However, they all do not conform to the laws of physics. In physics-based rendering, Bidirectional Reflection Distribution Function \cite{Nicodemus1965Directional} is usually used to represent the ratio of the reflected radiance to the incident irradiance of the object surface. BRDF functions that follow the laws of physics perfectly are very complicated, therefore approximate methods are usually used in actual rendering. Different approximation methods form different BRDF models. There are already many ideal BRDF models \cite{Montes2012AnOO}, such as Granier-Heidrich BRDF model\cite{Granier2003A} based on layering theory, Oren-Nayar model\cite{Nayar1995Visual} based on geometric viewpoint, Schlick BRDF model\cite{schlick1994inexpensive}based on experiment, etc.. But the most used in real-time rendering and game engine is the Cook-Torrance BRDF model\cite{cook1982reflectance} based on the micro-surface theory proposed by Cook et al. on Beckman\cite{Beckmann1963The} and Torrance-Sparrow\cite{torrance1967theory}, the theory holds that any surface is composed of very small microscopic facets, each with its own roughness.In addition to this, there are many variants of the Cook-Torrance BRDF model \cite{Pont2002Bidirectional}\cite{schlick1994inexpensive}\cite{kelemen2001microfacet}, which have also been experimentally proven to mimic the real surface \cite{Ngan2005Experimental}. For the microscopic surface normal distribution function in this model, some distribution functions such as Beckmann\cite{Beckmann1963The}, Phong\cite{phong1975illumination}, and GGX\cite{Walter2007Microfacet} are very popular, but only the GGX distribution will attenuate faster at the center of the highlight, and the attenuation will become slower when away from the highlight center, making the GGX highlight has a tailing effect, which is in line with the reality\cite{Matusik2003A}. The bidirectional shadowing-masking function can be obtained by the normal distribution function and the Smith Shadowing function, but the Smith shadow function assumes that the shadowing and the masking are not related, but more popular in recent years is the more precise geometric occlusion function proposed by Lagarde et al. \cite{lagarde2014moving}, which considers the correlation between shadowing and masking. For the diffuse reflection BRDF, the Lambert BRDF model \cite{Bouknight1970A} was once popular, but because it does not consider directionality, and cannot effectively reflect the effect of retro-reflection, Disney has proposed a new diffuse reflection empirical model\cite{burley2012physically}.
+
+\subsection{Linearly Transformed Cosine}
+Since the physics-based BRDF model is complex and computationally intensive, Eric Heitz et al. proposed a mathematical method called Linearly Transformed Cosine to achieve surface light source illumination, using a linear matrix and cosine distribution to fit BRDF distribution. This work is inspired by this, using Linearly Transformed Cosine to reduce the calculation of the physics-based illumination of a large number of light sources.
+
 \section{算法部分}
 本文算法要实现的目标是：用LTC的方式来近似实现多点光源下基于物理的光照效果，同时渲染效率要比常用的BRDF方式更高。
 \subsection{反射率方程}
-为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的光照渲染：
+为了实现更真实的渲染效果，如今业界广泛使用如下的反射率方程来实现基于物理的实时光照渲染：
 \begin{equation}
 \label{eq:ReflectionFunction}
 L_o(p,\omega_o)=\int_{\Omega}f_r(p,\omega_i,\omega_o)L_i(p,w_i)n\cdot \omega_id\omega_i
 \end{equation}
 
-其中$p$着色点，n是表面法线，$\omega_o$为观察方向，$\omega_i$为光线入射方向，$L_i$是来自$\omega_i$方向上的辐射亮度，$L_o$是着色点在上半球空间接受到的辐射度，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射照度与入射方向上的辐射照度的比率。
-当前主流的游戏引擎（如Unity、Unreal等）都在使用基于微面元理论的BRDF模型：
+其中$p$是着色点，n是表面法线，$\omega_o$为观察方向，$\omega_i$为光线入射方向，$L_i$是来自$\omega_i$方向上的辐射亮度，$L_o$是着色点在上半球空间接受到的辐射度，$f_r$是双向反射分布函数（BRDF），描述了反射方向上的辐射亮度与入射方向上的辐射照度的比率。
+当前主流的游戏引擎都在使用基于微面元理论的Cook-Torrance BRDF模型：
 \begin{equation}
 \label{eq:BRDFFunction}
 f_r(\omega_i,\omega_o)=f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}
 \end{equation}
 
-其中$f_d$是漫反射系数，D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
+其中$f_d$是漫反射系数，$\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}$一起构成了镜面反射系数，D是描述微观面元法线分布的函数，F是描述表面菲涅尔反射的函数，G是描述微观面元之间几何遮挡比率的函数。
 
-所以我们通常使用的反射率方程是：
+所以对于各向同性材质，我们通常使用的反射率方程是：
 \begin{equation}
 L_o(p,\omega_o)=\int_\Omega(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_i(p,\omega_i)n\cdot\omega_id\omega_i
 \end{equation}
@@ -238,10 +248,10 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 从式\ref{eq:FinalEquation4MPL}、\ref{eq:BRDFFinalEquation4MPL}可以看出，本文用LTC的方式来实现多点光源光照，计算量比使用BRDF方式要少很多，从而达到本文要实现的目标：以更快的速率实现多点光源下基于物理的光照效果。除此之外，使用本文LTC渲染点光源的方法，不会因为BRDF公式（$DFG$以及$f_d$项）的复杂性而增加渲染时间， 也就是说，即使未来BRDF因为要达到更加物理真实的效果而变得更加复杂，使用本文的方法是不会降低渲染帧率的。本文算法对于点光源在基于物理的渲染上具有很好的可扩展性。甚至可以让复杂的点光源PBR光照在移动平台上也能快速实现出较好的效果。
 
 \subsection{光源裁剪}
-按照上述的方法，当变换前和变换后的的光源位置均处于微平面以上时，使用LTC和BRDF方法的效果相似。如图\ref{fig:LightClip}中$(a)$和$(b)$，其中光源初始位置为$(0, 0, 1)$，地面粗糙度为$\alpha=0.5$。
-但是有可能会在以下两种情况下出现光照异常：
+按照上述的方法，当变换前和变换后的的光源位置均处于微平面以上时，使用LTC和BRDF方法的效果相似。如图\ref{fig:FirstLightClip}中$(a)$和$(b)$，其中光源初始位置为$(0, 0, 1)$，地面粗糙度为$\alpha=0.5$。
+但是需要对光源位置在变换前后为以下两种情况时出现的错误结果做出处理：
 \subsubsection{在光源做线性变换之前进行光源裁剪}
-当点光源的初始位置于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置移动到半球面以上，如图\ref{fig:LightClip}中的$(c)$和$(d)$。
+当点光源的初始位置于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置移动到半球面以上，如图\ref{fig:FirstLightClip}中的$(c)$和$(d)$。
 
 \begin{figure}[h]
     \centering
@@ -276,9 +286,6 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 \end{figure}
 
 按照实际中的真实效果，当点光源位于平面以下时，平面表面应当无任何光照效果。但是从图\ref{fig:FirstLightClip}中的$(c)$和$(d)$，其中光源初始位置为$(0, 0, -0.158731)$，地面粗糙度为$\alpha=0.5$，可以看出使用LTC 的方法在平面上有明显的“漏光”，这是因为本文的变换矩阵$M$在拟合时事先假定光源初始时一定处于切平面以上。如果光源初始时处于切平面以下，按照式\ref{eq:SpecularOmega} 和\ref{eq:DiffuseOmega}，乘上矩阵$M$之后，光源有可能被变换到切平面以上（即$\omega_s.z > 0$或$\omega_d.z > 0$），导致漏光现象的出现。所以对于这类光源，我们需要在计算光照前先将其裁剪去掉。
-\begin{equation}
-  \omega_1\cdot n<0
-\end{equation}
 
 \subsubsection{在光源做线性变换之后进行光源裁剪}
 当点光源的初始位置于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置有可能变换到半球面以下，导致$\omega_s.z < 0$或$\omega_d.z < 0$。但是本文在拟合BRDF分布时用的是式\ref{eq:ClampedCosine}中的截断余弦分布，在半球面以下分布的值应该为0，所以需要在光源变换之后再做一次裁剪，保证式\ref{eq:FinalEquation4SPL}不会算出负的$L_o$。如果不做该次裁剪，在单点光源光照下正常（因为负值的出射辐射度在输出到颜色缓冲区时被截断为0），但是在多点光源光照下会出现不正常的结果，如图\ref{fig:SecondLightClip}所示：
@@ -301,13 +308,42 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 	\label{fig:SecondLightClip}
 \end{figure}
 
-综上，加上两次光源裁剪之后的式\ref{eq:FinalEquation4SPL}更新为：
+综上，加上两次光源裁剪之后的式\ref{eq:FinalEquation4MPL}更新为：
 \begin{equation}
     L_o=
     \begin{cases}
     0, &\omega_i\cdot n<0 \\
     |M_s^{-1}|\sum_{\omega_i}\frac{max(\omega_s.z,0)}{(\omega_s\cdot\omega_s)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{max(\omega_d.z,0)}{(\omega_d\cdot\omega_d)^2}L_i, &\omega_i\cdot n>0
     \end{cases}
+\end{equation}
+
+\subsection{Fresnel项近似}
+【注：Fresnel项近似其实不是本文的创新，原作者虽然在论文中没有给出这部分的描述，但是在原作者的后续报告中提供的附加文档里有说明这部分，建议这部分不写入我们的论文中。】
+
+实际上本文在拟合镜面BRDF分布和余弦分布时，是将Fresnel项提出来单独考虑的（否则会增加拟合的难度并且还需要用三维纹理而不是二维纹理来存储矩阵M，因为不提出来的话还需要多考虑一个积分变量：基础反射率$F_0$），也就是说实际上拟合时用的镜面BRDF积分是：
+\begin{equation}
+L_s=\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i d\omega_i
+\end{equation}
+那么缺少的Fresnel项怎么办？本文对原积分做如下变换（该方法借鉴于Brian Karis提出的Image-Based Lighting算法中预计算二维查找纹理(2D look-up texture)的思想\cite{karis2013real}）：
+\begin{equation}
+\label{eq:BRDFIntegration}
+L_s=\int_{\Omega}\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)}n\cdot\omega_i d\omega_i \\
+\end{equation}
+将式\ref{eq:Fresnel}代入上式，得：
+\begin{equation}
+\begin{aligned}
+L_s&=\int_{\Omega}(F_0+(1-F_0)(1-(h\cdot\omega_o)^5))\frac{DG}{4(\omega_o\cdot n)}d\omega_i\\
+&=F_0\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i+(1-F_0)\int_{\Omega}(1-(h\cdot\omega_o)^5)\frac{DG}{4(\omega_o\cdot n)}d\omega_i\\
+&\approx F_0\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i+(1-F_0)\int_{\Omega}(1-(h\cdot\omega_o)^5)d\omega_i\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i
+\end{aligned}
+\end{equation}
+其中$\int_{\Omega}\frac{DG}{4(\omega_o\cdot n)}d\omega_i$可以用本文算法式\ref{eq:FinalEquation4MPL}中的镜面部分来计算。记$f_s=\int_{\Omega}(1-(h\cdot\omega_o)^5)d\omega_i$，本文在拟合BRDF分布和余弦分布的同时，计算出$f_s$并将其存入到另一张纹理，在执行光照计算出再从这张预计算的纹理里取出$f_s$，乘到式\ref{eq:FinalEq4MPLAfterClippping}的镜面部分上，就可以模拟出近似的Fresnel。即加上Fresnel后式\ref{eq:FinalEq4MPLAfterClippping} 更新为：
+\begin{equation}
+L_o=
+\begin{cases}
+0, &\omega_i\cdot n<0 \\
+|M_s^{-1}|\sum_{\omega_i}\frac{max(\omega_s.z,0)}{(\omega_s\cdot\omega_s)^2}L_i+f_s|M_d^{-1}|\sum_{\omega_i}\frac{max(\omega_d.z,0)}{(\omega_d\cdot\omega_d)^2}L_i, &\omega_i\cdot n>0
+\end{cases}
 \end{equation}
 
 \subsection{实验结果}
