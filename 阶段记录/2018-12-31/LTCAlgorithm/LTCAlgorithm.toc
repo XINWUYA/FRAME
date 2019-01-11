@@ -5,12 +5,17 @@
 \contentsline {subsection}{\numberline {0.1.1}大量点光源光照}{1}{subsection.0.1.1}
 \contentsline {subsection}{\numberline {0.1.2}实时光照模型}{1}{subsection.0.1.2}
 \contentsline {subsection}{\numberline {0.1.3}Linearly Transformed cosine}{2}{subsection.0.1.3}
-\contentsline {section}{\numberline {0.2}算法部分}{2}{section.0.2}
-\contentsline {subsection}{\numberline {0.2.1}反射率方程}{2}{subsection.0.2.1}
-\contentsline {subsection}{\numberline {0.2.2}使用LTC方法近似BRDF积分}{4}{subsection.0.2.2}
-\contentsline {subsection}{\numberline {0.2.3}使用LTC方法来计算单点光源光照}{5}{subsection.0.2.3}
-\contentsline {subsection}{\numberline {0.2.4}使用LTC方法来计算多个点光源光照}{7}{subsection.0.2.4}
-\contentsline {subsection}{\numberline {0.2.5}光源裁剪}{8}{subsection.0.2.5}
-\contentsline {subsubsection}{\numberline {0.2.5.1}在光源做线性变换之前进行光源裁剪}{8}{subsubsection.0.2.5.1}
-\contentsline {subsubsection}{\numberline {0.2.5.2}在光源做线性变换之后进行光源裁剪}{9}{subsubsection.0.2.5.2}
-\contentsline {subsection}{\numberline {0.2.6}实验结果}{10}{subsection.0.2.6}
+\contentsline {section}{\numberline {0.2}Related Work}{2}{section.0.2}
+\contentsline {subsection}{\numberline {0.2.1}Large Number of Point Lights Illumination}{2}{subsection.0.2.1}
+\contentsline {subsection}{\numberline {0.2.2}Real-time Lighting Model}{3}{subsection.0.2.2}
+\contentsline {subsection}{\numberline {0.2.3}Linearly Transformed Cosine}{4}{subsection.0.2.3}
+\contentsline {section}{\numberline {0.3}算法部分}{4}{section.0.3}
+\contentsline {subsection}{\numberline {0.3.1}反射率方程}{4}{subsection.0.3.1}
+\contentsline {subsection}{\numberline {0.3.2}使用LTC方法近似BRDF积分}{6}{subsection.0.3.2}
+\contentsline {subsection}{\numberline {0.3.3}使用LTC方法来计算单点光源光照}{7}{subsection.0.3.3}
+\contentsline {subsection}{\numberline {0.3.4}使用LTC方法来计算多个点光源光照}{9}{subsection.0.3.4}
+\contentsline {subsection}{\numberline {0.3.5}光源裁剪}{9}{subsection.0.3.5}
+\contentsline {subsubsection}{\numberline {0.3.5.1}在光源做线性变换之前进行光源裁剪}{9}{subsubsection.0.3.5.1}
+\contentsline {subsubsection}{\numberline {0.3.5.2}在光源做线性变换之后进行光源裁剪}{11}{subsubsection.0.3.5.2}
+\contentsline {subsection}{\numberline {0.3.6}实验结果}{11}{subsection.0.3.6}
+\contentsline {chapter}{Bibliography}{15}{chapter*.7}
