@@ -239,7 +239,9 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 
 \subsection{光源裁剪}
 按照上述的方法，当变换前和变换后的的光源位置均处于微平面以上时，使用LTC和BRDF方法的效果相似。如图\ref{fig:LightClip}中$(a)$和$(b)$，其中光源初始位置为$(0, 0, 1)$，地面粗糙度为$\alpha=0.5$。
-考虑可能会出现的以下两种情况：1）当点光源$\omega_1$的初始位置于点P所在半球面以下，而在乘上变换矩阵${M_1}^{-1}$ 后，光源位置移动到半球面以上；2）当点光源$\omega_2$ 的初始位置于点P所在半球面以上，而在乘上变换矩阵${M_2}^{-1}$ 后，光源位置移动到半球面以下。
+但是有可能会在以下两种情况下出现光照异常：
+\subsubsection{在光源做线性变换之前进行光源裁剪}
+当点光源的初始位置于点P所在半球面以下，而在乘上变换矩阵${M}^{-1}$ 后，光源位置移动到半球面以上，如图\ref{fig:LightClip}中的$(c)$和$(d)$。
 
 \begin{figure}[h]
     \centering
@@ -256,35 +258,52 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 		\end{minipage}
     }
 
-    \subfigure[情况1下使用LTC方法计算单个点光源]{
+    \subfigure[当点光源在着色点切平面以下，并且不做第一次裁剪时使用LTC方法计算光照]{
 		\begin{minipage}[t]{0.45\linewidth}
 			\centering
 			\includegraphics[width=1.0\linewidth]{LTCPointLight_0_5_and_-0_15.png}
 		\end{minipage}
     }
-    \subfigure[情况1下使用BRDF方法计算单个点光源]{
+    \subfigure[当点光源在着色点切平面以下时，使用BRDF方法计算光照]{
 		\begin{minipage}[t]{0.45\linewidth}
 			\centering
 			\includegraphics[width=1.0\linewidth]{BRDFPointLight_0_5_and_-0_15.png}
 		\end{minipage}
     }
     \captionsetup{font={small}}
-    \caption{光源裁剪}
-	\label{fig:LightClip}
+    \caption{第一次光源裁剪}
+	\label{fig:FirstLightClip}
 \end{figure}
 
-按照实际中的真实效果，当点光源位于平面以下时，平面表面应当无任何光照效果。而当出现情况1时，使用两种方法所呈现的效果如图\ref{fig:LightClip}中$(c)$和$(d)$，其中光源初始位置为$(0, 0, -0.158731)$，地面粗糙度为$\alpha=0.5$，可以看出使用LTC 的方法在平面上有明显的“余光”，这是因为虽然$\omega_1.z < 0$，但由式\ref{eq:SpecularOmega}和\ref{eq:DiffuseOmega}，$\omega_s.z > 0$，$\omega_d.z > 0$，代入式\ref{eq:LTCSinglePointLight}，有$L_o > 0$。 因此对于这类光源，我们需要在计算时裁剪去掉。很明显当点光源初始位置在平面以下时，有
-\begin{equation}
-  \omega_1\cdot n<0
-\end{equation}
+按照实际中的真实效果，当点光源位于平面以下时，平面表面应当无任何光照效果。但是从图\ref{fig:FirstLightClip}中的$(c)$和$(d)$，其中光源初始位置为$(0, 0, -0.158731)$，地面粗糙度为$\alpha=0.5$，可以看出使用LTC 的方法在平面上有明显的“漏光”，这是因为本文的变换矩阵$M$在拟合时事先假定光源初始时一定处于切平面以上。如果光源初始时处于切平面以下，按照式\ref{eq:SpecularOmega} 和\ref{eq:DiffuseOmega}，乘上矩阵$M$之后，光源有可能被变换到切平面以上（即$\omega_s.z > 0$或$\omega_d.z > 0$），导致漏光现象的出现。所以对于这类光源，我们需要在计算光照前先将其裁剪去掉。
 
-对于第2种情况，当$\omega_2$乘上变换矩阵${M_2}^{-1}$后，光源位置移动到半球面以下，此时由式\ref{eq:SpecularOmega}和\ref{eq:DiffuseOmega}，有$\omega_s.z < 0$和$\omega_d.z < 0$，代入式\ref{eq:LTCSinglePointLight}，有$L_o < 0$，不符合真实情况，因此此类光源也需要进行裁剪。
-综上，整合所有情况之后的式\ref{eq:FinalEquation4SPL}应为：
+\subsubsection{在光源做线性变换之后进行光源裁剪}
+当点光源的初始位置于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置有可能变换到半球面以下，导致$\omega_s.z < 0$或$\omega_d.z < 0$。但是本文在拟合BRDF分布时用的是式\ref{eq:ClampedCosine}中的截断余弦分布，在半球面以下分布的值应该为0，所以需要在光源变换之后再做一次裁剪，保证式\ref{eq:FinalEquation4SPL}不会算出负的$L_o$。如果不做该次裁剪，在单点光源光照下正常（因为负值的出射辐射度在输出到颜色缓冲区时被截断为0），但是在多点光源光照下会出现不正常的结果，如图\ref{fig:SecondLightClip}所示：
+\begin{figure}[h]
+    \centering
+	\subfigure[不做第二次裁剪时使用LTC方法计算多个点光源光照]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{NoSecondClip.png}
+		\end{minipage}
+    }
+    \subfigure[做第二次裁剪时使用LTC方法计算多个点光源光照]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{WithSecondClip.png}
+		\end{minipage}
+    }
+    \captionsetup{font={small}}
+    \caption{第二次光源裁剪}
+	\label{fig:SecondLightClip}
+\end{figure}
+
+综上，加上两次光源裁剪之后的式\ref{eq:FinalEquation4MPL}更新为：
 \begin{equation}
     L_o=
     \begin{cases}
     0, &\omega_i\cdot n<0 \\
-    \frac{\max(\omega_s.z, 0)}{(\omega_s\cdot\omega_s)^2}|M_s^{-1}|L_i+\frac{\max(\omega_d.z, 0)}{(\omega_d\cdot\omega_d)^2}|M_d^{-1}|L_i, &\omega_i\cdot n>0
+    |M_s^{-1}|\sum_{\omega_i}\frac{max(\omega_s.z,0)}{(\omega_s\cdot\omega_s)^2}L_i+|M_d^{-1}|\sum_{\omega_i}\frac{max(\omega_d.z,0)}{(\omega_d\cdot\omega_d)^2}L_i, &\omega_i\cdot n>0
     \end{cases}
 \end{equation}
 
