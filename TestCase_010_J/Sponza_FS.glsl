@@ -1,10 +1,10 @@
 #version 430 core
 #pragma optionNV (unroll all)
 
-in  vec3 v2f_FragPosInWorldSpace;
-in  vec2 v2f_TexCoords;
-in  vec3 v2f_Normal;
-in  vec3 v2f_Tangent;
+sample in  vec3 v2f_FragPosInWorldSpace;
+sample in  vec2 v2f_TexCoords;
+sample in  vec3 v2f_Normal;
+sample in  vec3 v2f_Tangent;
 out vec4 FragColor_;
 
 layout (std140, binding = 0) uniform u_Matrices4ProjectionWorld

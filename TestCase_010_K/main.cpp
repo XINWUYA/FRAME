@@ -9,6 +9,7 @@ int main()
 {
 	//ElayGraphics::COMPONENT_CONFIG::setIsEnableGUI(false);
 	ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
+	ElayGraphics::WINDOW_KEYWORD::setSampleNum(16);
 	ElayGraphics::Camera::setIsEnableCursor(false);
 	ElayGraphics::Camera::setMainCameraMoveSpeed(0.3);
 	ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CSponza>("Sponza", 1));
