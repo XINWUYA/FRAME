@@ -512,15 +512,16 @@ int captureScreen2Img(const std::string& vFileName, int vQuality)
 	int WindowWidth = 0, WindowHeight = 0;
 	WindowWidth = ElayGraphics::WINDOW_KEYWORD::WINDOW_WIDTH;
 	WindowHeight = ElayGraphics::WINDOW_KEYWORD::WINDOW_HEIGHT;
-	GLbyte* pScreenData = new GLbyte[WindowWidth * WindowHeight * 4];
-	glReadPixels(0, 0, WindowWidth, WindowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pScreenData);
+	std::shared_ptr<GLbyte> pScreenData;
+	pScreenData.reset(new GLbyte[WindowWidth * WindowHeight * 4]);
+	glReadPixels(0, 0, WindowWidth, WindowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pScreenData.get());
 	if (FilePostfix == "tga")
-		return stbi_write_tga(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData);
+		return stbi_write_tga(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData.get());
 	else if (FilePostfix == "png")
-		return stbi_write_png(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData, WindowWidth * 4);
+		return stbi_write_png(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData.get(), WindowWidth * 4);
 	else if (FilePostfix == "bmp")
-		return stbi_write_bmp(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData);
+		return stbi_write_bmp(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData.get());
 	else if (FilePostfix == "jpg")
-		return stbi_write_jpg(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData, vQuality);
+		return stbi_write_jpg(vFileName.c_str(), WindowWidth, WindowHeight, 4, pScreenData.get(), vQuality);
 	return -1;
 }

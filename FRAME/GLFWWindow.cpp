@@ -20,9 +20,9 @@ void CGLFWWindow::init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-#ifdef MULTISAMPLE
+//#ifdef MULTISAMPLE
 	glfwWindowHint(GLFW_SAMPLES, ElayGraphics::WINDOW_KEYWORD::NUM_SAMPLES);
-#endif //MULTISAMPLE
+//#endif //MULTISAMPLE
 	//m_pWindow = std::make_shared<GLFWwindow>(glfwCreateWindow(ElayGraphics::WINDOW_KEYWORD::WINDOW_WIDTH, ElayGraphics::WINDOW_KEYWORD::WINDOW_HEIGHT, ElayGraphics::WINDOW_KEYWORD::WINDOW_TITLE.c_str(), nullptr, nullptr));
 	m_pWindow = glfwCreateWindow(ElayGraphics::WINDOW_KEYWORD::WINDOW_WIDTH, ElayGraphics::WINDOW_KEYWORD::WINDOW_HEIGHT, ElayGraphics::WINDOW_KEYWORD::WINDOW_TITLE.c_str(), nullptr, nullptr);
 	if (!m_pWindow)
