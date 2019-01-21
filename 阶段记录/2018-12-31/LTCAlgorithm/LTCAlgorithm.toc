@@ -20,4 +20,10 @@
 \contentsline {subsubsection}{\numberline {0.4.1.2}在光源做线性变换之后进行光源裁剪}{10}{subsubsection.0.4.1.2}
 \contentsline {subsection}{\numberline {0.4.2}Fresnel项近似}{11}{subsection.0.4.2}
 \contentsline {section}{\numberline {0.5}实验结果}{13}{section.0.5}
-\contentsline {chapter}{Bibliography}{15}{chapter*.7}
+\contentsline {section}{\numberline {0.6}总结和展望}{13}{section.0.6}
+\contentsline {subsection}{\numberline {0.6.1}总结}{13}{subsection.0.6.1}
+\contentsline {subsection}{\numberline {0.6.2}展望}{15}{subsection.0.6.2}
+\contentsline {subsubsection}{\numberline {0.6.2.1}更好的分布拟合}{15}{subsubsection.0.6.2.1}
+\contentsline {subsection}{\numberline {0.6.3}对点光源进行聚类}{15}{subsection.0.6.3}
+\contentsline {subsubsection}{\numberline {0.6.3.1}将本文算法运用于其他多点光源渲染框架以及全局光照}{15}{subsubsection.0.6.3.1}
+\contentsline {chapter}{Bibliography}{17}{chapter*.7}

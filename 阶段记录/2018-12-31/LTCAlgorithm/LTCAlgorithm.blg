@@ -1,6 +1,6 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: LTCAlgorithm.aux
 The style file: unsrt.bst
-Illegal, another \bibstyle command---line 135 of file LTCAlgorithm.aux
+Illegal, another \bibstyle command---line 145 of file LTCAlgorithm.aux
  : \bibstyle
  :          {plain}
 I'm skipping whatever remains of this command
@@ -17,4 +17,6 @@ while executing---line 944 of file unsrt.bst
 Name 2 in "Pont, Sylvia C, and Koenderink, Jan J," has a comma at the end for entry Pont2002Bidirectional
 while executing---line 944 of file unsrt.bst
 Warning--can't use both volume and number fields in kelemen2001microfacet
-(There were 4 error messages)
+Name 3 in "Laurent, Gilles and Delalandre, Cyril and Gr¨¦goire, De La Rivi¨¨re, and Boubekeur, Tamy" has a comma at the end for entry Laurent2016Forward
+while executing---line 944 of file unsrt.bst
+(There were 5 error messages)

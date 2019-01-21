@@ -123,4 +123,10 @@ Brian Karis and Epic Games.
 \newblock {\em Proc. Physically Based Shading Theory Practice}, pages 621--635,
   2013.
 
+\bibitem{Laurent2016Forward}
+Gilles Laurent, Cyril Delalandre, De~La~Rivi¨¨re Gr¨¦goire, and Tamy Boubekeur.
+\newblock Forward light cuts: A scalable approach to realtime global
+  illumination.
+\newblock {\em Computer Graphics Forum}, 35(4):79--88, 2016.
+
 \end{thebibliography}

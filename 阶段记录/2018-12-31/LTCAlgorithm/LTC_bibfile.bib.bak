@@ -38,16 +38,6 @@
   pages={41},
   year={2016},
 }
-@inproceedings {conf:EG2012:short:005-008,
-booktitle = {Eurographics 2012 - Short Papers},
-editor = {Carlos Andujar and Enrico Puppo},
-title = {{Forward+: Bringing Deferred Lighting to the Next Level}},
-author = {Harada, Takahiro and McKee, Jay and Yang, Jason C.},
-year = {2012},
-publisher = {The Eurographics Association},
-ISSN = {1017-4656},
-DOI = {10.2312/conf/EG2012/short/005-008}
-}
 @article{harada2012forward+,
   title={Forward+: Bringing deferred lighting to the next level},
   author={Harada, Takahiro and McKee, Jay and Yang, Jason C},
@@ -138,7 +128,7 @@ DOI = {10.2312/conf/EG2012/short/005-008}
 @article{Pont2002Bidirectional,
   title={Bidirectional reflectance distribution function of specular surfaces with hemispherical pits},
   author={Pont, Sylvia C, and Koenderink, Jan J,},
-  journal={Journal of the Optical Society of America A Optics Image Science & Vision},
+  journal={Journal of the Optical Society of America A Optics Image Science and Vision},
   volume={19},
   number={12},
   pages={2456},
@@ -158,4 +148,46 @@ DOI = {10.2312/conf/EG2012/short/005-008}
   author={Ngan, Addy and Durand, Fr¨¦do and Matusik, Wojciech},
   booktitle={Proc Eurographics Symposium on Rendering},
   year={2005},
+}
+@inproceedings{Matusik2003A,
+  title={A data-driven reflectance model},
+  author={Matusik and Wojciech},
+  booktitle={Acm Siggraph},
+  pages={759},
+  year={2003},
+}
+@article{Bouknight1970A,
+  title={A procedure for generation of three-dimensional half-toned computer graphics presentations},
+  author={Bouknight, W. Jack},
+  journal={Communications of the Acm},
+  volume={13},
+  number={9},
+  pages={527-536},
+  year={1970},
+}
+@inproceedings{blinn1977models,
+  title={Models of light reflection for computer synthesized pictures},
+  author={Blinn, James F},
+  booktitle={ACM SIGGRAPH computer graphics},
+  volume={11},
+  number={2},
+  pages={192--198},
+  year={1977},
+  organization={ACM}
+}
+@article{karis2013real,
+  title={Real shading in unreal engine 4},
+  author={Karis, Brian and Games, Epic},
+  journal={Proc. Physically Based Shading Theory Practice},
+  pages={621--635},
+  year={2013}
+}
+@article{Laurent2016Forward,
+  title={Forward Light Cuts: A Scalable Approach to Real©\Time Global Illumination},
+  author={Laurent, Gilles and Delalandre, Cyril and Gr¨¦goire, De La Rivi¨¨re, and Boubekeur, Tamy},
+  journal={Computer Graphics Forum},
+  volume={35},
+  number={4},
+  pages={79-88},
+  year={2016},
 }
