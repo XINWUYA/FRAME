@@ -183,7 +183,7 @@
   year={2013}
 }
 @article{Laurent2016Forward,
-  title={Forward Light Cuts: A Scalable Approach to Real©\Time Global Illumination},
+  title={Forward Light Cuts: A Scalable Approach to RealTime Global Illumination},
   author={Laurent, Gilles and Delalandre, Cyril and Gr¨¦goire, De La Rivi¨¨re, and Boubekeur, Tamy},
   journal={Computer Graphics Forum},
   volume={35},
