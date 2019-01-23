@@ -83,7 +83,10 @@ GLvoid CModel::__processVertex(const aiMesh *vAiMesh, std::vector<SMeshVertex> &
 		else {
 			Vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 		}
-		Vertex.Tangent = glm::vec3(vAiMesh->mTangents[i].x, vAiMesh->mTangents[i].y, vAiMesh->mTangents[i].z);
+
+		if (vAiMesh->mTangents)
+			Vertex.Tangent = glm::vec3(vAiMesh->mTangents[i].x, vAiMesh->mTangents[i].y, vAiMesh->mTangents[i].z);
+		
 		voVertices.push_back(Vertex);
 	}
 }
