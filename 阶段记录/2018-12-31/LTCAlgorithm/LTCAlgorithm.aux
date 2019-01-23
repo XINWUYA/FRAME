@@ -14,7 +14,7 @@
 \global\let\hyper@last\relax 
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
-\bibstyle{unsrt}
+\bibstyle{plain}
 \@writefile{toc}{\let \CTEX@spaceChar\relax }
 \select@language{english}
 \@writefile{toc}{\select@language{english}}
@@ -128,51 +128,75 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {0.4.2}Fresnel项近似}{11}{subsection.0.4.2}}
 \citation{karis2013real}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 第二次光源裁剪\relax }}{12}{figure.caption.4}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {不做第二次裁剪时使用LTC方法计算多个点光源光照}}}{12}{figure.caption.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {不做第二次裁剪时使用LTC方法计算多个点光源光照，可以看到，场景中右侧红色和蓝色旗子上方的墙壁有明显偏绿的现象，造成这种现象的原因可能是，某些光源在该点计算的颜色值为负，导致多个光源累加之后的值偏绿色。}}}{12}{figure.caption.4}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {做第二次裁剪时使用LTC方法计算多个点光源光照}}}{12}{figure.caption.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {做第二次裁剪时使用BRDF方法计算多个点光源光照}}}{12}{figure.caption.4}}
 \newlabel{fig:SecondLightClip}{{3}{12}{第二次光源裁剪\relax \relax }{figure.caption.4}{}}
 \newlabel{eq:BRDFIntegration}{{31}{12}{Fresnel项近似\relax }{equation.0.4.31}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {0.5}实验结果}{13}{section.0.5}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 本文算法以及BRDF的渲染效率\relax }}{13}{table.caption.6}}
-\newlabel{tab:TimeConsuming}{{1}{13}{本文算法以及BRDF的渲染效率\relax \relax }{table.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {0.6}总结和展望}{13}{section.0.6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.1}总结}{13}{subsection.0.6.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 使用BRDF和本文算法结果的对比\relax }}{14}{figure.caption.5}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {使用BRDF方式渲染的结果}}}{14}{figure.caption.5}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {使用本文算法渲染的结果}}}{14}{figure.caption.5}}
-\newlabel{fig:BRDFResultAndLTCResult}{{4}{14}{使用BRDF和本文算法结果的对比\relax \relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.5.1}单个点光源的简单场景}{13}{subsection.0.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.5.2}多点光源下的模型光照}{13}{subsection.0.5.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.5.3}多点光源下的复杂场景}{13}{subsection.0.5.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比\relax }}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {LTC, $\alpha $=0.25}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {LTC, $\alpha $=0.5}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {LTC, $\alpha $=0.75}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {LTC, $\alpha $=1.0}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {BRDF, $\alpha $=0.25}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {BRDF, $\alpha $=0.5}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(g)}{\ignorespaces {BRDF, $\alpha $=0.75}}}{14}{figure.caption.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(h)}{\ignorespaces {BRDF, $\alpha $=1.0}}}{14}{figure.caption.5}}
+\newlabel{fig:PointLightWithDifferentRoughness}{{4}{14}{对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比\relax \relax }{figure.caption.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 本文算法以及BRDF的渲染效率\relax }}{14}{table.caption.8}}
+\newlabel{tab:TimeConsuming}{{1}{14}{本文算法以及BRDF的渲染效率\relax \relax }{table.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.6}总结和展望}{14}{section.0.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.1}总结}{14}{subsection.0.6.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比\relax }}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {LTC,$\alpha $=0.25}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {BRDF,$\alpha $=0.25}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {LTC,$\alpha $=0.5}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {BRDF,$\alpha $=0.5}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {LTC,$\alpha $=0.75}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {BRDF,$\alpha $=0.75}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(g)}{\ignorespaces {LTC,$\alpha $=1.0}}}{15}{figure.caption.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(h)}{\ignorespaces {BRDF,$\alpha $=1.0}}}{15}{figure.caption.6}}
+\newlabel{fig:SingleModelResultWithDifferentRoughness}{{5}{15}{对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比\relax \relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 使用BRDF和本文算法结果的对比\relax }}{16}{figure.caption.7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {使用BRDF方式渲染的结果}}}{16}{figure.caption.7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {使用本文算法渲染的结果}}}{16}{figure.caption.7}}
+\newlabel{fig:BRDFResultAndLTCResult}{{6}{16}{使用BRDF和本文算法结果的对比\relax \relax }{figure.caption.7}{}}
 \citation{Laurent2016Forward}
 \bibstyle{plain}
 \bibdata{LTC_bibfile}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.2}展望}{15}{subsection.0.6.2}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.6.2.1}更好的分布拟合}{15}{subsubsection.0.6.2.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.3}对点光源进行聚类}{15}{subsection.0.6.3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.6.3.1}将本文算法运用于其他多点光源渲染框架以及全局光照}{15}{subsubsection.0.6.3.1}}
-\bibcite{harada2012forward+}{{1}{}{{}}{{}}}
-\bibcite{Olsson2012Clustered}{{2}{}{{}}{{}}}
-\bibcite{bezrati2018real}{{3}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.2}展望}{17}{subsection.0.6.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.6.2.1}更好的分布拟合}{17}{subsubsection.0.6.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.6.3}对点光源进行聚类}{17}{subsection.0.6.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.6.3.1}将本文算法运用于其他多点光源渲染框架以及全局光照}{17}{subsubsection.0.6.3.1}}
+\bibcite{Beckmann1963The}{{1}{}{{}}{{}}}
+\bibcite{bezrati2018real}{{2}{}{{}}{{}}}
+\bibcite{blinn1977models}{{3}{}{{}}{{}}}
 \bibcite{Bouknight1970A}{{4}{}{{}}{{}}}
-\bibcite{blinn1977models}{{5}{}{{}}{{}}}
-\bibcite{Nicodemus1965Directional}{{6}{}{{}}{{}}}
-\bibcite{Montes2012AnOO}{{7}{}{{}}{{}}}
-\bibcite{Granier2003A}{{8}{}{{}}{{}}}
-\bibcite{Nayar1995Visual}{{9}{}{{}}{{}}}
-\bibcite{schlick1994inexpensive}{{10}{}{{}}{{}}}
-\bibcite{Beckmann1963The}{{11}{}{{}}{{}}}
-\bibcite{torrance1967theory}{{12}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{17}{chapter*.7}}
+\bibcite{burley2012physically}{{5}{}{{}}{{}}}
+\bibcite{cook1982reflectance}{{6}{}{{}}{{}}}
+\bibcite{Granier2003A}{{7}{}{{}}{{}}}
+\bibcite{harada2012forward+}{{8}{}{{}}{{}}}
+\bibcite{Heitz2016Real}{{9}{}{{}}{{}}}
+\bibcite{karis2013real}{{10}{}{{}}{{}}}
+\bibcite{kelemen2001microfacet}{{11}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{19}{chapter*.9}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{cook1982reflectance}{{13}{}{{}}{{}}}
-\bibcite{Pont2002Bidirectional}{{14}{}{{}}{{}}}
-\bibcite{kelemen2001microfacet}{{15}{}{{}}{{}}}
-\bibcite{Ngan2005Experimental}{{16}{}{{}}{{}}}
-\bibcite{phong1975illumination}{{17}{}{{}}{{}}}
-\bibcite{Walter2007Microfacet}{{18}{}{{}}{{}}}
-\bibcite{Matusik2003A}{{19}{}{{}}{{}}}
-\bibcite{lagarde2014moving}{{20}{}{{}}{{}}}
-\bibcite{burley2012physically}{{21}{}{{}}{{}}}
-\bibcite{Heitz2016Real}{{22}{}{{}}{{}}}
-\bibcite{karis2013real}{{23}{}{{}}{{}}}
-\bibcite{Laurent2016Forward}{{24}{}{{}}{{}}}
+\bibcite{lagarde2014moving}{{12}{}{{}}{{}}}
+\bibcite{Laurent2016Forward}{{13}{}{{}}{{}}}
+\bibcite{Matusik2003A}{{14}{}{{}}{{}}}
+\bibcite{Montes2012AnOO}{{15}{}{{}}{{}}}
+\bibcite{Nayar1995Visual}{{16}{}{{}}{{}}}
+\bibcite{Ngan2005Experimental}{{17}{}{{}}{{}}}
+\bibcite{Nicodemus1965Directional}{{18}{}{{}}{{}}}
+\bibcite{Olsson2012Clustered}{{19}{}{{}}{{}}}
+\bibcite{phong1975illumination}{{20}{}{{}}{{}}}
+\bibcite{Pont2002Bidirectional}{{21}{}{{}}{{}}}
+\bibcite{schlick1994inexpensive}{{22}{}{{}}{{}}}
+\bibcite{torrance1967theory}{{23}{}{{}}{{}}}
+\bibcite{Walter2007Microfacet}{{24}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers

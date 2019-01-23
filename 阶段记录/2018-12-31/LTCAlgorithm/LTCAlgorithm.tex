@@ -296,17 +296,23 @@ L_o=\sum_{\omega_i}(f_d+\frac{DFG}{4(\omega_o\cdot n)(\omega_i\cdot n)})L_in\cdo
 \subsubsection{在光源做线性变换之后进行光源裁剪}
 当点光源的初始位置位于点P所在半球面以上，而在乘上变换矩阵${M}^{-1}$ 后，光源位置有可能变换到半球面以下，导致$\omega_s.z < 0$或$\omega_d.z < 0$。但是本文在拟合BRDF分布时用的是式\ref{eq:ClampedCosine}中的截断余弦分布，在半球面以下分布的值应该为0，所以需要在光源变换之后再做一次裁剪，保证式\ref{eq:FinalEquation4SPL}不会算出负的$L_o$。如果不做该次裁剪，在单点光源光照下正常（因为负值的出射辐射度在输出到颜色缓冲区时被截断为0），但是在多点光源光照下会出现不正常的结果，如图\ref{fig:SecondLightClip}所示：
 \begin{figure}[h]
-    \centering
-	\subfigure[不做第二次裁剪时使用LTC方法计算多个点光源光照]{
+    %\centering
+	\subfigure[不做第二次裁剪时使用LTC方法计算多个点光源光照，可以看到，场景中右侧红色和蓝色旗子上方的墙壁有明显偏绿的现象，造成这种现象的原因可能是，某些光源在该点计算的颜色值为负，导致多个光源累加之后的值偏绿色。]{
 		\begin{minipage}[t]{0.45\linewidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{NoSecondClip.png}
+			\includegraphics[width=1.0\linewidth]{LTC_without_second_clip.png}
 		\end{minipage}
     }
     \subfigure[做第二次裁剪时使用LTC方法计算多个点光源光照]{
 		\begin{minipage}[t]{0.45\linewidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{WithSecondClip.png}
+			\includegraphics[width=1.0\linewidth]{LTC_with_second_clip.png}
+		\end{minipage}
+    }
+    \subfigure[做第二次裁剪时使用BRDF方法计算多个点光源光照]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_with_second_clip.png}
 		\end{minipage}
     }
     \captionsetup{font={small}}
@@ -356,7 +362,181 @@ L_o=
 \section{实验结果}
 本文的实验环境是：Intel(R)Xeon(R)CPU E3-1230 V2@3.30GHz，16GB内存，NVIDIA GeForce GTX 1060 6GB显卡。
 
-在有100个点光源的场景中，使用BRDF方式以及本文的算法在场景粗糙度$\alpha=0.27$时所实现的渲染结果如图\ref{fig:BRDFResultAndLTCResult}所示：
+\subsection{单个点光源的简单场景}
+对于简单平面，单个点光源位置在平面上(0,0,1)处，当平面的粗糙度$\alpha$分别为0.25，0.5，0.75和1.0时。使用本文方法和BRDF方法计算的光照结果如图\ref{fig:PointLightWithDifferentRoughness}：
+\begin{figure}%[!h]
+	\centering
+    \subfigure[LTC, $\alpha$=0.25]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_point_light_alpha_0_25.png}
+		\end{minipage}
+    }
+    \subfigure[LTC, $\alpha$=0.5]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_point_light_alpha_0_5.png}
+		\end{minipage}
+    }
+    \subfigure[LTC, $\alpha$=0.75]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_point_light_alpha_0_75.png}
+		\end{minipage}
+    }
+    \subfigure[LTC, $\alpha$=1.0]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_point_light_alpha_1_0.png}
+		\end{minipage}
+    }
+
+	\centering
+    \subfigure[BRDF, $\alpha$=0.25]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_point_light_alpha_0_25.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF, $\alpha$=0.5]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_point_light_alpha_0_5.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF, $\alpha$=0.75]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_point_light_alpha_0_75.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF, $\alpha$=1.0]{
+		\begin{minipage}[t]{0.22\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_point_light_alpha_1_0.png}
+		\end{minipage}
+    }
+    \captionsetup{font={small}}
+    \caption{对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比}
+    \label{fig:PointLightWithDifferentRoughness}
+\end{figure}
+\subsection{多点光源下的模型光照}
+在对单个模型计算光照时，本文以Dragon模型为例，场景中随机分布100个点光源，在不同的粗糙度下（$\alpha$ 分别为0.25，0.5，0.75，1.0时）分别使用本文算法和BRDF算法计算的光照情况如下图\ref{fig:SingleModelResultWithDifferentRoughness}：
+%\begin{figure}[!h]
+%	\centering
+%    \subfigure[LTC,$\alpha$=0.25]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_25.png}
+%		\end{minipage}
+%    }
+%    \subfigure[LTC,$\alpha$=0.5]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_5.png}
+%		\end{minipage}
+%    }
+%    \subfigure[LTC,$\alpha$=0.75]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_75.png}
+%		\end{minipage}
+%    }
+%    \subfigure[LTC,$\alpha$=1.0]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{LTC_alpha_1_0.png}
+%		\end{minipage}
+%    }
+%
+%    \subfigure[BRDF,$\alpha$=0.25]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_25.png}
+%		\end{minipage}
+%    }
+%    \subfigure[BRDF,$\alpha$=0.5]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_5.png}
+%		\end{minipage}
+%    }
+%    \subfigure[BRDF,$\alpha$=0.75]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_75.png}
+%		\end{minipage}
+%    }
+%    \subfigure[BRDF,$\alpha$=1.0]{
+%		\begin{minipage}[t]{0.22\linewidth}
+%			\centering
+%			\includegraphics[width=1.0\linewidth]{BRDF_alpha_1_0.png}
+%		\end{minipage}
+%    }
+%    \captionsetup{font={small}}
+%    \caption{对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比}
+%    \label{fig:SingleModelResultWithDifferentRoughness}
+%\end{figure}
+\begin{figure}
+	\centering
+    \subfigure[LTC,$\alpha$=0.25]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_25.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF,$\alpha$=0.25]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_25.png}
+		\end{minipage}
+    }
+
+    \subfigure[LTC,$\alpha$=0.5]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_5.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF,$\alpha$=0.5]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_5.png}
+		\end{minipage}
+    }
+
+    \subfigure[LTC,$\alpha$=0.75]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_alpha_0_75.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF,$\alpha$=0.75]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_alpha_0_75.png}
+		\end{minipage}
+    }
+
+    \subfigure[LTC,$\alpha$=1.0]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{LTC_alpha_1_0.png}
+		\end{minipage}
+    }
+    \subfigure[BRDF,$\alpha$=1.0]{
+		\begin{minipage}[t]{0.45\linewidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{BRDF_alpha_1_0.png}
+		\end{minipage}
+    }
+    \captionsetup{font={small}}
+    \caption{对于单个模型，在不同粗糙度下，使用本文算法和BRDF结果的对比}
+    \label{fig:SingleModelResultWithDifferentRoughness}
+\end{figure}
+
+\subsection{多点光源下的复杂场景}
+在有100个点光源的场景中，使用BRDF方式以及本文的算法所实现的渲染结果如图\ref{fig:BRDFResultAndLTCResult}所示：
 %\begin{figure}
 %	\centering
 %	\includegraphics[width=1.0\columnwidth]{BRDFResult.png}
@@ -377,13 +557,13 @@ L_o=
     \subfigure[使用BRDF方式渲染的结果]{
 		\begin{minipage}[t]{1.0\linewidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{BRDFResult.png}
+			\includegraphics[width=1.0\linewidth]{BRDFResult_MS_16.jpg}
 		\end{minipage}
     }
     \subfigure[使用本文算法渲染的结果]{
 		\begin{minipage}[t]{1.0\linewidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{LTCResult.png}
+			\includegraphics[width=1.0\linewidth]{LTCResult_MS_16.jpg}
 		\end{minipage}
     }
     \captionsetup{font={small}}
