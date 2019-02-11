@@ -11,8 +11,8 @@ int main()
 {
 	{
 		ElayGraphics::WINDOW_KEYWORD::setIsCursorDisable(false);
-		/*ElayGraphics::WINDOW_KEYWORD::setWindowSize(1080, 768);
-		ElayGraphics::Camera::setMainCameraFarPlane(2000.0);
+		ElayGraphics::WINDOW_KEYWORD::setWindowSize(1080, 768);
+		/*ElayGraphics::Camera::setMainCameraFarPlane(2000.0);
 		ElayGraphics::Camera::setMainCameraMoveSpeed(50.0);*/
 
 		ElayGraphics::ResourceManager::registerGameObject(std::make_shared<CLightSource>("LightSource", 1));

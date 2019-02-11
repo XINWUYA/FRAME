@@ -27,11 +27,11 @@ void CGroundPass::initV()
 
 	m_pShader->activeShader();
 	m_pShader->setMat4UniformValue("u_ModelMatrix", glm::value_ptr(ElayGraphics::ResourceManager::getGameObjectByName("Ground")->getModelMatrix()));
-	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture, 0);
-	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture, 1);
+	m_pShader->setTextureUniformValue("u_LTC_MatrixTexture", m_LTCMatrixTexture);
+	m_pShader->setTextureUniformValue("u_LTC_MagnitueTexture", m_LTCMagnitueTexture);
 
 	m_FBOTextureArray = ElayGraphics::ResourceManager::getSharedDataByName<int>("FBOTextureArray");
-	m_pShader->setTextureUniformValue("u_FilteredLightTexture", m_FBOTextureArray, 2, GL_TEXTURE_2D_ARRAY);
+	m_pShader->setTextureUniformValue("u_FilteredLightTexture", m_FBOTextureArray, GL_TEXTURE_2D_ARRAY);
 }
 
 //************************************************************************************

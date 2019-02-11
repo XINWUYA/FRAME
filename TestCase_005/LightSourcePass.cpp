@@ -23,7 +23,7 @@ void CLightSourcePass::initV()
 	m_LightSourceTexture = loadTextureFromFile("Textures/0.png");
 	int LTCMatrixTexture = ElayGraphics::ResourceManager::getSharedDataByName<GLuint>("LTCMatrixTexture");
 	m_pShader->activeShader();
-	m_pShader->setTextureUniformValue("u_LightSourceTexture", m_LightSourceTexture, 3);
+	m_pShader->setTextureUniformValue("u_LightSourceTexture", m_LightSourceTexture);
 }
 
 //************************************************************************************

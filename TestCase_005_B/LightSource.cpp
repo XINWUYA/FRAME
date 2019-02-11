@@ -36,7 +36,9 @@ void CLightSource::updateV()
 	if (RotationFromGUI != m_Rotation)
 	{
 		m_Rotation = RotationFromGUI;
-		setRotation(m_Rotation);
+		setRotationX(m_Rotation.x);
+		setRotationY(m_Rotation.y);
+		setRotationZ(m_Rotation.z);
 		for (int i = 0; i < m_PolygonalLightVertexPosSet.size(); ++i)
 		{
 			m_PolygonalLightVertexPosSet[i] = glm::vec3(getModelMatrix() * glm::vec4(m_PolygonalLightVertexOriginalPosSet[i], 1.0));

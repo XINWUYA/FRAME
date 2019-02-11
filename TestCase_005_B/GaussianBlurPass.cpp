@@ -34,6 +34,9 @@ void CGaussianBlurPass::initV()
 	}
 	ElayGraphics::ResourceManager::registerSharedData("BluredTexture", m_PingPongTexture[0]);
 	ElayGraphics::ResourceManager::registerSharedData("MaxMipLevel", m_MaxMipLevel);
+
+	m_pShader->activeShader();
+	m_pShader->setTextureUniformValue("u_InputImage", m_InputTexture);
 }
 
 //************************************************************************************
@@ -63,7 +66,8 @@ void CGaussianBlurPass::updateV()
 			glClearColor(1, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			m_pShader->setIntUniformValue("u_IsHorizontal", IsHorizontal);
-			m_pShader->setTextureUniformValue("u_InputImage", IsFirstIteration ? m_InputTexture : m_PingPongTexture[!IsHorizontal], 4);
+			//m_pShader->setTextureUniformValue("u_InputImage", IsFirstIteration ? m_InputTexture : m_PingPongTexture[!IsHorizontal], 4);
+			m_pShader->changeTextureUniformValue("u_InputImage", IsFirstIteration ? m_InputTexture : m_PingPongTexture[!IsHorizontal]);
 			drawQuad();
 			IsHorizontal = !IsHorizontal;
 			if (IsFirstIteration)

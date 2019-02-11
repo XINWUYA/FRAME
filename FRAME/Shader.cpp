@@ -237,7 +237,7 @@ GLvoid CShader::setTextureUniformValue(const std::string& vTextureUniformName, G
 //Function:
 GLvoid CShader::changeTextureUniformValue(const std::string& vTextureUniformName, GLint vTextureID, GLint vTextureType/* = GL_TEXTURE_2D*/)
 {
-	_WARNING(m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.find(vTextureUniformName) != m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.end(), "Texture Uniform not be binded.");
+	_WARNING(m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.find(vTextureUniformName) == m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet.end(), "Texture Uniform not be binded.");
 	auto &Item = m_TextureNameAndTextureIDAndBindingIndexAndTextureTypeSet[vTextureUniformName];
 	std::get<0>(Item) = vTextureID;
 	std::get<2>(Item) = vTextureType;

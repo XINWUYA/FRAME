@@ -21,6 +21,9 @@ void CLightSourcePass::initV()
 {
 	m_pShader = std::make_shared<CShader>("LightSource_VS.glsl", "LightSource_FS.glsl");
 	m_LightSourceTexture = loadTextureFromFile("../Textures/GaussianBlurTexture/0.png");
+
+	m_pShader->activeShader();
+	m_pShader->setTextureUniformValue("u_LightSourceTexture", m_LightSourceTexture);
 }
 
 //************************************************************************************
@@ -37,7 +40,6 @@ void CLightSourcePass::updateV()
 		m_Intensity = Intensity;
 		m_pShader->setFloatUniformValue("u_Intensity", m_Intensity);
 	}
-	m_pShader->setTextureUniformValue("u_LightSourceTexture", m_LightSourceTexture, 3);
 	drawQuad();
 	glDisable(GL_DEPTH_TEST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
